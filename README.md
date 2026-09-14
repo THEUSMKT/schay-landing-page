@@ -1,0 +1,115 @@
+# Schay Corretora — Landing Page
+
+Landing page da Schay Corretora (São Leopoldo/RS), com vitrine de imóveis,
+histórias de vendas realizadas e formulário de contato. As 3 categorias de
+imóveis (Apartamentos, Casas, Terrenos e oportunidades) têm páginas internas
+próprias, acessadas com uma transição suave a partir dos cards da Home.
+
+## Stack
+
+- **React 19 + Vite** — build simples, gera arquivos estáticos (`dist/`) que
+  rodam em qualquer host de site estático.
+- **React Router** — rotas `/`, `/apartamentos`, `/casas`,
+  `/terrenos-e-oportunidades`.
+- **Framer Motion** — transição suave entre páginas e animação de entrada
+  dos títulos ao rolar a página.
+- **Tailwind CSS v4** — estilos, com a paleta e tipografia do site definidas
+  como tokens em `src/index.css`.
+- **lucide-react** — ícones.
+
+Não há backend: o formulário de contato monta uma mensagem e abre o
+WhatsApp da Schay já com o texto preenchido (ver seção "Formulário de
+contato" abaixo).
+
+## Rodando o projeto
+
+```bash
+npm install
+npm run dev       # ambiente de desenvolvimento em http://localhost:5173
+npm run build     # gera a versão de produção em dist/
+npm run preview   # serve a versão de produção localmente, pra conferir
+npm run lint      # checagem de código (oxlint)
+```
+
+## Estrutura do projeto
+
+```
+src/
+  data/
+    properties.js   # ▶ imóveis e categorias — ver "Editando imóveis" abaixo
+    site.js          # dados institucionais (WhatsApp, e-mail, CRECI, menu)
+    stories.js        # cards da seção "Histórias reais"
+  components/        # peças reutilizáveis (Header, Footer, PropertyCard...)
+  sections/          # seções da Home (Hero, Vitrine, Formulário...)
+  pages/             # Home.jsx e CategoryPage.jsx (rotas)
+  App.jsx            # rotas + transição entre páginas
+```
+
+## Editando os imóveis
+
+Todo o conteúdo dos imóveis (os 3 cards da Home e as 3 páginas de
+categoria) vem de **um único arquivo**: `src/data/properties.js`. Não é
+preciso mexer em nenhum componente visual para atualizar um imóvel.
+
+Os 9 imóveis cadastrados hoje são **exemplos fictícios**
+(`isExample: true`) só para validar o layout — é só isso que aparece no
+selo "Imóvel de exemplo" nos cards. Para publicar um imóvel real:
+
+1. Abra `src/data/properties.js`.
+2. Duplique um objeto dentro de `PROPERTIES` (ou edite um existente) e
+   preencha `title`, `neighborhood`, `city`, `areaM2`, `bedroomsLabel` e
+   `priceLabel`.
+3. Troque `isExample` para `false` — o selo "Imóvel de exemplo" some.
+4. Para usar uma foto real (em vez da ilustração de placeholder), veja o
+   comentário no topo de `src/components/PropertyMedia.jsx`: basta importar
+   a imagem e trocar `image: { kind: 'house', variant: 1 }` por
+   `image: { src: fotoImportada }`.
+
+O card da Home de cada categoria é sempre o **primeiro imóvel cadastrado**
+dessa categoria em `PROPERTIES` — editar esse imóvel atualiza a Home e a
+página de categoria ao mesmo tempo, automaticamente.
+
+## Imagens de placeholder
+
+Como o site ainda não tem fotos reais (do hero, da corretora, dos imóveis
+e das vendas realizadas), todas as "fotos" hoje são ilustrações geradas em
+CSS/SVG (gradiente + ícone), deixando isso claro visualmente — nunca
+fingem ser uma foto de verdade. Troque por fotos reais quando tiver:
+
+- **Imóveis:** ver item 4 acima.
+- **Hero e retrato da corretora:** `src/sections/Hero.jsx`.
+- **Fotos de "Histórias reais":** `src/sections/RealStories.jsx` e
+  `src/data/stories.js`.
+
+## Formulário de contato
+
+O formulário (`src/sections/ContactForm.jsx`) não usa backend: ao enviar,
+ele valida os campos obrigatórios (Nome, WhatsApp e Interesse) e abre o
+WhatsApp da Schay em uma nova aba, com uma mensagem já formatada com os
+dados preenchidos. Isso mantém o site 100% estático (fácil de hospedar em
+qualquer lugar) e usa o canal que a imobiliária já usa no dia a dia.
+
+Se no futuro for necessário capturar os leads também por e-mail ou em uma
+planilha/CRM, dá pra trocar a função `handleSubmit` por uma chamada a um
+serviço de formulários (Netlify Forms, Formspree, EmailJS etc.) sem mexer
+no restante do site.
+
+## Deploy
+
+O projeto já sai pronto para os hosts estáticos mais comuns — o build
+(`npm run build`) gera arquivos 100% estáticos em `dist/`:
+
+- **Netlify:** `netlify.toml` já configurado (build `npm run build`,
+  publish `dist`, com a regra de redirect para as rotas funcionarem).
+- **Vercel:** `vercel.json` já configurado com o rewrite equivalente.
+- **Outro host estático** (Cloudflare Pages, GitHub Pages, S3 etc.):
+  configure o servidor para responder qualquer rota com `index.html`
+  (SPA fallback) — sem isso, recarregar a página em `/apartamentos`, por
+  exemplo, resulta em 404. O arquivo `public/_redirects` já resolve isso
+  automaticamente em qualquer host compatível com o formato Netlify
+  (inclusive Cloudflare Pages).
+
+## Dados institucionais
+
+WhatsApp, e-mail, CRECI e os links do menu ficam centralizados em
+`src/data/site.js`.

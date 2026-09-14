@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Também coberto por public/_redirects — mantido aqui por clareza e
+# porque tem prioridade caso os dois arquivos divirjam no futuro.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+/* Playfair Display — serifada elegante para títulos (com itálico) */
+@import "@fontsource/playfair-display/500.css";
+@import "@fontsource/playfair-display/500-italic.css";
+@import "@fontsource/playfair-display/600.css";
+@import "@fontsource/playfair-display/600-italic.css";
+@import "@fontsource/playfair-display/700.css";
+@import "@fontsource/playfair-display/700-italic.css";
+
+/* Inter — sans-serif limpa para textos de apoio, UI e formulário */
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+
+@theme {
+  --font-display: "Playfair Display", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* Azul-marinho — fundo principal das seções escuras */
+  --color-navy-950: #070d1a;
+  --color-navy-900: #0b1526;
+  --color-navy-850: #0e1a2f;
+  --color-navy-800: #132238;
+  --color-navy-700: #1a2c46;
+  --color-navy-600: #253c5c;
+  --color-navy-500: #375377;
+
+  /* Bege/off-white — seção clara (Histórias reais) */
+  --color-cream-50: #faf8f4;
+  --color-cream-100: #f4efe6;
+  --color-cream-200: #ebe3d3;
+  --color-cream-300: #ddd1b8;
+
+  /* Azul claro — destaques, itálicos, links */
+  --color-accent-200: #cddff4;
+  --color-accent-300: #a9c8ef;
+  --color-accent-400: #86ade5;
+  --color-accent-500: #6a96db;
+  --color-accent-600: #5580c9;
+  /* Mais escuro — só para texto pequeno sobre fundo claro (contraste AA) */
+  --color-accent-700: #3f63aa;
+
+  /* Âmbar/laranja — CTA principal */
+  --color-amber-300: #f7cd82;
+  --color-amber-400: #f2bb5c;
+  --color-amber-500: #eda638;
+  --color-amber-600: #d98f22;
+
+  /* Verde WhatsApp */
+  --color-whatsapp: #25d366;
+
+  --shadow-card: 0 20px 45px -20px rgba(4, 10, 22, 0.55);
+  --shadow-soft: 0 12px 30px -14px rgba(4, 10, 22, 0.4);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-navy-900);
+    color: #e7ebf2;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--color-accent-500);
+    color: var(--color-navy-950);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  /* Foco visível e consistente para acessibilidade de teclado */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--color-accent-400);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-pulse-ring {
+    animation: pulse-ring 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.55;
+  }
+  70% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
