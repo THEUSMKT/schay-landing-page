@@ -1,30 +1,24 @@
-import { Building2, Home, LandPlot } from 'lucide-react'
-import PlaceholderPhoto from './PlaceholderPhoto'
+import { SCENE_BY_KIND } from './illustrations'
 
 /**
- * Imagem de um card de imóvel. Hoje sempre renderiza uma ilustração de
- * placeholder (ver PlaceholderPhoto) porque os imóveis em src/data/properties.js
- * são exemplos fictícios.
+ * Imagem de um card de imóvel (páginas de categoria). Hoje sempre renderiza
+ * a ilustração da categoria (ver src/components/illustrations) porque os
+ * imóveis em src/data/properties.js são exemplos fictícios — a `variant`
+ * só varia um pouco o enquadramento (espelhado / tom) pra não repetir a
+ * mesma imagem exata nos 3 exemplos de uma categoria.
  *
  * Para usar uma foto real de um imóvel:
- *   1. Importe a imagem no topo deste arquivo, ex:
+ *   1. Importe a imagem no topo de src/data/properties.js, ex:
  *        import fotoCasaCentro from '../assets/imoveis/casa-centro.jpg'
- *   2. No objeto do imóvel em src/data/properties.js, troque `image`
- *      de `{ kind: 'house', variant: 1 }` para `{ src: fotoCasaCentro }`.
+ *   2. No objeto do imóvel, troque `image` de `{ kind: 'house', variant: 1 }`
+ *      para `{ src: fotoCasaCentro }`.
  *   3. Este componente detecta `image.src` automaticamente e usa <img>
  *      no lugar da ilustração — nenhum outro arquivo precisa mudar.
  */
-
-const KIND_CONFIG = {
-  apartment: { Icon: Building2, label: 'Foto ilustrativa · apartamento' },
-  house: { Icon: Home, label: 'Foto ilustrativa · casa' },
-  land: { Icon: LandPlot, label: 'Foto ilustrativa · terreno' },
-}
-
-const VARIANT_GRADIENTS = {
-  1: 'from-navy-700 via-navy-850 to-navy-950',
-  2: 'from-navy-600 via-navy-800 to-navy-950',
-  3: 'from-navy-800 via-navy-700 to-navy-950',
+const VARIANT_STYLE = {
+  1: {},
+  2: { transform: 'scaleX(-1)' },
+  3: { filter: 'hue-rotate(-8deg) saturate(1.05)' },
 }
 
 export default function PropertyMedia({ image, className = '' }) {
@@ -42,16 +36,13 @@ export default function PropertyMedia({ image, className = '' }) {
   }
 
   const { kind, variant = 1 } = image || {}
-  const config = KIND_CONFIG[kind] || KIND_CONFIG.house
-  const gradientClassName = VARIANT_GRADIENTS[variant] || VARIANT_GRADIENTS[1]
+  const Scene = SCENE_BY_KIND[kind] || SCENE_BY_KIND.house
 
   return (
-    <PlaceholderPhoto
-      icon={config.Icon}
-      gradientClassName={gradientClassName}
-      iconClassName="h-28 w-28 sm:h-32 sm:w-32"
-      label={config.label}
-      className={className}
-    />
+    <div className={`overflow-hidden ${className}`}>
+      <div className="h-full w-full" style={VARIANT_STYLE[variant] || undefined}>
+        <Scene className="h-full w-full" />
+      </div>
+    </div>
   )
 }

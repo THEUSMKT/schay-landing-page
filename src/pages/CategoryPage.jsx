@@ -20,12 +20,12 @@ export default function CategoryPage({ categorySlug }) {
 
   return (
     <>
-      <section className="border-b border-white/10 bg-navy-900 pt-14 pb-16 sm:pt-20 sm:pb-20">
+      <section className="border-b border-navy-950/10 bg-paper-200 pt-14 pb-16 sm:pt-20 sm:pb-20">
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
           <Reveal mode="mount">
             <Link
               to="/"
-              className="inline-flex items-center gap-2 text-sm font-medium text-white/60 transition-colors duration-200 hover:text-accent-300"
+              className="inline-flex items-center gap-2 text-sm font-medium text-navy-600 transition-colors duration-200 hover:text-accent-600"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
               Voltar para a página inicial
@@ -33,36 +33,36 @@ export default function CategoryPage({ categorySlug }) {
           </Reveal>
 
           <Reveal mode="mount" delay={0.08} className="mt-6">
-            <SectionEyebrow>{category.heroKicker}</SectionEyebrow>
+            <SectionEyebrow tone="dark">{category.heroKicker}</SectionEyebrow>
           </Reveal>
 
           <Reveal
             as="h1"
             mode="mount"
             delay={0.14}
-            className="mt-4 max-w-2xl font-display text-4xl font-semibold text-balance text-white sm:text-5xl"
+            className="mt-4 max-w-2xl font-display text-4xl font-semibold text-balance text-navy-950 sm:text-5xl"
           >
             {category.pageTitle}
           </Reveal>
 
-          <Reveal mode="mount" delay={0.2} className="mt-4 max-w-xl text-white/60">
+          <Reveal mode="mount" delay={0.2} className="mt-4 max-w-xl text-navy-600">
             {category.pageIntro}
           </Reveal>
         </div>
       </section>
 
-      <section className="bg-navy-950 py-16 sm:py-20">
+      <section className="bg-paper-100 py-16 sm:py-20">
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {properties.map((property, index) => (
               <Reveal key={property.id} delay={index * 0.1}>
-                <PropertyCard property={property} variant="listing" className="h-full" />
+                <PropertyCard property={property} className="h-full" />
               </Reveal>
             ))}
           </div>
 
           <Reveal delay={0.2}>
-            <p className="mt-10 text-center font-display text-sm text-white/40 italic">
+            <p className="mt-10 text-center font-display text-sm text-navy-500 italic">
               Vitrine de exemplo: fotos e características ilustrativas. Consulte os imóveis
               disponíveis com a Schay.
             </p>

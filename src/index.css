@@ -26,12 +26,19 @@
   --color-navy-700: #1a2c46;
   --color-navy-600: #253c5c;
   --color-navy-500: #375377;
+  --color-navy-400: #5c7a9e;
 
   /* Bege/off-white — seção clara (Histórias reais) */
   --color-cream-50: #faf8f4;
   --color-cream-100: #f4efe6;
   --color-cream-200: #ebe3d3;
   --color-cream-300: #ddd1b8;
+
+  /* "Papel" — fundo claro das seções gerais (o azul-marinho vira destaque,
+     não fundo, fora da hero e da seção "História da corretora"). */
+  --color-paper-50: #ffffff;
+  --color-paper-100: #f5f7fb;
+  --color-paper-200: #e8ecf3;
 
   /* Azul claro — destaques, itálicos, links */
   --color-accent-200: #cddff4;
@@ -65,8 +72,11 @@
   }
 
   body {
-    background-color: var(--color-navy-900);
-    color: #e7ebf2;
+    /* A maior parte do site agora usa fundo claro (o azul-marinho virou
+       cor de destaque); Header, Footer, Hero e "História da corretora"
+       definem seu próprio fundo escuro explicitamente. */
+    background-color: var(--color-paper-100);
+    color: var(--color-navy-800);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;

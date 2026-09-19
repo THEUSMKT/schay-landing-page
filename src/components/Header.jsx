@@ -3,7 +3,11 @@ import { Link } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import Logo from './Logo'
 import Cta from './Cta'
-import { NAV_LINKS } from '../data/site'
+import { NAV_LINKS, buildWhatsAppLink } from '../data/site'
+
+const WHATSAPP_HREF = buildWhatsAppLink(
+  'Olá! Vim pelo site da Schay Corretora e gostaria de solicitar atendimento.',
+)
 
 export default function Header() {
   const [open, setOpen] = useState(false)
@@ -26,7 +30,14 @@ export default function Header() {
         </nav>
 
         <div className="hidden lg:block">
-          <Cta to="/#contato" variant="outline" className="px-5 py-2.5" showIcon={false}>
+          <Cta
+            href={WHATSAPP_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="outline"
+            className="px-5 py-2.5"
+            showIcon={false}
+          >
             Solicitar atendimento
           </Cta>
         </div>
@@ -58,7 +69,9 @@ export default function Header() {
             ))}
           </ul>
           <Cta
-            to="/#contato"
+            href={WHATSAPP_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
             variant="amber"
             onClick={() => setOpen(false)}
             className="mt-4 w-full"

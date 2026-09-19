@@ -3,15 +3,17 @@
  * FONTE ÚNICA DE DADOS — imóveis e categorias
  * ============================================================================
  *
- * Este arquivo concentra TODO o conteúdo dos imóveis mostrados no site:
- * os 3 cards da vitrine na Home e os 3 imóveis de cada página de categoria
- * (/apartamentos, /casas, /terrenos-e-oportunidades).
+ * Este arquivo concentra TODO o conteúdo de categorias e imóveis do site:
+ * - CATEGORIES alimenta os 3 banners de categoria na Home (Vitrine) e o
+ *   cabeçalho de cada página de categoria.
+ * - PROPERTIES alimenta os cards de imóvel dentro de cada página de
+ *   categoria (/apartamentos, /casas, /terrenos-e-oportunidades).
  *
  * Os imóveis abaixo são EXEMPLOS FICTÍCIOS (isExample: true) só para validar
  * o layout. Para publicar imóveis reais:
  *
  *   1. Duplique um objeto dentro de PROPERTIES (ou edite um existente).
- *   2. Preencha title, neighborhood, city, areaM2, bedroomsLabel, priceLabel.
+ *   2. Preencha title, neighborhood, city, areaM2, bedroomsLabel.
  *   3. Troque isExample para false (isso remove o selo "Imóvel de exemplo").
  *   4. Para usar uma foto real em vez da ilustração de placeholder, importe
  *      a imagem no topo de src/components/PropertyMedia.jsx e associe o
@@ -27,8 +29,11 @@ export const CATEGORIES = {
     slug: 'apartamentos',
     path: '/apartamentos',
     tag: 'Apartamento',
+    kind: 'apartment',
     navLabel: 'Apartamentos',
     ctaLabel: 'Ver apartamentos',
+    // Título do banner de categoria na Home (Vitrine).
+    bannerTitle: 'Apartamentos em São Leopoldo e região',
     pageTitle: 'Apartamentos à venda em São Leopoldo e região',
     pageIntro:
       'Praticidade e boa localização para quem busca um novo endereço para chamar de seu.',
@@ -38,8 +43,10 @@ export const CATEGORIES = {
     slug: 'casas',
     path: '/casas',
     tag: 'Casa',
+    kind: 'house',
     navLabel: 'Casas',
     ctaLabel: 'Ver casas',
+    bannerTitle: 'Casas em São Leopoldo e região',
     pageTitle: 'Casas à venda em São Leopoldo e região',
     pageIntro:
       'Espaço para a família viver com conforto, do quintal à sala de estar.',
@@ -49,8 +56,10 @@ export const CATEGORIES = {
     slug: 'terrenos',
     path: '/terrenos-e-oportunidades',
     tag: 'Terreno',
+    kind: 'land',
     navLabel: 'Terrenos e oportunidades',
     ctaLabel: 'Ver terrenos e oportunidades',
+    bannerTitle: 'Terrenos e oportunidades em São Leopoldo e região',
     pageTitle: 'Terrenos e oportunidades em São Leopoldo e região',
     pageIntro:
       'Para quem quer planejar o próximo passo do zero, com liberdade para construir.',
@@ -72,7 +81,6 @@ export const PROPERTIES = [
     city: 'São Leopoldo / RS',
     areaM2: 65,
     bedroomsLabel: '2 quartos',
-    priceLabel: 'Consulte valores',
     image: { kind: 'apartment', variant: 1 },
     isExample: true,
   },
@@ -84,7 +92,6 @@ export const PROPERTIES = [
     city: 'São Leopoldo / RS',
     areaM2: 78,
     bedroomsLabel: '3 quartos',
-    priceLabel: 'Consulte valores',
     image: { kind: 'apartment', variant: 2 },
     isExample: true,
   },
@@ -96,7 +103,6 @@ export const PROPERTIES = [
     city: 'São Leopoldo / RS',
     areaM2: 48,
     bedroomsLabel: '1 quarto',
-    priceLabel: 'Consulte valores',
     image: { kind: 'apartment', variant: 3 },
     isExample: true,
   },
@@ -110,7 +116,6 @@ export const PROPERTIES = [
     city: 'São Leopoldo / RS',
     areaM2: 120,
     bedroomsLabel: '3 quartos',
-    priceLabel: 'Consulte valores',
     image: { kind: 'house', variant: 1 },
     isExample: true,
   },
@@ -122,7 +127,6 @@ export const PROPERTIES = [
     city: 'São Leopoldo / RS',
     areaM2: 150,
     bedroomsLabel: '3 quartos',
-    priceLabel: 'Consulte valores',
     image: { kind: 'house', variant: 2 },
     isExample: true,
   },
@@ -134,7 +138,6 @@ export const PROPERTIES = [
     city: 'São Leopoldo / RS',
     areaM2: 95,
     bedroomsLabel: '2 quartos',
-    priceLabel: 'Consulte valores',
     image: { kind: 'house', variant: 3 },
     isExample: true,
   },
@@ -148,7 +151,6 @@ export const PROPERTIES = [
     city: 'São Leopoldo / RS',
     areaM2: 300,
     bedroomsLabel: 'Sem quartos (terreno)',
-    priceLabel: 'Consulte valores',
     image: { kind: 'land', variant: 1 },
     isExample: true,
   },
@@ -160,7 +162,6 @@ export const PROPERTIES = [
     city: 'São Leopoldo / RS',
     areaM2: 360,
     bedroomsLabel: 'Sem quartos (terreno)',
-    priceLabel: 'Consulte valores',
     image: { kind: 'land', variant: 2 },
     isExample: true,
   },
@@ -172,7 +173,6 @@ export const PROPERTIES = [
     city: 'São Leopoldo / RS',
     areaM2: 250,
     bedroomsLabel: 'Sem quartos (terreno)',
-    priceLabel: 'Consulte valores',
     image: { kind: 'land', variant: 3 },
     isExample: true,
   },
@@ -181,11 +181,4 @@ export const PROPERTIES = [
 /** Retorna os imóveis de uma categoria (pela slug usada na URL/CATEGORIES). */
 export function getPropertiesByCategory(categorySlug) {
   return PROPERTIES.filter((property) => property.category === categorySlug)
-}
-
-/** Retorna o imóvel de destaque (1º cadastrado) de cada categoria — usado na Home. */
-export function getFeaturedProperties() {
-  return CATEGORY_LIST.map((category) =>
-    PROPERTIES.find((property) => property.category === category.slug),
-  ).filter(Boolean)
 }

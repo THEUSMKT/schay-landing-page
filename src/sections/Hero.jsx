@@ -1,23 +1,27 @@
-import { MapPin, Home as HomeIcon, UserRound } from 'lucide-react'
+import { MapPin, UserRound } from 'lucide-react'
+import { HeroScene } from '../components/illustrations'
 import PlaceholderPhoto from '../components/PlaceholderPhoto'
 import Reveal from '../components/Reveal'
 import SectionEyebrow from '../components/SectionEyebrow'
 import Cta from '../components/Cta'
-import { SITE } from '../data/site'
+import { SITE, buildWhatsAppLink } from '../data/site'
 
 export default function Hero() {
   return (
     <section className="relative overflow-hidden">
+      {/*
+        Ilustração no lugar de uma foto real (casa amarela com árvores e
+        família em frente, como pedido). Este ambiente não tem acesso a
+        bancos de imagem — a rede é bloqueada por política para qualquer
+        host fora de uma lista curta de serviços de desenvolvimento (registro
+        do npm, PyPI etc.). Pra trocar por uma foto real: importe a imagem
+        aqui e troque <HeroScene className="h-full w-full" /> por
+        <img src={fotoHero} className="h-full w-full object-cover" />.
+      */}
       <div className="absolute inset-0">
-        <PlaceholderPhoto
-          icon={HomeIcon}
-          gradientClassName="from-navy-800 via-navy-900 to-navy-950"
-          iconClassName="h-80 w-80 -right-12 -bottom-16 sm:h-[26rem] sm:w-[26rem]"
-          showLabel={false}
-          className="h-full w-full"
-        />
-        <div className="absolute inset-0 bg-linear-to-r from-navy-950 via-navy-950/88 to-navy-950/45" />
-        <div className="absolute inset-0 bg-linear-to-t from-navy-950 via-transparent to-transparent" />
+        <HeroScene className="h-full w-full" />
+        <div className="absolute inset-0 bg-linear-to-r from-navy-950 via-navy-950/80 to-navy-950/35" />
+        <div className="absolute inset-0 bg-linear-to-t from-navy-950 via-navy-950/10 to-navy-950/25" />
       </div>
 
       <div className="relative mx-auto grid max-w-6xl gap-12 px-5 pt-14 pb-20 sm:px-8 sm:pt-20 sm:pb-28 lg:grid-cols-[1.2fr_0.8fr] lg:items-end lg:pt-28 lg:pb-24">
@@ -54,7 +58,15 @@ export default function Hero() {
           </Reveal>
 
           <Reveal mode="mount" delay={0.34}>
-            <Cta to="/#contato" variant="amber" className="mt-8 px-7 py-3.5 text-base">
+            <Cta
+              href={buildWhatsAppLink(
+                'Olá! Vim pelo site da Schay Corretora e gostaria de solicitar atendimento.',
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="amber"
+              className="mt-8 px-7 py-3.5 text-base"
+            >
               Solicitar atendimento
             </Cta>
           </Reveal>
