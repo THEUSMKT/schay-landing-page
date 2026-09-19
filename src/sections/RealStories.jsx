@@ -1,13 +1,6 @@
-import { HeartHandshake } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import SectionEyebrow from '../components/SectionEyebrow'
-import PlaceholderPhoto from '../components/PlaceholderPhoto'
 import { SALES_STORIES } from '../data/stories'
-
-const VARIANT_GRADIENTS = {
-  1: 'from-navy-700 via-navy-800 to-navy-950',
-  2: 'from-navy-800 via-navy-700 to-navy-950',
-}
 
 export default function RealStories() {
   return (
@@ -17,24 +10,33 @@ export default function RealStories() {
           <SectionEyebrow tone="dark">Vendas realizadas</SectionEyebrow>
         </Reveal>
 
-        <Reveal as="h2" delay={0.08} className="mt-4 max-w-xl font-display text-4xl font-semibold text-navy-950 sm:text-5xl">
-          Cada novo endereço,
-          <br />
-          <em className="font-medium text-accent-600 italic">uma nova história.</em>
+        <Reveal
+          as="h2"
+          delay={0.08}
+          className="mt-4 max-w-xl font-display text-4xl font-semibold text-navy-950 sm:text-5xl"
+        >
+          Transformando <em className="font-medium text-accent-600 italic">histórias.</em>
         </Reveal>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2">
+        <Reveal delay={0.14} className="mt-3 max-w-xl text-navy-600">
+          Cada novo endereço, uma nova história.
+        </Reveal>
+
+        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {SALES_STORIES.map((story, index) => (
             <Reveal key={story.id} delay={index * 0.12}>
-              <article className="overflow-hidden rounded-2xl border border-navy-950/10 bg-white shadow-soft">
-                <PlaceholderPhoto
-                  icon={HeartHandshake}
-                  gradientClassName={VARIANT_GRADIENTS[story.image.variant] || VARIANT_GRADIENTS[1]}
-                  iconClassName="h-28 w-28"
-                  label="Foto do fechamento"
-                  className="aspect-[16/10] w-full"
-                />
-                <div className="px-6 py-6">
+              <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-navy-950/10 bg-white shadow-soft">
+                <div className="relative aspect-[16/10] w-full">
+                  <img
+                    src={story.image.src}
+                    alt={story.image.alt || ''}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                  {/* Gradiente padronizado sobre as 3 fotos de prova real */}
+                  <div className="absolute inset-0 bg-linear-to-t from-black/65 via-black/10 to-transparent" />
+                </div>
+                <div className="flex flex-1 flex-col px-6 py-6">
                   <p className="text-xs font-semibold tracking-[0.15em] text-accent-700 uppercase">
                     {story.kicker}
                   </p>
