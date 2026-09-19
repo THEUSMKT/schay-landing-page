@@ -37,6 +37,12 @@ export default function PropertyCard({ property, className = '' }) {
       <div className="flex flex-1 flex-col px-5 pt-7 pb-5">
         <h3 className="font-display text-xl font-semibold text-navy-950">{property.title}</h3>
 
+        {property.priceLabel ? (
+          <p className="mt-1 font-display text-lg font-semibold text-accent-600">
+            {property.priceLabel}
+          </p>
+        ) : null}
+
         <div className="mt-3 flex items-start gap-2 text-sm text-navy-600">
           <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent-600" aria-hidden="true" />
           <span>
@@ -51,7 +57,7 @@ export default function PropertyCard({ property, className = '' }) {
         <div className="flex items-center gap-5 text-sm text-navy-700">
           <span className="inline-flex items-center gap-1.5">
             <Ruler className="h-4 w-4 text-accent-600" aria-hidden="true" />
-            {property.areaM2} m²
+            {property.areaM2 ? `${property.areaM2} m²` : 'Metragem a informar'}
           </span>
           <span className="inline-flex items-center gap-1.5">
             <BedDouble className="h-4 w-4 text-accent-600" aria-hidden="true" />

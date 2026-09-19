@@ -13,6 +13,9 @@ import { CATEGORIES, getPropertiesByCategory } from '../data/properties'
 export default function CategoryPage({ categorySlug }) {
   const category = CATEGORIES[categorySlug]
   const properties = getPropertiesByCategory(categorySlug)
+  // Só mostra o aviso de "vitrine de exemplo" enquanto sobrar algum imóvel
+  // fictício na categoria — some sozinho assim que todos forem reais.
+  const hasExampleProperties = properties.some((property) => property.isExample)
 
   if (!category) {
     return <Navigate to="/" replace />
@@ -61,12 +64,14 @@ export default function CategoryPage({ categorySlug }) {
             ))}
           </div>
 
-          <Reveal delay={0.2}>
-            <p className="mt-10 text-center font-display text-sm text-navy-500 italic">
-              Vitrine de exemplo: fotos e características ilustrativas. Consulte os imóveis
-              disponíveis com a Schay.
-            </p>
-          </Reveal>
+          {hasExampleProperties ? (
+            <Reveal delay={0.2}>
+              <p className="mt-10 text-center font-display text-sm text-navy-500 italic">
+                Vitrine de exemplo: fotos e características ilustrativas. Consulte os imóveis
+                disponíveis com a Schay.
+              </p>
+            </Reveal>
+          ) : null}
         </div>
       </section>
     </>

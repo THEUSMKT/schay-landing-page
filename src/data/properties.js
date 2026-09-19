@@ -9,15 +9,25 @@
  * - PROPERTIES alimenta os cards de imóvel dentro de cada página de
  *   categoria (/apartamentos, /casas, /terrenos-e-oportunidades).
  *
- * Os imóveis abaixo são EXEMPLOS FICTÍCIOS (isExample: true) só para validar
- * o layout. Para publicar imóveis reais:
+ * Categorias que ainda não têm fotos reais (isExample: true) usam imóveis
+ * FICTÍCIOS só pra validar o layout. Para publicar um imóvel real:
  *
  *   1. Duplique um objeto dentro de PROPERTIES (ou edite um existente).
- *   2. Preencha title, neighborhood, city, areaM2, bedroomsLabel.
+ *   2. Preencha title, neighborhood, city, areaM2, bedroomsLabel e, se
+ *      souber o valor, priceLabel (ex: 'R$ 329.000' — opcional, o card só
+ *      mostra o preço quando esse campo existe).
  *   3. Troque isExample para false (isso remove o selo "Imóvel de exemplo").
- *   4. Para usar uma foto real em vez da ilustração de placeholder, importe
- *      a imagem no topo de src/components/PropertyMedia.jsx e associe o
- *      novo `image` a ela (veja o comentário nesse arquivo).
+ *   4. Importe a foto no topo deste arquivo e troque `image` de
+ *      `{ kind: 'house', variant: 1 }` (ilustração) para
+ *      `{ src: fotoImportada, alt: '...' }` (foto real).
+ *
+ * Enquanto os dados de um imóvel com foto real ainda não chegaram, use
+ * 'Título a informar' / 'Bairro a informar' / 'Quartos a informar' e
+ * `areaM2: null` (o card mostra "Metragem a informar" automaticamente) —
+ * é o padrão usado nos imóveis de "Casas" abaixo. NUNCA reordene ou troque
+ * o `id` de um imóvel já publicado: a ordem dos cards em cada página segue
+ * a ordem deste array, e cada novo imóvel enviado depois entra no final
+ * da lista da categoria, sem mexer nos anteriores.
  *
  * Nada mais no site precisa ser tocado: a Home e as 3 páginas de categoria
  * são geradas automaticamente a partir desta lista.
@@ -30,6 +40,17 @@
 import fotoCasas from '../assets/images/categoria-casas.webp'
 import fotoApartamentos from '../assets/images/categoria-apartamentos.webp'
 import fotoTerrenos from '../assets/images/categoria-terrenos.webp'
+
+// Fotos reais dos imóveis de "Casas" (fornecidas pela Schay). A ordem dos
+// imports abaixo é a ordem em que os cards aparecem em /casas — mantenha
+// essa ordem estável: quando os dados (título, bairro, m², quartos) de
+// cada imóvel chegarem depois, "1º imóvel enviado" = casasImovel01, e
+// assim por diante.
+import casasImovel01 from '../assets/images/imoveis/casas-01.webp'
+import casasImovel02 from '../assets/images/imoveis/casas-02.webp'
+import casasImovel03 from '../assets/images/imoveis/casas-03.webp'
+import casasImovel04 from '../assets/images/imoveis/casas-04.webp'
+import casasImovel05 from '../assets/images/imoveis/casas-05.webp'
 
 // Categorias disponíveis. `slug` define a rota (ex: /apartamentos).
 export const CATEGORIES = {
@@ -119,38 +140,73 @@ export const PROPERTIES = [
   },
 
   // ----------------------------------------------------------------------- Casas
+  // Imóveis reais (fotos + dados enviados pela Schay, extraídos de anúncios
+  // da Innovar Imobiliária). Não reordene nem troque o `id` de uma entrada
+  // já publicada — novos imóveis entram no fim da lista, como casa-06,
+  // casa-07 etc.
   {
-    id: 'casa-01',
+    id: 'casa-01', // Card 1 · Código Innovar 52456
     category: 'casas',
-    title: 'Casa com jardim privativo',
-    neighborhood: 'Bairro a informar',
+    title: 'Casa aconchegante no bairro Campestre',
+    neighborhood: 'Campestre',
     city: 'São Leopoldo / RS',
-    areaM2: 120,
-    bedroomsLabel: '3 quartos',
-    image: { kind: 'house', variant: 1 },
-    isExample: true,
-  },
-  {
-    id: 'casa-02',
-    category: 'casas',
-    title: 'Casa térrea para a família',
-    neighborhood: 'Bairro a informar',
-    city: 'São Leopoldo / RS',
-    areaM2: 150,
-    bedroomsLabel: '3 quartos',
-    image: { kind: 'house', variant: 2 },
-    isExample: true,
-  },
-  {
-    id: 'casa-03',
-    category: 'casas',
-    title: 'Casa com espaço para ampliar',
-    neighborhood: 'Bairro a informar',
-    city: 'São Leopoldo / RS',
-    areaM2: 95,
+    areaM2: 67,
     bedroomsLabel: '2 quartos',
-    image: { kind: 'house', variant: 3 },
-    isExample: true,
+    priceLabel: 'R$ 329.000',
+    image: { src: casasImovel01, alt: 'Foto do imóvel' },
+    isExample: false,
+  },
+  {
+    id: 'casa-02', // Card 2 · Código Innovar 43787
+    category: 'casas',
+    title: 'Casa com 4 quartos à venda',
+    neighborhood: 'Campina',
+    city: 'São Leopoldo / RS',
+    areaM2: 116,
+    bedroomsLabel: '4 quartos',
+    priceLabel: 'R$ 200.000',
+    image: { src: casasImovel02, alt: 'Foto do imóvel' },
+    isExample: false,
+  },
+  {
+    id: 'casa-03', // Card 3 · Código Innovar 9265
+    category: 'casas',
+    title: 'Casa térrea em ótima localização',
+    neighborhood: 'Campestre',
+    city: 'São Leopoldo / RS',
+    // Só a área do terreno estava visível no anúncio (450 m²); não havia
+    // área construída/privativa informada.
+    areaM2: 450,
+    bedroomsLabel: '2 quartos',
+    priceLabel: 'R$ 636.000',
+    image: { src: casasImovel03, alt: 'Foto do imóvel' },
+    isExample: false,
+  },
+  {
+    id: 'casa-04', // Card 4 · Código Innovar 36912
+    category: 'casas',
+    title: 'Casa aconchegante em Estância Velha',
+    neighborhood: 'Campo Grande',
+    city: 'Estância Velha / RS',
+    // Metragem não estava visível/legível na captura enviada — mantido
+    // como "a informar" (não inventar dado), conforme pedido.
+    areaM2: null,
+    bedroomsLabel: '2 quartos',
+    priceLabel: 'R$ 295.000',
+    image: { src: casasImovel04, alt: 'Foto do imóvel' },
+    isExample: false,
+  },
+  {
+    id: 'casa-05', // Card 5 · Código Innovar 46763
+    category: 'casas',
+    title: 'Casa com 3 quartos à venda',
+    neighborhood: 'Cristo Rei',
+    city: 'São Leopoldo / RS',
+    areaM2: 300.9,
+    bedroomsLabel: '3 quartos (1 suíte)',
+    priceLabel: 'R$ 980.000',
+    image: { src: casasImovel05, alt: 'Foto do imóvel' },
+    isExample: false,
   },
 
   // -------------------------------------------------------------------- Terrenos
