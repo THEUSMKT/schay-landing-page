@@ -12,8 +12,13 @@ import { buildWhatsAppLink } from '../data/site'
  */
 export default function PropertyCard({ property, className = '' }) {
   const category = CATEGORIES[property.category]
+  // Usa bairro (+ metragem, quando existir) em vez do título: o título é só
+  // um nome comercial e pode se repetir entre imóveis, enquanto bairro (e
+  // metragem, no caso de mais de um imóvel no mesmo bairro) é o que
+  // realmente ajuda a corretora a identificar qual imóvel é.
+  const areaSuffix = property.areaM2 ? ` de ${property.areaM2} m²` : ''
   const whatsappHref = buildWhatsAppLink(
-    `Olá! Tenho interesse no imóvel "${property.title}". Pode me passar mais informações?`,
+    `Olá! Gostaria de saber mais informações sobre ${category.messageLabel}${areaSuffix} no bairro ${property.neighborhood}.`,
   )
 
   return (

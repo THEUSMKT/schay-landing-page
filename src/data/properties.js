@@ -29,6 +29,14 @@
  * a ordem deste array, e cada novo imóvel enviado depois entra no final
  * da lista da categoria, sem mexer nos anteriores.
  *
+ * O botão "Saiba mais" de cada card monta a mensagem do WhatsApp
+ * automaticamente a partir de `neighborhood` (bairro) e, quando existe,
+ * `areaM2` (metragem) — nunca a partir de `title`, porque o título é só um
+ * nome comercial e não ajuda a corretora a identificar o imóvel exato
+ * (vários imóveis podem ter títulos parecidos). Por isso é importante
+ * manter `neighborhood` sempre preenchido com o bairro real assim que ele
+ * chegar — é o dado que de fato diferencia um imóvel do outro.
+ *
  * Nada mais no site precisa ser tocado: a Home e as 3 páginas de categoria
  * são geradas automaticamente a partir desta lista.
  */
@@ -61,6 +69,10 @@ export const CATEGORIES = {
     path: '/apartamentos',
     tag: 'Apartamento',
     kind: 'apartment',
+    // Usado na mensagem de WhatsApp do "Saiba mais" (artigo + nome no
+    // singular): "Olá! Gostaria de saber mais informações sobre
+    // {messageLabel}...".
+    messageLabel: 'o apartamento',
     bannerImage: fotoApartamentos,
     navLabel: 'Apartamentos',
     ctaLabel: 'Ver apartamentos',
@@ -76,6 +88,7 @@ export const CATEGORIES = {
     path: '/casas',
     tag: 'Casa',
     kind: 'house',
+    messageLabel: 'a casa',
     bannerImage: fotoCasas,
     navLabel: 'Casas',
     ctaLabel: 'Ver casas',
@@ -90,6 +103,7 @@ export const CATEGORIES = {
     path: '/terrenos-e-oportunidades',
     tag: 'Terreno',
     kind: 'land',
+    messageLabel: 'o terreno',
     bannerImage: fotoTerrenos,
     navLabel: 'Terrenos e oportunidades',
     ctaLabel: 'Ver terrenos e oportunidades',
