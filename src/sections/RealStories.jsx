@@ -26,11 +26,12 @@ export default function RealStories() {
           {SALES_STORIES.map((story, index) => (
             <Reveal key={story.id} delay={index * 0.12}>
               <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-navy-950/10 bg-white shadow-soft">
-                <div className="relative aspect-[16/10] w-full">
+                <div className="relative aspect-[4/5] w-full">
                   <img
                     src={story.image.src}
                     alt={story.image.alt || ''}
                     loading="lazy"
+                    style={{ objectPosition: story.image.position || 'center' }}
                     className="absolute inset-0 h-full w-full object-cover"
                   />
                   {/* Gradiente padronizado sobre as 3 fotos de prova real */}

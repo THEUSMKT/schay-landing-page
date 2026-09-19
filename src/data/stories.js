@@ -15,20 +15,37 @@ export const SALES_STORIES = [
     title: 'Um novo capítulo começou aqui',
     description:
       'Registro real de um contrato de compra e venda de casa concluído com a Schay.',
-    image: { src: venda01, alt: 'Fechamento de contrato de compra e venda de casa' },
+    // Foto vertical (retrato): logo no topo + rostos logo abaixo, sem
+    // "sobra" de conteúdo relevante mais pra baixo — ancorar no topo.
+    image: {
+      src: venda01,
+      alt: 'Fechamento de contrato de compra e venda de casa',
+      position: 'center 15%',
+    },
   },
   {
     id: 'venda-02',
     kicker: 'Casa vendida · Contrato fechado',
     title: 'Mais uma família encontrou seu lugar',
     description: 'Outro contrato fechado: mais uma venda de casa realizada pela Schay.',
-    image: { src: venda02, alt: 'Fechamento de contrato de compra e venda de casa' },
+    // Foto de corpo inteiro com bastante parede em branco acima da logo —
+    // ancorar mais pra baixo pra sobrar corte só nessa área vazia do topo.
+    image: {
+      src: venda02,
+      alt: 'Fechamento de contrato de compra e venda de casa',
+      position: 'center 75%',
+    },
   },
   {
     id: 'venda-03',
     kicker: 'Casa vendida · Contrato fechado',
     title: 'Outro sonho se tornou realidade',
     description: 'Mais uma conquista: chaves entregues, negócio fechado com a Schay.',
-    image: { src: venda03, alt: 'Fechamento de contrato de compra e venda de casa' },
+    // Logo e rostos concentrados no terço superior da foto — ancorar no topo.
+    image: {
+      src: venda03,
+      alt: 'Fechamento de contrato de compra e venda de casa',
+      position: 'center 15%',
+    },
   },
 ]
