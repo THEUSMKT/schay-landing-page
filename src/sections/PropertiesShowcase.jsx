@@ -38,7 +38,7 @@ export default function PropertiesShowcase() {
 
         <Reveal delay={0.2}>
           <p className="mt-8 text-center font-display text-sm text-navy-500 italic">
-            Imagens ilustrativas de cada categoria — fotos reais dos imóveis disponíveis com a
+            Fotos representativas de cada categoria — consulte os imóveis disponíveis com a
             Schay.
           </p>
         </Reveal>

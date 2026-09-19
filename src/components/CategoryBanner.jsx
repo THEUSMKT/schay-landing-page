@@ -18,7 +18,13 @@ export default function CategoryBanner({ category, className = '' }) {
       className={`group relative flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-2xl border border-navy-950/10 shadow-card transition-transform duration-300 hover:-translate-y-1 ${className}`}
     >
       <div className="absolute inset-0 overflow-hidden">
-        {Scene ? (
+        {category.bannerImage ? (
+          <img
+            src={category.bannerImage}
+            alt={category.bannerTitle}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : Scene ? (
           <Scene className="h-full w-full transition-transform duration-500 group-hover:scale-105" />
         ) : null}
       </div>

@@ -1,25 +1,20 @@
 import { MapPin, UserRound } from 'lucide-react'
-import { HeroScene } from '../components/illustrations'
 import PlaceholderPhoto from '../components/PlaceholderPhoto'
 import Reveal from '../components/Reveal'
 import SectionEyebrow from '../components/SectionEyebrow'
 import Cta from '../components/Cta'
 import { SITE, buildWhatsAppLink } from '../data/site'
+import fotoHero from '../assets/images/hero-casa-familia.webp'
 
 export default function Hero() {
   return (
     <section className="relative overflow-hidden">
-      {/*
-        Ilustração no lugar de uma foto real (casa amarela com árvores e
-        família em frente, como pedido). Este ambiente não tem acesso a
-        bancos de imagem — a rede é bloqueada por política para qualquer
-        host fora de uma lista curta de serviços de desenvolvimento (registro
-        do npm, PyPI etc.). Pra trocar por uma foto real: importe a imagem
-        aqui e troque <HeroScene className="h-full w-full" /> por
-        <img src={fotoHero} className="h-full w-full object-cover" />.
-      */}
       <div className="absolute inset-0">
-        <HeroScene className="h-full w-full" />
+        <img
+          src={fotoHero}
+          alt="Casa amarela com jardim e família em frente, representando o próximo endereço"
+          className="h-full w-full object-cover"
+        />
         <div className="absolute inset-0 bg-linear-to-r from-navy-950 via-navy-950/80 to-navy-950/35" />
         <div className="absolute inset-0 bg-linear-to-t from-navy-950 via-navy-950/10 to-navy-950/25" />
       </div>

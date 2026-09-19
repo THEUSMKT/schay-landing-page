@@ -23,6 +23,14 @@
  * são geradas automaticamente a partir desta lista.
  */
 
+// Fotos reais dos banners de categoria (Home). Se algum dia precisar tirar
+// uma foto (voltando à ilustração de placeholder), basta remover a linha
+// `bannerImage` correspondente — o CategoryBanner cai de volta na
+// ilustração de `kind` automaticamente.
+import fotoCasas from '../assets/images/categoria-casas.webp'
+import fotoApartamentos from '../assets/images/categoria-apartamentos.webp'
+import fotoTerrenos from '../assets/images/categoria-terrenos.webp'
+
 // Categorias disponíveis. `slug` define a rota (ex: /apartamentos).
 export const CATEGORIES = {
   apartamentos: {
@@ -30,6 +38,7 @@ export const CATEGORIES = {
     path: '/apartamentos',
     tag: 'Apartamento',
     kind: 'apartment',
+    bannerImage: fotoApartamentos,
     navLabel: 'Apartamentos',
     ctaLabel: 'Ver apartamentos',
     // Título do banner de categoria na Home (Vitrine).
@@ -44,6 +53,7 @@ export const CATEGORIES = {
     path: '/casas',
     tag: 'Casa',
     kind: 'house',
+    bannerImage: fotoCasas,
     navLabel: 'Casas',
     ctaLabel: 'Ver casas',
     bannerTitle: 'Casas em São Leopoldo e região',
@@ -57,6 +67,7 @@ export const CATEGORIES = {
     path: '/terrenos-e-oportunidades',
     tag: 'Terreno',
     kind: 'land',
+    bannerImage: fotoTerrenos,
     navLabel: 'Terrenos e oportunidades',
     ctaLabel: 'Ver terrenos e oportunidades',
     bannerTitle: 'Terrenos e oportunidades em São Leopoldo e região',
