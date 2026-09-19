@@ -31,11 +31,11 @@
  *
  * O botão "Saiba mais" de cada card monta a mensagem do WhatsApp
  * automaticamente a partir de `neighborhood` (bairro) e, quando existe,
- * `areaM2` (metragem) — nunca a partir de `title`, porque o título é só um
- * nome comercial e não ajuda a corretora a identificar o imóvel exato
- * (vários imóveis podem ter títulos parecidos). Por isso é importante
+ * `priceLabel` (preço) — nunca a partir de `title`, `areaM2` ou
+ * `bedroomsLabel`. Isso é proposital: bairro + preço já identificam o
+ * imóvel pra corretora, e a mensagem fica curta. Por isso é importante
  * manter `neighborhood` sempre preenchido com o bairro real assim que ele
- * chegar — é o dado que de fato diferencia um imóvel do outro.
+ * chegar (e `priceLabel`, quando o valor for informado).
  *
  * Nada mais no site precisa ser tocado: a Home e as 3 páginas de categoria
  * são geradas automaticamente a partir desta lista.
@@ -51,11 +51,7 @@ import fotoTerrenos from '../assets/images/categoria-terrenos.webp'
 
 // Fotos reais dos imóveis de "Casas" (fornecidas pela Schay). A ordem dos
 // imports abaixo é a ordem em que os cards aparecem em /casas — mantenha
-// essa ordem estável: quando os dados (título, bairro, m², quartos) de
-// cada imóvel chegarem depois, "1º imóvel enviado" = casasImovel01, e
-// assim por diante.
-import casasImovel01 from '../assets/images/imoveis/casas-01.webp'
-import casasImovel02 from '../assets/images/imoveis/casas-02.webp'
+// essa ordem estável conforme novos imóveis forem chegando.
 import casasImovel03 from '../assets/images/imoveis/casas-03.webp'
 import casasImovel04 from '../assets/images/imoveis/casas-04.webp'
 import casasImovel05 from '../assets/images/imoveis/casas-05.webp'
@@ -69,10 +65,6 @@ export const CATEGORIES = {
     path: '/apartamentos',
     tag: 'Apartamento',
     kind: 'apartment',
-    // Usado na mensagem de WhatsApp do "Saiba mais" (artigo + nome no
-    // singular): "Olá! Gostaria de saber mais informações sobre
-    // {messageLabel}...".
-    messageLabel: 'o apartamento',
     bannerImage: fotoApartamentos,
     navLabel: 'Apartamentos',
     ctaLabel: 'Ver apartamentos',
@@ -88,7 +80,6 @@ export const CATEGORIES = {
     path: '/casas',
     tag: 'Casa',
     kind: 'house',
-    messageLabel: 'a casa',
     bannerImage: fotoCasas,
     navLabel: 'Casas',
     ctaLabel: 'Ver casas',
@@ -103,7 +94,6 @@ export const CATEGORIES = {
     path: '/terrenos-e-oportunidades',
     tag: 'Terreno',
     kind: 'land',
-    messageLabel: 'o terreno',
     bannerImage: fotoTerrenos,
     navLabel: 'Terrenos e oportunidades',
     ctaLabel: 'Ver terrenos e oportunidades',
@@ -160,30 +150,6 @@ export const PROPERTIES = [
   // da Innovar Imobiliária). Não reordene nem troque o `id` de uma entrada
   // já publicada — novos imóveis entram no fim da lista, como casa-06,
   // casa-07 etc.
-  {
-    id: 'casa-01', // Card 1 · Código Innovar 52456
-    category: 'casas',
-    title: 'Casa aconchegante no bairro Campestre',
-    neighborhood: 'Campestre',
-    city: 'São Leopoldo / RS',
-    areaM2: 67,
-    bedroomsLabel: '2 quartos',
-    priceLabel: 'R$ 329.000',
-    image: { src: casasImovel01, alt: 'Foto do imóvel' },
-    isExample: false,
-  },
-  {
-    id: 'casa-02', // Card 2 · Código Innovar 43787
-    category: 'casas',
-    title: 'Casa com 4 quartos à venda',
-    neighborhood: 'Campina',
-    city: 'São Leopoldo / RS',
-    areaM2: 116,
-    bedroomsLabel: '4 quartos',
-    priceLabel: 'R$ 200.000',
-    image: { src: casasImovel02, alt: 'Foto do imóvel' },
-    isExample: false,
-  },
   {
     id: 'casa-03', // Card 3 · Código Innovar 9265
     category: 'casas',
