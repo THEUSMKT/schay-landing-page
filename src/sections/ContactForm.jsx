@@ -12,7 +12,7 @@ const INTEREST_OPTIONS = [
   'Ainda estou pesquisando',
 ]
 
-const INITIAL_FORM = { nome: '', whatsapp: '', email: '', interesse: '', mensagem: '' }
+const INITIAL_FORM = { nome: '', interesse: '', mensagem: '' }
 
 const inputClass =
   'w-full rounded-xl border border-navy-950/15 bg-paper-100 px-4 py-3 text-sm text-navy-900 placeholder:text-navy-400 outline-none transition-colors duration-200 focus:border-accent-600 focus:bg-paper-50'
@@ -25,8 +25,6 @@ const inputClass =
 function buildContactWhatsAppMessage(form) {
   const lines = [
     `Olá! Meu nome é ${form.nome}.`,
-    `WhatsApp para contato: ${form.whatsapp}`,
-    form.email ? `E-mail: ${form.email}` : null,
     `Interesse: ${form.interesse}`,
     form.mensagem ? `Mensagem: ${form.mensagem}` : null,
   ].filter(Boolean)
@@ -49,7 +47,6 @@ export default function ContactForm() {
 
     const nextErrors = {}
     if (!form.nome.trim()) nextErrors.nome = 'Conte seu nome para a gente te chamar certo.'
-    if (!form.whatsapp.trim()) nextErrors.whatsapp = 'Informe um WhatsApp para retornar o contato.'
     if (!form.interesse) nextErrors.interesse = 'Selecione uma opção.'
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) return
@@ -141,28 +138,6 @@ export default function ContactForm() {
                 />
               </Field>
 
-              <Field label="WhatsApp" error={errors.whatsapp}>
-                <input
-                  type="tel"
-                  value={form.whatsapp}
-                  onChange={update('whatsapp')}
-                  placeholder="(51) 99999-9999"
-                  autoComplete="tel"
-                  className={inputClass}
-                />
-              </Field>
-
-              <Field label="E-mail">
-                <input
-                  type="email"
-                  value={form.email}
-                  onChange={update('email')}
-                  placeholder="voce@exemplo.com"
-                  autoComplete="email"
-                  className={inputClass}
-                />
-              </Field>
-
               <Field label="Interesse" error={errors.interesse}>
                 <div className="relative">
                   <select
@@ -201,7 +176,7 @@ export default function ContactForm() {
                   Solicitar atendimento
                 </Cta>
                 <p className="mt-3 text-xs text-navy-500">
-                  Seus dados serão usados somente para o atendimento imobiliário.
+                  Ao continuar, você será direcionado ao WhatsApp da Schay.
                 </p>
               </div>
             </form>
