@@ -51,6 +51,8 @@ import casasImovel02 from '../assets/images/imoveis/casas-02.webp'
 import casasImovel03 from '../assets/images/imoveis/casas-03.webp'
 import casasImovel04 from '../assets/images/imoveis/casas-04.webp'
 import casasImovel05 from '../assets/images/imoveis/casas-05.webp'
+import casasImovel06 from '../assets/images/imoveis/casas-06.webp'
+import casasImovel07 from '../assets/images/imoveis/casas-07.webp'
 
 // Categorias disponíveis. `slug` define a rota (ex: /apartamentos).
 export const CATEGORIES = {
@@ -206,6 +208,30 @@ export const PROPERTIES = [
     bedroomsLabel: '3 quartos (1 suíte)',
     priceLabel: 'R$ 980.000',
     image: { src: casasImovel05, alt: 'Foto do imóvel' },
+    isExample: false,
+  },
+  {
+    id: 'casa-06', // Card 6 · Código Innovar 74350 (sobrado em construção)
+    category: 'casas',
+    title: 'Sobrado com 2 quartos à venda',
+    neighborhood: 'Campestre',
+    city: 'São Leopoldo / RS',
+    areaM2: 99,
+    bedroomsLabel: '2 quartos',
+    priceLabel: 'R$ 580.000',
+    image: { src: casasImovel06, alt: 'Foto do imóvel' },
+    isExample: false,
+  },
+  {
+    id: 'casa-07', // Card 7 · Código Innovar 45917
+    category: 'casas',
+    title: 'Casa de alvenaria na São Borja',
+    neighborhood: 'Fazenda São Borja',
+    city: 'São Leopoldo / RS',
+    areaM2: 108,
+    bedroomsLabel: '2 quartos',
+    priceLabel: 'R$ 421.880',
+    image: { src: casasImovel07, alt: 'Foto do imóvel' },
     isExample: false,
   },
 
