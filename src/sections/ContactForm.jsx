@@ -3,7 +3,7 @@ import { MapPin, ChevronDown } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import SectionEyebrow from '../components/SectionEyebrow'
 import Cta from '../components/Cta'
-import { SITE } from '../data/site'
+import { SITE, buildWhatsAppLink } from '../data/site'
 
 const INTEREST_OPTIONS = [
   'Comprar um imóvel',
@@ -17,32 +17,59 @@ const INITIAL_FORM = { nome: '', whatsapp: '', email: '', interesse: '', mensage
 const inputClass =
   'w-full rounded-xl border border-navy-950/15 bg-paper-100 px-4 py-3 text-sm text-navy-900 placeholder:text-navy-400 outline-none transition-colors duration-200 focus:border-accent-600 focus:bg-paper-50'
 
-/** Monta o link mailto: com os dados do formulário já preenchidos. */
-function buildMailtoLink(form) {
-  const subject = 'Solicitação de atendimento — site Schay Corretora'
-  const body = [
-    `Nome: ${form.nome}`,
-    `WhatsApp: ${form.whatsapp}`,
-    form.email ? `E-mail: ${form.email}` : null,
-    `Interesse: ${form.interesse}`,
-    form.mensagem ? `Mensagem: ${form.mensagem}` : null,
-  ]
-    .filter((line) => line !== null)
-    .join('\n')
+/**
+ * Envia o formulário direto pro e-mail da Schay via Formspree (formspree.io)
+ * — nenhum backend próprio necessário, funciona no GitHub Pages. Precisa do
+ * `SITE.formspreeFormId` configurado (veja o comentário em src/data/site.js);
+ * sem isso, o fetch abaixo retorna erro e a tela cai automaticamente no
+ * estado de erro com alternativa por WhatsApp.
+ */
+async function submitToFormspree(form) {
+  const endpoint = `https://formspree.io/f/${SITE.formspreeFormId}`
 
-  return `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+  const body = new FormData()
+  body.append('name', form.nome)
+  body.append('whatsapp', form.whatsapp)
+  if (form.email) body.append('email', form.email)
+  body.append('interesse', form.interesse)
+  if (form.mensagem) body.append('mensagem', form.mensagem)
+  body.append('_subject', 'Nova solicitação de atendimento — site Schay Corretora')
+  body.append('_gotcha', '') // honeypot anti-spam do Formspree — sempre vazio para humanos
+
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    headers: { Accept: 'application/json' },
+    body,
+  })
+
+  if (!response.ok) {
+    throw new Error(`Formspree respondeu ${response.status}`)
+  }
+}
+
+/** Mensagem de WhatsApp usada como alternativa caso o envio pelo site falhe. */
+function buildFallbackWhatsAppMessage(form) {
+  const lines = [
+    `Olá! Tentei preencher o formulário do site, mas não consegui enviar.`,
+    `Meu nome é ${form.nome}.`,
+    form.interesse ? `Interesse: ${form.interesse}.` : null,
+    form.mensagem ? `Mensagem: ${form.mensagem}` : null,
+  ].filter(Boolean)
+
+  return lines.join(' ')
 }
 
 export default function ContactForm() {
   const [form, setForm] = useState(INITIAL_FORM)
   const [errors, setErrors] = useState({})
-  const [sent, setSent] = useState(false)
+  // 'idle' | 'sending' | 'sent' | 'error'
+  const [status, setStatus] = useState('idle')
 
   function update(field) {
     return (event) => setForm((current) => ({ ...current, [field]: event.target.value }))
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
 
     const nextErrors = {}
@@ -52,9 +79,15 @@ export default function ContactForm() {
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) return
 
-    window.location.href = buildMailtoLink(form)
-    setSent(true)
-    setForm(INITIAL_FORM)
+    setStatus('sending')
+    try {
+      await submitToFormspree(form)
+      setStatus('sent')
+      setForm(INITIAL_FORM)
+    } catch (error) {
+      console.error('Falha ao enviar o formulário de contato:', error)
+      setStatus('error')
+    }
   }
 
   return (
@@ -102,20 +135,42 @@ export default function ContactForm() {
           </h3>
           <div className="my-6 h-px bg-navy-950/10" />
 
-          {sent ? (
+          {status === 'sent' ? (
             <div className="rounded-xl border border-accent-600/25 bg-accent-600/10 px-5 py-8 text-center">
-              <p className="font-display text-lg text-navy-950">Obrigado!</p>
-              <p className="mt-2 text-sm text-navy-600">
-                Abrimos seu aplicativo de e-mail com a mensagem pronta — é só enviar para a
-                Schay dar continuidade ao seu atendimento.
-              </p>
+              <p className="font-display text-lg text-navy-950">Recebemos seu contato!</p>
+              <p className="mt-2 text-sm text-navy-600">A Schay vai retornar em breve.</p>
               <button
                 type="button"
-                onClick={() => setSent(false)}
+                onClick={() => setStatus('idle')}
                 className="mt-4 text-sm font-medium text-accent-600 underline underline-offset-4"
               >
                 Preencher novamente
               </button>
+            </div>
+          ) : status === 'error' ? (
+            <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-5 py-8 text-center">
+              <p className="font-display text-lg text-navy-950">Não foi possível enviar agora</p>
+              <p className="mt-2 text-sm text-navy-600">
+                Pode ter sido uma instabilidade da conexão. Tente novamente ou fale direto com a
+                Schay pelo WhatsApp — seus dados preenchidos não foram perdidos.
+              </p>
+              <div className="mt-5 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+                <Cta
+                  href={buildWhatsAppLink(buildFallbackWhatsAppMessage(form))}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="amber"
+                >
+                  Chamar no WhatsApp
+                </Cta>
+                <button
+                  type="button"
+                  onClick={() => setStatus('idle')}
+                  className="text-sm font-medium text-accent-600 underline underline-offset-4"
+                >
+                  Tentar novamente
+                </button>
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} noValidate className="grid gap-5 sm:grid-cols-2">
@@ -186,8 +241,13 @@ export default function ContactForm() {
               </Field>
 
               <div className="sm:col-span-2">
-                <Cta type="submit" variant="amber" className="w-full py-3.5 text-base">
-                  Solicitar atendimento
+                <Cta
+                  type="submit"
+                  variant="amber"
+                  disabled={status === 'sending'}
+                  className={`w-full py-3.5 text-base ${status === 'sending' ? 'cursor-not-allowed opacity-60' : ''}`}
+                >
+                  {status === 'sending' ? 'Enviando…' : 'Solicitar atendimento'}
                 </Cta>
                 <p className="mt-3 text-xs text-navy-500">
                   Seus dados serão usados somente para o atendimento imobiliário.
