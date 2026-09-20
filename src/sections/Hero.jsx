@@ -1,10 +1,10 @@
-import { MapPin, UserRound } from 'lucide-react'
-import PlaceholderPhoto from '../components/PlaceholderPhoto'
+import { MapPin } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import SectionEyebrow from '../components/SectionEyebrow'
 import Cta from '../components/Cta'
 import { SITE, buildWhatsAppLink } from '../data/site'
 import fotoHero from '../assets/images/hero-casa-familia.webp'
+import fotoRetrato from '../assets/images/schay-retrato.webp'
 
 export default function Hero() {
   return (
@@ -69,13 +69,13 @@ export default function Hero() {
 
         <Reveal mode="mount" delay={0.3} className="lg:justify-self-end">
           <div className="w-full max-w-xs overflow-hidden rounded-2xl border border-white/10 bg-navy-900/60 shadow-card backdrop-blur-sm sm:max-w-sm">
-            <PlaceholderPhoto
-              icon={UserRound}
-              gradientClassName="from-navy-700 via-navy-800 to-navy-950"
-              iconClassName="h-28 w-28 -right-2 -bottom-2 sm:h-32 sm:w-32"
-              label="Foto da corretora"
-              className="aspect-[4/5] w-full"
-            />
+            <div className="relative aspect-[4/5] w-full">
+              <img
+                src={fotoRetrato}
+                alt="Foto de Schay, corretora da Schay Corretora"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            </div>
             <div className="px-5 py-4">
               <p className="font-display text-lg text-white">{SITE.name}</p>
               <p className="text-sm font-medium text-accent-400">CRECI {SITE.creci}</p>
