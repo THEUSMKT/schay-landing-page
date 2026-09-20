@@ -19,7 +19,7 @@ export default function Hero() {
         <div className="absolute inset-0 bg-linear-to-t from-navy-950 via-navy-950/10 to-navy-950/25" />
       </div>
 
-      <div className="relative mx-auto grid max-w-6xl gap-12 px-5 pt-14 pb-20 sm:px-8 sm:pt-20 sm:pb-28 lg:grid-cols-[1.2fr_0.8fr] lg:items-end lg:pt-28 lg:pb-24">
+      <div className="relative mx-auto grid max-w-6xl gap-12 px-5 pt-14 pb-20 sm:px-8 sm:pt-20 sm:pb-28 lg:grid-cols-[1.1fr_0.9fr] lg:items-end lg:pt-28 lg:pb-24">
         <div>
           <Reveal mode="mount">
             <SectionEyebrow>Imóveis à venda</SectionEyebrow>
@@ -67,8 +67,8 @@ export default function Hero() {
           </Reveal>
         </div>
 
-        <Reveal mode="mount" delay={0.3} className="lg:justify-self-end">
-          <div className="w-full max-w-xs overflow-hidden rounded-2xl border border-white/10 bg-navy-900/60 shadow-card backdrop-blur-sm sm:max-w-sm">
+        <Reveal mode="mount" delay={0.3}>
+          <div className="w-full max-w-sm overflow-hidden rounded-2xl border border-white/10 bg-navy-900/60 shadow-card backdrop-blur-sm sm:max-w-md lg:ml-auto">
             <div className="relative aspect-[4/5] w-full">
               <img
                 src={fotoRetrato}
