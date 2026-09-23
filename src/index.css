@@ -121,26 +121,4 @@
   .text-balance {
     text-wrap: balance;
   }
-
-  /* Glow suave atrás da foto da corretora (seção "Minha história"), pra dar
-     a sensação de um fundo em gradiente em vez de um retângulo sólido. */
-  .broker-photo-glow {
-    background: radial-gradient(
-      ellipse 85% 78% at 50% 50%,
-      color-mix(in srgb, var(--color-accent-500) 48%, transparent),
-      transparent 78%
-    );
-  }
-
-  /* Dissolve as bordas da foto no fundo da seção (sem contorno reto de
-     card): a foto enquadra ela de corpo quase inteiro sem sobra em cima
-     nem embaixo, então o esmaecimento é mais forte nas laterais e nos
-     cantos (onde a cena de fundo tem espaço), e leve no topo/base, pra
-     não comer cabelo nem corpo. */
-  .broker-photo-mask {
-    mask-image: radial-gradient(ellipse 60% 92% at 50% 50%, #000 32%, transparent 82%);
-    -webkit-mask-image: radial-gradient(ellipse 60% 92% at 50% 50%, #000 32%, transparent 82%);
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
-  }
 }

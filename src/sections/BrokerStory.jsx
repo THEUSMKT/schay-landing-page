@@ -4,12 +4,11 @@ import fotoHistoria from '../assets/images/schay-historia.webp'
 
 /**
  * Seção "História da corretora": texto à esquerda, foto à direita em
- * telas grandes (lg+), empilhados em telas menores. A foto não tem
- * card/caixa nem sombra — as bordas se dissolvem num glow em gradiente
- * atrás dela (.broker-photo-glow + .broker-photo-mask, em index.css),
- * então ela parece emergir do fundo escuro da seção. O aspect-[3/4] casa
- * exatamente com a proporção da foto enviada (952×1269), então não há
- * corte nenhum em nenhum tamanho de tela.
+ * telas grandes (lg+), empilhados em telas menores. A foto já vem sem
+ * fundo de escritório (recorte da silhueta) e com um gradiente azul claro
+ * + fade para transparente embutidos no próprio arquivo — por isso é só
+ * um <img>, sem card/caixa/máscara em CSS. O aspect-[3/4] casa exatamente
+ * com o canvas da imagem (952×1269), então não há corte em nenhuma tela.
  */
 export default function BrokerStory() {
   return (
@@ -43,9 +42,8 @@ export default function BrokerStory() {
           </Reveal>
         </div>
 
-        <Reveal delay={0.2} className="relative mx-auto mt-12 max-w-sm lg:mx-0 lg:mt-0 lg:max-w-none">
-          <div aria-hidden="true" className="broker-photo-glow absolute -inset-12 -z-10 blur-2xl" />
-          <div className="broker-photo-mask relative aspect-[3/4] w-full">
+        <Reveal delay={0.2} className="mx-auto mt-12 max-w-sm lg:mx-0 lg:mt-0 lg:max-w-none">
+          <div className="relative aspect-[3/4] w-full">
             <img
               src={fotoHistoria}
               alt="Schay, corretora da Schay Corretora"
