@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Mail, MapPin, Phone } from 'lucide-react'
 import Logo from './Logo'
+import Reveal from './Reveal'
 import { NAV_LINKS, SITE, buildWhatsAppLink } from '../data/site'
 
 export default function Footer() {
@@ -9,7 +10,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-white/10 bg-navy-950">
       <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
-        <div className="grid gap-10 md:grid-cols-[1.3fr_1fr_1fr]">
+        <Reveal className="grid gap-10 md:grid-cols-[1.3fr_1fr_1fr]">
           <div>
             <Logo />
             <p className="mt-5 max-w-xs font-display text-lg text-white/80 italic">
@@ -66,14 +67,17 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-        </div>
+        </Reveal>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">
+        <Reveal
+          delay={0.1}
+          className="mt-12 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between"
+        >
           <p>
             © {year} {SITE.name}. Todos os direitos reservados.
           </p>
           <p>CRECI {SITE.creci}</p>
-        </div>
+        </Reveal>
       </div>
     </footer>
   )

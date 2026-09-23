@@ -4,7 +4,7 @@ import SectionEyebrow from '../components/SectionEyebrow'
 import Cta from '../components/Cta'
 import { SITE, buildWhatsAppLink } from '../data/site'
 import fotoHero from '../assets/images/hero-casa-familia.webp'
-import fotoRetrato from '../assets/images/schay-retrato.webp'
+import fotoRetrato from '../assets/images/schay-hero-retrato.webp'
 
 export default function Hero() {
   return (
@@ -67,19 +67,21 @@ export default function Hero() {
           </Reveal>
         </div>
 
-        <Reveal mode="mount" delay={0.3}>
-          <div className="w-full max-w-sm overflow-hidden rounded-2xl border border-white/10 bg-navy-900/60 shadow-card backdrop-blur-sm sm:max-w-md lg:ml-auto">
-            <div className="relative aspect-[4/5] w-full">
-              <img
-                src={fotoRetrato}
-                alt="Foto de Schay, corretora da Schay Corretora"
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-            </div>
-            <div className="px-5 py-4">
-              <p className="font-display text-lg text-white">{SITE.name}</p>
-              <p className="text-sm font-medium text-accent-400">CRECI {SITE.creci}</p>
-            </div>
+        <Reveal mode="mount" delay={0.42} className="w-full max-w-sm sm:max-w-md lg:ml-auto">
+          {/* Sem card/caixa: foto com cantos suaves + sombra, integrada
+              direto na cena do hero, com um leve esmaecimento na base pra
+              transicionar pro nome/CRECI abaixo. */}
+          <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[2rem] shadow-card">
+            <img
+              src={fotoRetrato}
+              alt="Foto de Schay, corretora da Schay Corretora"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-navy-950/85 to-transparent" />
+          </div>
+          <div className="mt-4">
+            <p className="font-display text-lg text-white">{SITE.name}</p>
+            <p className="text-sm font-medium text-accent-400">CRECI {SITE.creci}</p>
           </div>
         </Reveal>
       </div>

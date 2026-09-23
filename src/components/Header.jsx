@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import Logo from './Logo'
 import Cta from './Cta'
@@ -47,39 +48,46 @@ export default function Header() {
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-label={open ? 'Fechar menu' : 'Abrir menu'}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white lg:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white transition-[background-color,transform] duration-150 hover:bg-white/5 active:scale-90 lg:hidden"
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
-      {open ? (
-        <nav className="border-t border-white/10 bg-navy-950/95 px-5 py-4 lg:hidden">
-          <ul className="flex flex-col gap-1">
-            {NAV_LINKS.map((link) => (
-              <li key={link.href}>
-                <Link
-                  to={link.href}
-                  onClick={() => setOpen(false)}
-                  className="block rounded-lg px-2 py-2.5 text-sm font-medium text-white/85 transition-colors duration-200 hover:bg-white/5 hover:text-accent-300"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <Cta
-            href={WHATSAPP_HREF}
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="amber"
-            onClick={() => setOpen(false)}
-            className="mt-4 w-full"
+      <AnimatePresence>
+        {open ? (
+          <motion.nav
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0, transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] } }}
+            exit={{ opacity: 0, y: -8, transition: { duration: 0.15 } }}
+            className="border-t border-white/10 bg-navy-950/95 px-5 py-4 lg:hidden"
           >
-            Solicitar atendimento
-          </Cta>
-        </nav>
-      ) : null}
+            <ul className="flex flex-col gap-1">
+              {NAV_LINKS.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    to={link.href}
+                    onClick={() => setOpen(false)}
+                    className="block rounded-lg px-2 py-2.5 text-sm font-medium text-white/85 transition-colors duration-200 hover:bg-white/5 hover:text-accent-300"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <Cta
+              href={WHATSAPP_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="amber"
+              onClick={() => setOpen(false)}
+              className="mt-4 w-full"
+            >
+              Solicitar atendimento
+            </Cta>
+          </motion.nav>
+        ) : null}
+      </AnimatePresence>
     </header>
   )
 }

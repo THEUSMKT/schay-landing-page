@@ -35,7 +35,7 @@ export default function Logo({ className = '', linkToHome = true }) {
     <Link
       to="/"
       aria-label={`${SITE.name} — página inicial`}
-      className="inline-flex rounded-lg"
+      className="inline-flex rounded-lg opacity-100 transition-opacity duration-200 hover:opacity-80"
     >
       {content}
     </Link>

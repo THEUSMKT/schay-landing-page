@@ -3,42 +3,17 @@ import SectionEyebrow from '../components/SectionEyebrow'
 import fotoHistoria from '../assets/images/schay-historia.webp'
 
 /**
- * Seção "História da corretora". Na foto usada aqui, a Schay está
- * posicionada à direita do quadro, com bastante fundo vazio à esquerda —
- * por isso o texto fica à esquerda em telas grandes (lg+), sobre esse
- * espaço vazio, sem cobrir o rosto/corpo dela.
- *
- * Em telas menores a foto vira um bloco próprio acima do texto (em vez de
- * espremer a mesma imagem larga atrás de um texto empilhado), evitando
- * cortar a Schay para caber num recorte muito mais alto que largo.
+ * Seção "História da corretora": texto à esquerda, foto à direita em
+ * telas grandes (lg+), empilhados em telas menores. A foto é um recorte
+ * de cantos suaves com sombra (sem card/caixa com borda) — o aspect-[3/4]
+ * casa exatamente com a proporção da foto enviada (952×1269), então não
+ * há corte nenhum em nenhum tamanho de tela.
  */
 export default function BrokerStory() {
   return (
     <section id="historia-da-corretora" className="relative overflow-hidden bg-navy-950">
-      {/* < lg: foto como bloco próprio, enquadrada nela */}
-      <div className="relative aspect-[4/5] w-full lg:hidden">
-        <img
-          src={fotoHistoria}
-          alt="Schay, corretora da Schay Corretora"
-          className="absolute inset-0 h-full w-full object-cover"
-          style={{ objectPosition: '68% center' }}
-        />
-        <div className="absolute inset-0 bg-linear-to-t from-navy-950 via-navy-950/10 to-transparent" />
-      </div>
-
-      {/* lg+: foto de fundo em toda a seção, com texto sobre a área vazia à esquerda */}
-      <div className="absolute inset-0 hidden lg:block">
-        <img
-          src={fotoHistoria}
-          alt="Schay, corretora da Schay Corretora"
-          className="h-full w-full object-cover"
-          style={{ objectPosition: 'center 0%' }}
-        />
-        <div className="absolute inset-0 bg-linear-to-r from-navy-950 via-navy-950/85 to-navy-950/10" />
-      </div>
-
-      <div className="relative mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24 lg:py-36">
-        <div className="mx-auto max-w-xl text-center lg:mx-0 lg:max-w-md lg:text-left">
+      <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-16 lg:py-28">
+        <div className="mx-auto max-w-xl text-center lg:mx-0 lg:max-w-none lg:text-left">
           <Reveal className="flex justify-center lg:justify-start">
             <SectionEyebrow>Nossa história</SectionEyebrow>
           </Reveal>
@@ -65,6 +40,16 @@ export default function BrokerStory() {
             </p>
           </Reveal>
         </div>
+
+        <Reveal delay={0.2} className="mx-auto mt-12 max-w-sm lg:mx-0 lg:mt-0 lg:max-w-none">
+          <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[2rem] shadow-card">
+            <img
+              src={fotoHistoria}
+              alt="Schay, corretora da Schay Corretora"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          </div>
+        </Reveal>
       </div>
     </section>
   )

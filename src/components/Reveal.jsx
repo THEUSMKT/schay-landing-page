@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 
 const TAGS = {
   div: motion.div,
@@ -19,29 +19,37 @@ const TAGS = {
  *   rolar a página — usado nos títulos de seção abaixo da dobra.
  * - mode="mount": dispara assim que o componente monta — usado no hero,
  *   que já está visível no carregamento da página.
+ *
+ * Padrão de referência do site: deslocamento 12-24px, duração 400-700ms,
+ * stagger de 60-120ms entre itens de um mesmo grupo (via `delay`). Quando
+ * o visitante prefere menos movimento (prefers-reduced-motion), o
+ * conteúdo aparece direto, sem deslocamento nem fade.
  */
 export default function Reveal({
   as = 'div',
   children,
   className,
   delay = 0,
-  duration = 0.7,
-  y = 26,
+  duration = 0.55,
+  y = 16,
   once = true,
-  amount = 0.35,
+  amount = 0.3,
   mode = 'inView',
   ...rest
 }) {
   const Component = TAGS[as] || motion.div
+  const reduceMotion = useReducedMotion()
 
-  const variants = {
-    hidden: { opacity: 0, y },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration, delay, ease: [0.22, 1, 0.36, 1] },
-    },
-  }
+  const variants = reduceMotion
+    ? { hidden: { opacity: 1, y: 0 }, visible: { opacity: 1, y: 0 } }
+    : {
+        hidden: { opacity: 0, y },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: { duration, delay, ease: [0.22, 1, 0.36, 1] },
+        },
+      }
 
   const triggerProps =
     mode === 'mount'

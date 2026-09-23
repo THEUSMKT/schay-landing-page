@@ -22,7 +22,7 @@ export default function PropertyCard({ property, className = '' }) {
 
   return (
     <article
-      className={`flex flex-col overflow-hidden rounded-2xl border border-navy-950/10 bg-paper-50 shadow-soft ${className}`}
+      className={`flex flex-col overflow-hidden rounded-2xl border border-navy-950/10 bg-paper-50 shadow-soft transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-card ${className}`}
     >
       <div className="relative">
         <div className="relative aspect-[4/3]">

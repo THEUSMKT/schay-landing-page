@@ -17,7 +17,14 @@ function App() {
       <ScrollManager />
       <Header />
 
-      <AnimatePresence mode="wait" initial={false}>
+      {/* Sem `initial={false}`: precisamos que a animação de entrada rode
+          também no primeiro carregamento, porque os componentes <Reveal>
+          (scroll-reveal) em toda a página dependem do ciclo initial→animate
+          do Framer Motion propagando corretamente pela árvore — com
+          `initial={false}` aqui, esse estado inicial "escondido" nunca era
+          aplicado e as seções apareciam todas já visíveis, sem a animação
+          ao rolar a página. */}
+      <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route
             path="/"

@@ -25,7 +25,7 @@ export default function Cta({
   type = 'button',
   ...rest
 }) {
-  const classes = `inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold whitespace-nowrap transition-colors duration-200 ${VARIANTS[variant] || VARIANTS.amber} ${className}`
+  const classes = `inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold whitespace-nowrap transition duration-200 hover:-translate-y-0.5 active:translate-y-0 active:duration-100 ${VARIANTS[variant] || VARIANTS.amber} ${className}`
 
   const iconEl = showIcon && Icon ? <Icon className="h-4 w-4 shrink-0" aria-hidden="true" /> : null
 

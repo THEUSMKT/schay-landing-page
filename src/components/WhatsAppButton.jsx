@@ -12,12 +12,8 @@ export default function WhatsAppButton() {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed right-5 bottom-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-whatsapp text-white shadow-card transition-transform duration-200 hover:scale-105 sm:right-7 sm:bottom-7"
+      className="fixed right-5 bottom-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-whatsapp text-white shadow-card transition-transform duration-200 hover:scale-105 focus-visible:scale-105 sm:right-7 sm:bottom-7"
     >
-      <span
-        aria-hidden="true"
-        className="animate-pulse-ring absolute inset-0 rounded-full bg-whatsapp"
-      />
       <WhatsAppIcon className="relative h-7 w-7" />
       <span className="sr-only">Conversar no WhatsApp</span>
     </a>
