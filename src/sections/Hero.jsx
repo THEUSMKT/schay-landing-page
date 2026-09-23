@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import { MapPin } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import SectionEyebrow from '../components/SectionEyebrow'
@@ -7,13 +9,30 @@ import fotoHero from '../assets/images/hero-casa-familia.webp'
 import fotoRetrato from '../assets/images/schay-hero-retrato.webp'
 
 export default function Hero() {
+  const [bgReady, setBgReady] = useState(false)
+  const reduceMotion = useReducedMotion()
+
+  useEffect(() => {
+    // Salvaguarda: numa rede lenta (ou se a imagem falhar), libera o
+    // conteúdo mesmo assim depois de um tempo — o hero nunca fica preso
+    // esperando a imagem de fundo indefinidamente.
+    const timeout = setTimeout(() => setBgReady(true), 2500)
+    return () => clearTimeout(timeout)
+  }, [])
+
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative overflow-hidden bg-navy-950">
       <div className="absolute inset-0">
-        <img
+        <motion.img
           src={fotoHero}
           alt="Casa amarela com jardim e família em frente, representando o próximo endereço"
           className="h-full w-full object-cover"
+          fetchPriority="high"
+          onLoad={() => setBgReady(true)}
+          onError={() => setBgReady(true)}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: bgReady ? 1 : 0 }}
+          transition={{ duration: reduceMotion ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
         />
         <div className="absolute inset-0 bg-linear-to-r from-navy-950 via-navy-950/80 to-navy-950/35" />
         <div className="absolute inset-0 bg-linear-to-t from-navy-950 via-navy-950/10 to-navy-950/25" />
@@ -67,10 +86,17 @@ export default function Hero() {
           </Reveal>
         </div>
 
-        <Reveal mode="mount" delay={0.42} className="w-full max-w-sm sm:max-w-md lg:ml-auto">
+        <motion.div
+          initial={{ opacity: 0, y: reduceMotion ? 0 : 16 }}
+          animate={bgReady ? { opacity: 1, y: 0 } : { opacity: 0, y: reduceMotion ? 0 : 16 }}
+          transition={{ duration: reduceMotion ? 0 : 0.55, delay: reduceMotion ? 0 : 0.1, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full max-w-sm sm:max-w-md lg:ml-auto"
+        >
           {/* Sem card/caixa: foto com cantos suaves + sombra, integrada
               direto na cena do hero, com um leve esmaecimento na base pra
-              transicionar pro nome/CRECI abaixo. */}
+              transicionar pro nome/CRECI abaixo. A entrada dela (e do
+              fundo, acima) só dispara quando a imagem de fundo termina de
+              carregar (bgReady), pra nunca aparecer "antes" do fundo. */}
           <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[2rem] shadow-card">
             <img
               src={fotoRetrato}
@@ -83,7 +109,7 @@ export default function Hero() {
             <p className="font-display text-lg text-white">{SITE.name}</p>
             <p className="text-sm font-medium text-accent-400">CRECI {SITE.creci}</p>
           </div>
-        </Reveal>
+        </motion.div>
       </div>
     </section>
   )
