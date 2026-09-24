@@ -7,10 +7,10 @@ import fotoHistoria from '../assets/images/schay-historia.webp'
  * telas grandes (lg+), empilhados em telas menores. A foto já vem sem
  * fundo de escritório (recorte da silhueta) e com um gradiente azul claro
  * + fade para transparente embutidos no próprio arquivo — por isso é só
- * um <img>, sem card/caixa/máscara em CSS. O canvas (952×1429) tem uma
+ * um <img>, sem card/caixa/máscara em CSS. O canvas (1086×1638) tem uma
  * faixa extra de espaço abaixo dos pés dela (que na foto original tocavam
  * a borda inferior, sem nenhuma margem pro gradiente esmaecer ali) — o
- * aspect-[952/1429] casa exatamente com esse canvas, então não há corte
+ * aspect-[1086/1638] casa exatamente com esse canvas, então não há corte
  * em nenhum tamanho de tela.
  */
 export default function BrokerStory() {
@@ -46,7 +46,7 @@ export default function BrokerStory() {
         </div>
 
         <Reveal delay={0.2} className="mx-auto mt-12 max-w-sm lg:mx-0 lg:mt-0 lg:max-w-none">
-          <div className="relative aspect-[952/1429] w-full">
+          <div className="relative aspect-[1086/1638] w-full">
             <img
               src={fotoHistoria}
               alt="Schay, corretora da Schay Corretora"
