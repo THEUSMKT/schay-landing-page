@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://theusmkt.github.io/schay-landing-page/sitemap.xml

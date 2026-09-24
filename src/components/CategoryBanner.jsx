@@ -19,9 +19,12 @@ export default function CategoryBanner({ category, className = '' }) {
     >
       <div className="absolute inset-0 overflow-hidden">
         {category.bannerImage ? (
+          // alt="" de propósito: o <h3> logo abaixo já mostra o mesmo texto
+          // de bannerTitle visivelmente — repetir na alt duplicaria a
+          // informação pra quem usa leitor de tela.
           <img
             src={category.bannerImage}
-            alt={category.bannerTitle}
+            alt=""
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : Scene ? (

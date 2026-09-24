@@ -5,11 +5,20 @@ import Reveal from '../components/Reveal'
 import SectionEyebrow from '../components/SectionEyebrow'
 import Cta from '../components/Cta'
 import { SITE, buildWhatsAppLink } from '../data/site'
+import { isPrerendered } from '../lib/prerender'
 import fotoHero from '../assets/images/hero-casa-familia.webp'
+import fotoHero480 from '../assets/images/hero-casa-familia-480.webp'
+import fotoHero960 from '../assets/images/hero-casa-familia-960.webp'
 import fotoRetrato from '../assets/images/schay-hero-retrato.webp'
 
 export default function Hero() {
-  const [bgReady, setBgReady] = useState(false)
+  // Numa página pré-renderizada, fundo e foto já chegam visíveis no HTML
+  // puro — começar com bgReady=true (e sem o `initial` de entrada, abaixo)
+  // evita que o primeiro mount do React esconda os dois de novo só pra
+  // reanimar o que o visitante já está vendo (isso empurrava o LCP pra
+  // muito depois; ver src/lib/prerender.js e scripts/prerender.mjs).
+  const [prerendered] = useState(isPrerendered)
+  const [bgReady, setBgReady] = useState(prerendered)
   const reduceMotion = useReducedMotion()
 
   useEffect(() => {
@@ -23,14 +32,19 @@ export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-navy-950">
       <div className="absolute inset-0">
+        {/* alt="" de propósito: fundo decorativo atrás do texto do hero, que já
+            transmite a mensagem sozinho — uma descrição aqui só duplicaria
+            informação pra quem usa leitor de tela. */}
         <motion.img
           src={fotoHero}
-          alt="Casa amarela com jardim e família em frente, representando o próximo endereço"
+          srcSet={`${fotoHero480} 480w, ${fotoHero960} 960w, ${fotoHero} 1456w`}
+          sizes="100vw"
+          alt=""
           className="h-full w-full object-cover"
           fetchPriority="high"
           onLoad={() => setBgReady(true)}
           onError={() => setBgReady(true)}
-          initial={{ opacity: 0 }}
+          initial={prerendered ? false : { opacity: 0 }}
           animate={{ opacity: bgReady ? 1 : 0 }}
           transition={{ duration: reduceMotion ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
         />
@@ -41,7 +55,7 @@ export default function Hero() {
       <div className="relative mx-auto grid max-w-6xl gap-12 px-5 pt-14 pb-20 sm:px-8 sm:pt-20 sm:pb-28 lg:grid-cols-[1.1fr_0.9fr] lg:items-end lg:pt-28 lg:pb-24">
         <div>
           <Reveal mode="mount">
-            <SectionEyebrow>Imóveis à venda</SectionEyebrow>
+            <SectionEyebrow>Corretora de imóveis</SectionEyebrow>
           </Reveal>
 
           <Reveal mode="mount" delay={0.08}>
@@ -57,37 +71,39 @@ export default function Hero() {
             delay={0.16}
             className="mt-6 font-display text-5xl leading-[1.08] font-semibold text-balance text-white sm:text-6xl lg:text-[4rem]"
           >
-            A sua nova fase
+            Encontre seu imóvel em {SITE.region}
             <br />
-            <em className="font-medium text-accent-400 italic">
-              pode começar agora.
-            </em>
+            <em className="font-medium text-accent-400 italic">com quem acompanha cada etapa.</em>
           </Reveal>
 
           <Reveal mode="mount" delay={0.26}>
             <p className="mt-6 max-w-md text-base text-white/70 sm:text-lg">
-              Encontre seu próximo endereço com orientação próxima, do primeiro contato à
-              entrega das chaves.
+              Casas, apartamentos e terrenos com curadoria da Schay — atendimento direto, do
+              primeiro contato à entrega das chaves.
             </p>
           </Reveal>
 
-          <Reveal mode="mount" delay={0.34}>
+          <Reveal mode="mount" delay={0.34} className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Cta to="/#imoveis" variant="amber" className="px-7 py-3.5 text-base">
+              Ver imóveis disponíveis
+            </Cta>
             <Cta
               href={buildWhatsAppLink(
-                'Olá! Vim pelo site da Schay Corretora e gostaria de solicitar atendimento.',
+                'Olá! Tenho um imóvel e gostaria de saber mais sobre como vendê-lo com a Schay.',
               )}
               target="_blank"
               rel="noopener noreferrer"
-              variant="amber"
-              className="mt-8 px-7 py-3.5 text-base"
+              variant="outline"
+              showIcon={false}
+              className="px-7 py-3.5 text-base"
             >
-              Solicitar atendimento
+              Quero vender meu imóvel
             </Cta>
           </Reveal>
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: reduceMotion ? 0 : 16 }}
+          initial={prerendered ? false : { opacity: 0, y: reduceMotion ? 0 : 16 }}
           animate={bgReady ? { opacity: 1, y: 0 } : { opacity: 0, y: reduceMotion ? 0 : 16 }}
           transition={{ duration: reduceMotion ? 0 : 0.55, delay: reduceMotion ? 0 : 0.1, ease: [0.22, 1, 0.36, 1] }}
           className="w-full max-w-sm sm:max-w-md lg:ml-auto"

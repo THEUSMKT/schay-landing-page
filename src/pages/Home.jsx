@@ -1,20 +1,25 @@
 import Hero from '../sections/Hero'
-import Pillars from '../sections/Pillars'
+import PropertySearch from '../sections/PropertySearch'
 import PropertiesShowcase from '../sections/PropertiesShowcase'
+import HowItWorks from '../sections/HowItWorks'
 import BrokerStory from '../sections/BrokerStory'
 import RealStories from '../sections/RealStories'
-import CareSection from '../sections/CareSection'
+import Faq from '../sections/Faq'
 import ContactForm from '../sections/ContactForm'
+import useDocumentTitle from '../hooks/useDocumentTitle'
 
 export default function Home() {
+  useDocumentTitle('Schay Corretora | Imóveis à venda em São Leopoldo e região')
+
   return (
     <>
       <Hero />
-      <Pillars />
+      <PropertySearch />
       <PropertiesShowcase />
+      <HowItWorks />
       <BrokerStory />
       <RealStories />
-      <CareSection />
+      <Faq />
       <ContactForm />
     </>
   )

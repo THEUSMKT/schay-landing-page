@@ -5,7 +5,7 @@ import { CATEGORY_LIST } from '../data/properties'
 
 export default function PropertiesShowcase() {
   return (
-    <section id="imoveis" className="bg-paper-100 py-20 sm:py-28">
+    <section id="imoveis" className="scroll-mt-24 bg-paper-100 py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>

@@ -9,33 +9,44 @@
  * - PROPERTIES alimenta os cards de imóvel dentro de cada página de
  *   categoria (/apartamentos, /casas, /terrenos-e-oportunidades).
  *
- * Categorias que ainda não têm fotos reais (isExample: true) usam imóveis
- * FICTÍCIOS só pra validar o layout. Para publicar um imóvel real:
+ * POLÍTICA DE DADOS (importante): PROPERTIES só pode conter imóveis reais,
+ * com foto e dados conferidos. NUNCA adicione um imóvel fictício/placeholder
+ * aqui pra "preencher" uma categoria — se uma categoria não tem nenhum
+ * imóvel real no momento, `getPropertiesByCategory` retorna uma lista vazia
+ * de propósito, e a página da categoria mostra um estado vazio (ver
+ * EmptyCategoryState) convidando a pessoa a falar com a Schay pelo
+ * WhatsApp em vez de exibir cards inventados. O campo `isExample` existe só
+ * por segurança (getPropertiesByCategory filtra qualquer imóvel marcado
+ * assim antes de chegar na tela) — não é o mecanismo normal de trabalho.
  *
- *   1. Duplique um objeto dentro de PROPERTIES (ou edite um existente).
- *   2. Preencha title, neighborhood, city, areaM2, bedroomsLabel e, se
- *      souber o valor, priceLabel (ex: 'R$ 329.000' — opcional, o card só
- *      mostra o preço quando esse campo existe).
- *   3. Troque isExample para false (isso remove o selo "Imóvel de exemplo").
- *   4. Importe a foto no topo deste arquivo e troque `image` de
- *      `{ kind: 'house', variant: 1 }` (ilustração) para
- *      `{ src: fotoImportada, alt: '...' }` (foto real).
+ * Para publicar um imóvel real:
+ *   1. Importe a foto no topo deste arquivo.
+ *   2. Adicione um objeto novo no fim da categoria correspondente dentro de
+ *      PROPERTIES, com: title, neighborhood, city, areaM2, areaType
+ *      ('lot' = terreno, 'built' = área construída/privativa, ou `null`
+ *      quando o tipo não foi confirmado no anúncio original — NUNCA
+ *      presuma), bedroomsLabel, code (código do anúncio na Innovar, sem o
+ *      qual a corretora não consegue identificar o imóvel pelo WhatsApp) e,
+ *      se souber, priceLabel (ex: 'R$ 329.000' — opcional, o card só mostra
+ *      o preço quando esse campo existe).
+ *   3. `image: { src: fotoImportada, alt: '...' }`.
  *
- * Enquanto os dados de um imóvel com foto real ainda não chegaram, use
- * 'Título a informar' / 'Bairro a informar' / 'Quartos a informar' e
- * `areaM2: null` (o card mostra "Metragem a informar" automaticamente) —
- * é o padrão usado nos imóveis de "Casas" abaixo. NUNCA reordene ou troque
- * o `id` de um imóvel já publicado: a ordem dos cards em cada página segue
- * a ordem deste array, e cada novo imóvel enviado depois entra no final
- * da lista da categoria, sem mexer nos anteriores.
+ * Enquanto algum dado ainda não chegou, use 'Título a informar' /
+ * 'Bairro a informar' / 'Quartos a informar', `areaM2: null` (o card mostra
+ * "Metragem a informar" automaticamente) ou `areaType: null` (o card mostra
+ * "tipo a confirmar" ao lado da metragem) — nunca invente o valor. NUNCA
+ * reordene ou troque o `id` de um imóvel já publicado: a ordem dos cards em
+ * cada página segue a ordem deste array, e cada novo imóvel enviado depois
+ * entra no final da lista da categoria, sem mexer nos anteriores.
  *
  * O botão "Saiba mais" de cada card monta a mensagem do WhatsApp
- * automaticamente a partir de `neighborhood` (bairro) e, quando existe,
- * `priceLabel` (preço) — nunca a partir de `title`, `areaM2` ou
- * `bedroomsLabel`. Isso é proposital: bairro + preço já identificam o
- * imóvel pra corretora, e a mensagem fica curta. Por isso é importante
- * manter `neighborhood` sempre preenchido com o bairro real assim que ele
- * chegar (e `priceLabel`, quando o valor for informado).
+ * automaticamente a partir de `code` (código do anúncio), `neighborhood`
+ * (bairro) e, quando existe, `priceLabel` (preço) — nunca a partir de
+ * `title`, `areaM2` ou `bedroomsLabel`. Isso é proposital: código + bairro
+ * + preço já identificam o imóvel pra corretora sem ambiguidade, e a
+ * mensagem fica curta. Por isso é importante manter `code` e `neighborhood`
+ * sempre preenchidos assim que chegarem (e `priceLabel`, quando o valor for
+ * informado).
  *
  * Nada mais no site precisa ser tocado: a Home e as 3 páginas de categoria
  * são geradas automaticamente a partir desta lista.
@@ -107,151 +118,108 @@ export const CATEGORIES = {
 
 export const CATEGORY_LIST = Object.values(CATEGORIES)
 
-// Imóveis — 3 por categoria. O primeiro de cada categoria é o que aparece
-// na vitrine da Home; todos os 3 aparecem na respectiva página de categoria.
+// Imóveis reais. Categorias sem nenhum imóvel aqui (hoje, apartamentos e
+// terrenos) mostram o estado vazio — ver EmptyCategoryState — em vez de
+// cards fictícios.
 export const PROPERTIES = [
-  // ---------------------------------------------------------------- Apartamentos
-  {
-    id: 'apartamento-01',
-    category: 'apartamentos',
-    title: 'Apartamento para viver bem',
-    neighborhood: 'Bairro a informar',
-    city: 'São Leopoldo / RS',
-    areaM2: 65,
-    bedroomsLabel: '2 quartos',
-    image: { kind: 'apartment', variant: 1 },
-    isExample: true,
-  },
-  {
-    id: 'apartamento-02',
-    category: 'apartamentos',
-    title: 'Apartamento com varanda gourmet',
-    neighborhood: 'Bairro a informar',
-    city: 'São Leopoldo / RS',
-    areaM2: 78,
-    bedroomsLabel: '3 quartos',
-    image: { kind: 'apartment', variant: 2 },
-    isExample: true,
-  },
-  {
-    id: 'apartamento-03',
-    category: 'apartamentos',
-    title: 'Apartamento compacto e bem localizado',
-    neighborhood: 'Bairro a informar',
-    city: 'São Leopoldo / RS',
-    areaM2: 48,
-    bedroomsLabel: '1 quarto',
-    image: { kind: 'apartment', variant: 3 },
-    isExample: true,
-  },
-
   // ----------------------------------------------------------------------- Casas
   // Imóveis reais (fotos + dados enviados pela Schay, extraídos de anúncios
   // da Innovar Imobiliária). Não reordene nem troque o `id` de uma entrada
   // já publicada — novos imóveis entram no fim da lista, como casa-06,
   // casa-07 etc.
   {
-    id: 'casa-03', // Card 3 · Código Innovar 9265
+    id: 'casa-03',
     category: 'casas',
     title: 'Casa térrea em ótima localização',
     neighborhood: 'Campestre',
     city: 'São Leopoldo / RS',
+    code: '9265',
     // Só a área do terreno estava visível no anúncio (450 m²); não havia
-    // área construída/privativa informada.
+    // área construída/privativa informada — por isso areaType: 'lot', pra
+    // o card deixar claro que não é a área construída da casa.
     areaM2: 450,
+    areaType: 'lot',
     bedroomsLabel: '2 quartos',
+    price: 636000,
     priceLabel: 'R$ 636.000',
-    image: { src: casasImovel03, alt: 'Foto do imóvel' },
+    image: { src: casasImovel03, alt: 'Casa térrea à venda no bairro Campestre, São Leopoldo' },
     isExample: false,
   },
   {
-    id: 'casa-04', // Card 4 · Código Innovar 36912
+    id: 'casa-04',
     category: 'casas',
     title: 'Casa aconchegante em Estância Velha',
     neighborhood: 'Campo Grande',
     city: 'Estância Velha / RS',
+    code: '36912',
     // Metragem não estava visível/legível na captura enviada — mantido
     // como "a informar" (não inventar dado), conforme pedido.
     areaM2: null,
+    areaType: null,
     bedroomsLabel: '2 quartos',
+    price: 295000,
     priceLabel: 'R$ 295.000',
-    image: { src: casasImovel04, alt: 'Foto do imóvel' },
+    image: { src: casasImovel04, alt: 'Casa à venda no bairro Campo Grande, Estância Velha' },
     isExample: false,
   },
   {
-    id: 'casa-05', // Card 5 · Código Innovar 46763
+    id: 'casa-05',
     category: 'casas',
     title: 'Casa com 3 quartos à venda',
     neighborhood: 'Cristo Rei',
     city: 'São Leopoldo / RS',
+    code: '46763',
+    // Tipo de área (terreno x construída) não foi confirmado no anúncio
+    // original — não presumir; o card mostra "tipo a confirmar".
     areaM2: 300.9,
+    areaType: null,
     bedroomsLabel: '3 quartos (1 suíte)',
+    price: 980000,
     priceLabel: 'R$ 980.000',
-    image: { src: casasImovel05, alt: 'Foto do imóvel' },
+    image: { src: casasImovel05, alt: 'Casa à venda no bairro Cristo Rei, São Leopoldo' },
     isExample: false,
   },
   {
-    id: 'casa-06', // Card 6 · Código Innovar 74350 (sobrado em construção)
+    id: 'casa-06',
     category: 'casas',
     title: 'Sobrado com 2 quartos à venda',
     neighborhood: 'Campestre',
     city: 'São Leopoldo / RS',
+    code: '74350', // sobrado em construção
     areaM2: 99,
+    areaType: null,
     bedroomsLabel: '2 quartos',
+    price: 580000,
     priceLabel: 'R$ 580.000',
-    image: { src: casasImovel06, alt: 'Foto do imóvel' },
+    image: { src: casasImovel06, alt: 'Sobrado à venda no bairro Campestre, São Leopoldo' },
     isExample: false,
   },
   {
-    id: 'casa-07', // Card 7 · Código Innovar 45917
+    id: 'casa-07',
     category: 'casas',
     title: 'Casa de alvenaria na São Borja',
     neighborhood: 'Fazenda São Borja',
     city: 'São Leopoldo / RS',
+    code: '45917',
     areaM2: 108,
+    areaType: null,
     bedroomsLabel: '2 quartos',
+    price: 421880,
     priceLabel: 'R$ 421.880',
-    image: { src: casasImovel07, alt: 'Foto do imóvel' },
+    image: { src: casasImovel07, alt: 'Casa à venda na Fazenda São Borja, São Leopoldo' },
     isExample: false,
-  },
-
-  // -------------------------------------------------------------------- Terrenos
-  {
-    id: 'terreno-01',
-    category: 'terrenos',
-    title: 'Um lugar para o seu projeto',
-    neighborhood: 'Bairro a informar',
-    city: 'São Leopoldo / RS',
-    areaM2: 300,
-    bedroomsLabel: 'Sem quartos (terreno)',
-    image: { kind: 'land', variant: 1 },
-    isExample: true,
-  },
-  {
-    id: 'terreno-02',
-    category: 'terrenos',
-    title: 'Terreno plano, pronto para construir',
-    neighborhood: 'Bairro a informar',
-    city: 'São Leopoldo / RS',
-    areaM2: 360,
-    bedroomsLabel: 'Sem quartos (terreno)',
-    image: { kind: 'land', variant: 2 },
-    isExample: true,
-  },
-  {
-    id: 'terreno-03',
-    category: 'terrenos',
-    title: 'Terreno em condomínio fechado',
-    neighborhood: 'Bairro a informar',
-    city: 'São Leopoldo / RS',
-    areaM2: 250,
-    bedroomsLabel: 'Sem quartos (terreno)',
-    image: { kind: 'land', variant: 3 },
-    isExample: true,
   },
 ]
 
-/** Retorna os imóveis de uma categoria (pela slug usada na URL/CATEGORIES). */
+/**
+ * Retorna os imóveis reais de uma categoria (pela slug usada na
+ * URL/CATEGORIES). Filtra `isExample` por segurança — mesmo que um imóvel
+ * fictício seja adicionado por engano, ele nunca chega à vitrine pública.
+ * Lista vazia é um resultado válido e esperado: a página da categoria
+ * mostra o estado vazio nesse caso, em vez de inventar conteúdo.
+ */
 export function getPropertiesByCategory(categorySlug) {
-  return PROPERTIES.filter((property) => property.category === categorySlug)
+  return PROPERTIES.filter(
+    (property) => property.category === categorySlug && !property.isExample,
+  )
 }

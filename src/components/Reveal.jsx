@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion'
+import { isPrerendered } from '../lib/prerender'
 
 const TAGS = {
   div: motion.div,
@@ -51,8 +52,19 @@ export default function Reveal({
         },
       }
 
-  const triggerProps =
-    mode === 'mount'
+  // mode="mount" é sempre conteúdo acima da dobra (hero, cabeçalho de
+  // categoria). Numa página pré-renderizada esse conteúdo já chegou
+  // visível no HTML puro — usar initial={false} evita que o primeiro
+  // mount do React esconda (opacity:0) e reanime algo que o visitante já
+  // está vendo, o que empurrava o LCP pra depois do React+Framer Motion
+  // terminarem de rodar (ver src/lib/prerender.js). Conteúdo abaixo da
+  // dobra (mode="inView", o padrão) mantém a animação normal ao rolar —
+  // isso não afeta o LCP e preserva a experiência de entrada no scroll.
+  const skipMountAnimation = mode === 'mount' && isPrerendered()
+
+  const triggerProps = skipMountAnimation
+    ? { initial: false, animate: 'visible' }
+    : mode === 'mount'
       ? { initial: 'hidden', animate: 'visible' }
       : {
           initial: 'hidden',

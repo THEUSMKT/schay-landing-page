@@ -1,8 +1,11 @@
 import { ArrowLeft } from 'lucide-react'
 import Cta from '../components/Cta'
 import Reveal from '../components/Reveal'
+import useDocumentTitle from '../hooks/useDocumentTitle'
 
 export default function NotFound() {
+  useDocumentTitle('Página não encontrada | Schay Corretora')
+
   return (
     <section className="flex min-h-[70vh] items-center bg-navy-950">
       <div className="mx-auto max-w-xl px-5 py-24 text-center sm:px-8">

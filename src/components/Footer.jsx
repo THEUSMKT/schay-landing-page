@@ -19,9 +19,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold tracking-[0.2em] text-white/45 uppercase">
+            {/* h2 (não h4): o rodapé é seu próprio landmark e aparece
+                depois de hierarquias que terminam em h1, h2 ou h3
+                dependendo da página — h2 nunca "pula" nível nesses casos,
+                só volta pra um nível mais raso, o que é sempre válido. */}
+            <h2 className="text-xs font-semibold tracking-[0.2em] text-white/45 uppercase">
               Navegação
-            </h4>
+            </h2>
             <ul className="mt-4 space-y-2.5 text-sm text-white/70">
               {NAV_LINKS.map((link) => (
                 <li key={link.href}>
@@ -37,9 +41,9 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold tracking-[0.2em] text-white/45 uppercase">
+            <h2 className="text-xs font-semibold tracking-[0.2em] text-white/45 uppercase">
               Contato
-            </h4>
+            </h2>
             <ul className="mt-4 space-y-3 text-sm text-white/70">
               <li>
                 <a

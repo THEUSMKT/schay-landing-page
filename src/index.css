@@ -54,6 +54,9 @@
   --color-amber-400: #f2bb5c;
   --color-amber-500: #eda638;
   --color-amber-600: #d98f22;
+  /* Só para texto pequeno sobre fundo claro (amber-600 dá 2.48:1 nesse
+     uso — abaixo do AA; amber-700 dá 5.1:1+). Ver ContactForm. */
+  --color-amber-700: #8f5f16;
 
   /* Verde WhatsApp */
   --color-whatsapp: #25d366;
@@ -67,8 +70,10 @@
     box-sizing: border-box;
   }
 
-  html {
-    scroll-behavior: smooth;
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 
   body {
@@ -120,5 +125,20 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+/* Rede de segurança para prefers-reduced-motion: cobre as transições/
+   animações puramente em CSS (hover, foco, o acordeão de dúvidas
+   frequentes) que não passam pelo Reveal nem checam useReducedMotion() no
+   JS. Fica fora de qualquer @layer de propósito, pra sempre vencer. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

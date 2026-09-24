@@ -3,19 +3,23 @@ import { ArrowLeft } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import SectionEyebrow from '../components/SectionEyebrow'
 import PropertyCard from '../components/PropertyCard'
+import EmptyCategoryState from '../components/EmptyCategoryState'
+import useDocumentTitle from '../hooks/useDocumentTitle'
 import { CATEGORIES, getPropertiesByCategory } from '../data/properties'
 
 /**
  * Página de listagem de uma categoria (/apartamentos, /casas,
  * /terrenos-e-oportunidades). Gera tudo a partir de src/data/properties.js —
- * nenhum imóvel fica "hardcoded" direto no JSX.
+ * nenhum imóvel fica "hardcoded" direto no JSX. Categoria sem nenhum imóvel
+ * real mostra EmptyCategoryState em vez de cards fictícios.
  */
 export default function CategoryPage({ categorySlug }) {
   const category = CATEGORIES[categorySlug]
   const properties = getPropertiesByCategory(categorySlug)
-  // Só mostra o aviso de "vitrine de exemplo" enquanto sobrar algum imóvel
-  // fictício na categoria — some sozinho assim que todos forem reais.
-  const hasExampleProperties = properties.some((property) => property.isExample)
+
+  useDocumentTitle(
+    category ? `${category.pageTitle} | Schay Corretora` : 'Schay Corretora',
+  )
 
   if (!category) {
     return <Navigate to="/" replace />
@@ -56,22 +60,26 @@ export default function CategoryPage({ categorySlug }) {
 
       <section className="bg-paper-100 py-16 sm:py-20">
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {properties.map((property, index) => (
-              <Reveal key={property.id} delay={index * 0.1}>
-                <PropertyCard property={property} className="h-full" />
+          {properties.length > 0 ? (
+            <>
+              {/* h2 entre o h1 da página e os h3 dos cards — sem isso a
+                  hierarquia de headings pulava de h1 direto pra h3. */}
+              <Reveal mode="mount" as="h2" className="font-display text-2xl font-semibold text-navy-950">
+                Imóveis confirmados
               </Reveal>
-            ))}
-          </div>
-
-          {hasExampleProperties ? (
-            <Reveal delay={0.2}>
-              <p className="mt-10 text-center font-display text-sm text-navy-500 italic">
-                Vitrine de exemplo: fotos e características ilustrativas. Consulte os imóveis
-                disponíveis com a Schay.
-              </p>
+              <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {properties.map((property, index) => (
+                  <Reveal key={property.id} delay={index * 0.1}>
+                    <PropertyCard property={property} className="h-full" />
+                  </Reveal>
+                ))}
+              </div>
+            </>
+          ) : (
+            <Reveal mode="mount">
+              <EmptyCategoryState category={category} />
             </Reveal>
-          ) : null}
+          )}
         </div>
       </section>
     </>

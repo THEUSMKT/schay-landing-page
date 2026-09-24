@@ -34,6 +34,13 @@ jobs:
       # não usam este workflow, então continuam servindo a partir de "/".
       - run: npm run build -- --base=/${{ github.event.repository.name }}/
 
+      # Baixa só o Chromium (não Firefox/WebKit) — é o único navegador que o
+      # script de prerender usa. Ver scripts/prerender.mjs pro porquê da
+      # pré-renderização existir.
+      - run: npx playwright install --with-deps chromium
+
+      - run: npm run prerender -- --base=/${{ github.event.repository.name }}/
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

@@ -1,16 +1,14 @@
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { MapPin, ChevronDown } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import SectionEyebrow from '../components/SectionEyebrow'
 import Cta from '../components/Cta'
 import { SITE, buildWhatsAppLink } from '../data/site'
 
-const INTEREST_OPTIONS = [
-  'Comprar um imóvel',
-  'Vender um imóvel',
-  'Alugar um imóvel',
-  'Ainda estou pesquisando',
-]
+// "Alugar um imóvel" fica de fora até esse serviço ser confirmado — ver
+// lista de pontos a confirmar entregue junto com esta revisão. Não incluir
+// serviços não confirmados aqui, mesmo como opção de interesse.
+const INTEREST_OPTIONS = ['Comprar um imóvel', 'Vender um imóvel', 'Ainda estou pesquisando']
 
 const INITIAL_FORM = { nome: '', interesse: '', mensagem: '' }
 
@@ -36,6 +34,7 @@ export default function ContactForm() {
   const [form, setForm] = useState(INITIAL_FORM)
   const [errors, setErrors] = useState({})
   const [sent, setSent] = useState(false)
+  const [popupBlocked, setPopupBlocked] = useState(false)
   const [lastWhatsAppHref, setLastWhatsAppHref] = useState('')
 
   function update(field) {
@@ -53,15 +52,19 @@ export default function ContactForm() {
 
     const whatsappHref = buildWhatsAppLink(buildContactWhatsAppMessage(form))
     // Aberto de forma síncrona, direto no clique, pra não ser bloqueado
-    // pelo navegador como pop-up (mesmo comportamento do "Saiba mais").
-    window.open(whatsappHref, '_blank', 'noopener,noreferrer')
+    // pelo navegador como pop-up (mesmo comportamento do "Saiba mais"). Se
+    // mesmo assim o navegador bloquear, `win` volta null/undefined — nesse
+    // caso a tela de confirmação troca o texto pra deixar claro que a
+    // pessoa precisa clicar no botão manualmente.
+    const win = window.open(whatsappHref, '_blank', 'noopener,noreferrer')
+    setPopupBlocked(!win)
     setLastWhatsAppHref(whatsappHref)
     setSent(true)
     setForm(INITIAL_FORM)
   }
 
   return (
-    <section id="contato" className="bg-paper-100 py-20 sm:py-28">
+    <section id="contato" className="scroll-mt-24 bg-paper-100 py-20 sm:py-28">
       <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
         <div>
           <Reveal>
@@ -106,11 +109,19 @@ export default function ContactForm() {
           <div className="my-6 h-px bg-navy-950/10" />
 
           {sent ? (
-            <div className="rounded-xl border border-accent-600/25 bg-accent-600/10 px-5 py-8 text-center">
-              <p className="font-display text-lg text-navy-950">Você será direcionado ao WhatsApp da Schay!</p>
+            <div
+              role="status"
+              className="rounded-xl border border-accent-600/25 bg-accent-600/10 px-5 py-8 text-center"
+            >
+              <p className="font-display text-lg text-navy-950">
+                {popupBlocked
+                  ? 'Quase lá — falta só abrir o WhatsApp'
+                  : 'Você será direcionado ao WhatsApp da Schay!'}
+              </p>
               <p className="mt-2 text-sm text-navy-600">
-                Abrimos uma nova aba com sua mensagem pronta — é só enviar por lá para continuar o
-                atendimento.
+                {popupBlocked
+                  ? 'Seu navegador bloqueou a abertura automática da nova aba. Sua mensagem já está pronta — use o botão abaixo para abrir o WhatsApp e enviá-la.'
+                  : 'Abrimos uma nova aba com sua mensagem pronta — nada foi enviado ainda: é só conferir e enviar por lá para continuar o atendimento.'}
               </p>
               <div className="mt-5 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
                 <Cta href={lastWhatsAppHref} target="_blank" rel="noopener noreferrer" variant="amber">
@@ -127,48 +138,62 @@ export default function ContactForm() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} noValidate className="grid gap-5 sm:grid-cols-2">
-              <Field label="Nome" error={errors.nome}>
-                <input
-                  type="text"
-                  value={form.nome}
-                  onChange={update('nome')}
-                  placeholder="Como podemos chamar você?"
-                  autoComplete="name"
-                  className={inputClass}
-                />
-              </Field>
-
-              <Field label="Interesse" error={errors.interesse}>
-                <div className="relative">
-                  <select
-                    value={form.interesse}
-                    onChange={update('interesse')}
-                    className={`${inputClass} appearance-none pr-10`}
-                  >
-                    <option value="" disabled>
-                      Selecione uma opção
-                    </option>
-                    {INTEREST_OPTIONS.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown
-                    className="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-navy-400"
-                    aria-hidden="true"
+              <Field id="contato-nome" label="Nome" error={errors.nome}>
+                {(fieldProps) => (
+                  <input
+                    type="text"
+                    value={form.nome}
+                    onChange={update('nome')}
+                    placeholder="Como podemos chamar você?"
+                    autoComplete="name"
+                    className={inputClass}
+                    {...fieldProps}
                   />
-                </div>
+                )}
               </Field>
 
-              <Field label="Sua mensagem" hint="(opcional)" className="sm:col-span-2">
-                <textarea
-                  value={form.mensagem}
-                  onChange={update('mensagem')}
-                  placeholder="Conte um pouco sobre o que você procura"
-                  rows={4}
-                  className={`${inputClass} resize-y`}
-                />
+              <Field id="contato-interesse" label="Interesse" error={errors.interesse}>
+                {(fieldProps) => (
+                  <div className="relative">
+                    <select
+                      value={form.interesse}
+                      onChange={update('interesse')}
+                      className={`${inputClass} appearance-none pr-10`}
+                      {...fieldProps}
+                    >
+                      <option value="" disabled>
+                        Selecione uma opção
+                      </option>
+                      {INTEREST_OPTIONS.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      className="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-navy-400"
+                      aria-hidden="true"
+                    />
+                  </div>
+                )}
+              </Field>
+
+              <Field
+                id="contato-mensagem"
+                label="Sua mensagem"
+                hint="(opcional)"
+                className="sm:col-span-2"
+              >
+                {(fieldProps) => (
+                  <textarea
+                    value={form.mensagem}
+                    onChange={update('mensagem')}
+                    placeholder="Conte um pouco sobre o que você procura"
+                    rows={4}
+                    className={`${inputClass} resize-y`}
+                    {...fieldProps}
+                  />
+                )}
               </Field>
 
               <div className="sm:col-span-2">
@@ -176,7 +201,9 @@ export default function ContactForm() {
                   Solicitar atendimento
                 </Cta>
                 <p className="mt-3 text-xs text-navy-500">
-                  Ao continuar, você será direcionado ao WhatsApp da Schay.
+                  Este formulário não envia nem registra sua mensagem diretamente — ao continuar,
+                  vamos abrir o WhatsApp em uma nova aba com o texto pronto, e o envio acontece
+                  por lá.
                 </p>
               </div>
             </form>
@@ -187,14 +214,32 @@ export default function ContactForm() {
   )
 }
 
-function Field({ label, hint, error, children, className = '' }) {
+/**
+ * `children` é uma função (fieldProps) => elemento, pra garantir que
+ * id/aria-invalid/aria-describedby caiam sempre no controle de formulário
+ * de verdade (input/select/textarea) — mesmo quando ele vem envolvido por
+ * um wrapper extra, como o <select> do campo "Interesse".
+ */
+function Field({ id, label, hint, error, children, className = '' }) {
+  const reactId = useId()
+  const fieldId = id || reactId
+  const errorId = `${fieldId}-error`
+
   return (
-    <label className={`flex flex-col gap-2 text-sm ${className}`}>
-      <span className="font-medium text-navy-800">
-        {label} {hint ? <span className="font-normal text-navy-400">{hint}</span> : null}
-      </span>
-      {children}
-      {error ? <span className="text-xs text-amber-600">{error}</span> : null}
-    </label>
+    <div className={`flex flex-col gap-2 text-sm ${className}`}>
+      <label htmlFor={fieldId} className="font-medium text-navy-800">
+        {label} {hint ? <span className="font-normal text-navy-500">{hint}</span> : null}
+      </label>
+      {children({
+        id: fieldId,
+        'aria-invalid': error ? true : undefined,
+        'aria-describedby': error ? errorId : undefined,
+      })}
+      {error ? (
+        <span id={errorId} role="alert" className="text-xs text-amber-700">
+          {error}
+        </span>
+      ) : null}
+    </div>
   )
 }

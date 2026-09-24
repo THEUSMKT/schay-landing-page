@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Pasta temporária criada e removida por scripts/prerender.mjs a cada
+# execução — só sobra aqui se o script for interrompido no meio.
+.prerender-stage
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
