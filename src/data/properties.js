@@ -77,12 +77,18 @@ import casasImovel04 from '../assets/images/imoveis/casas-04.webp'
 import casasImovel05 from '../assets/images/imoveis/casas-05.webp'
 import casasImovel06 from '../assets/images/imoveis/casas-06.webp'
 import casasImovel07 from '../assets/images/imoveis/casas-07.webp'
+import casasImovel08 from '../assets/images/imoveis/casas-08-lomba-grande.webp'
 
 // Fotos reais de "Terrenos e oportunidades" (fornecidas pela Schay), na
 // mesma ordem dos cards em /terrenos-e-oportunidades.
 import terrenosCasaComercial from '../assets/images/imoveis/terrenos-01-casa-comercial.webp'
 import terrenosSitio from '../assets/images/imoveis/terrenos-02-sitio.webp'
 import terrenosTerreno from '../assets/images/imoveis/terrenos-03-terreno.webp'
+
+// Fotos reais de "Apartamentos" (fornecidas pela Schay), na mesma ordem dos
+// cards em /apartamentos.
+import apartamentoPortoMunique from '../assets/images/imoveis/apartamentos-01-porto-munique.webp'
+import apartamentoKaspary from '../assets/images/imoveis/apartamentos-02-edificio-kaspary.webp'
 
 // Categorias disponíveis. `slug` define a rota (ex: /apartamentos).
 export const CATEGORIES = {
@@ -224,6 +230,29 @@ export const PROPERTIES = [
     image: { src: casasImovel07, alt: 'Casa à venda na Fazenda São Borja, São Leopoldo' },
     isExample: false,
   },
+  {
+    id: 'casa-08-sobrado-lomba-grande',
+    category: 'casas',
+    title: 'Sobrado moderno em Lomba Grande',
+    neighborhood: 'Lomba Grande',
+    city: 'Novo Hamburgo / RS',
+    code: '96604',
+    areas: [
+      { label: 'Área total', m2: 150 },
+      { label: 'Área do terreno', m2: 300 },
+    ],
+    bedrooms: 2,
+    suites: 2,
+    bathrooms: 4,
+    parkingSpaces: 2,
+    price: 990000,
+    priceLabel: 'R$ 990.000',
+    image: {
+      src: casasImovel08,
+      alt: 'Sobrado moderno de arquitetura contemporânea à venda no Residencial Mirante do Vale, bairro Lomba Grande, Novo Hamburgo',
+    },
+    isExample: false,
+  },
 
   // ------------------------------------------------ Terrenos e oportunidades
   // Esta categoria reúne tipos diferentes de imóvel, então cada um tem o seu
@@ -288,6 +317,48 @@ export const PROPERTIES = [
     image: {
       src: terrenosTerreno,
       alt: 'Terreno à venda na Fazenda São Borja, São Leopoldo, com horta cultivada, árvores ao fundo e vista para os morros',
+    },
+    isExample: false,
+  },
+
+  // ----------------------------------------------------------------- Apartamentos
+  // `code` não foi informado nos anúncios recebidos para estes dois imóveis
+  // — o card e a mensagem de WhatsApp já lidam com `code` ausente (não
+  // mostram o selo/prefixo). Peça o código Innovar de cada um pra Schay
+  // assim que possível e preencha aqui.
+  {
+    id: 'apartamento-01-porto-munique',
+    category: 'apartamentos',
+    title: 'Apartamento com 2 dormitórios no Porto Munique',
+    neighborhood: 'Condomínio Porto Munique',
+    city: 'São Leopoldo / RS',
+    areas: [{ label: 'Área (aproximada)', m2: 41 }],
+    bedrooms: 2,
+    parkingSpaces: 1,
+    price: 165000,
+    priceLabel: 'R$ 165.000 (comissão inclusa)',
+    image: {
+      src: apartamentoPortoMunique,
+      alt: 'Fachada do condomínio Porto Munique à venda em São Leopoldo, com guarita e céu azul com nuvens',
+    },
+    isExample: false,
+  },
+  {
+    id: 'apartamento-02-edificio-kaspary',
+    category: 'apartamentos',
+    // Desocupado (imediato pra mudança) — sem campo próprio no card, mas
+    // vale mencionar pra Schay no atendimento.
+    title: 'Apartamento térreo de frente no Edifício Kaspary',
+    neighborhood: 'Centro',
+    city: 'São Leopoldo / RS',
+    areas: [{ label: 'Área privativa', m2: 114.31 }],
+    bedrooms: 2,
+    suites: 1,
+    price: 392000,
+    priceLabel: 'R$ 392.000 (corretagem inclusa)',
+    image: {
+      src: apartamentoKaspary,
+      alt: 'Fachada do Edifício Kaspary à venda no Centro de São Leopoldo, na Rua José Bonifácio',
     },
     isExample: false,
   },
