@@ -97,7 +97,7 @@ const ROUTES = [
     path: '/terrenos-e-oportunidades',
     outFile: 'terrenos-e-oportunidades/index.html',
     description:
-      'Terrenos e oportunidades em São Leopoldo e região com a Schay Corretora. Para planejar o próximo passo do zero, com liberdade para construir.',
+      'Terrenos, sítios e oportunidades comerciais em São Leopoldo, Nova Petrópolis e região com a Schay Corretora.',
   },
 ]
 

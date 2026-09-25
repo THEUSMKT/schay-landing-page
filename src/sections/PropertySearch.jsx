@@ -16,6 +16,13 @@ const PRICE_BANDS = [
 
 const REAL_PROPERTIES = PROPERTIES.filter((property) => !property.isExample)
 
+// "nova petropolis" encontra "Nova Petrópolis", "boemios" encontra "Boêmios".
+const normalize = (text) =>
+  text
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+
 const selectClass =
   'w-full appearance-none rounded-xl border border-navy-950/15 bg-paper-50 px-4 py-3 pr-10 text-sm text-navy-900 outline-none transition-colors duration-200 focus:border-accent-600'
 
@@ -38,12 +45,12 @@ export default function PropertySearch() {
 
   const results = useMemo(() => {
     if (!touched) return null
-    const locationQuery = location.trim().toLowerCase()
+    const locationQuery = normalize(location.trim())
 
     return REAL_PROPERTIES.filter((property) => {
       if (type && property.category !== type) return false
       if (locationQuery) {
-        const haystack = `${property.neighborhood} ${property.city}`.toLowerCase()
+        const haystack = normalize(`${property.neighborhood} ${property.city}`)
         if (!haystack.includes(locationQuery)) return false
       }
       if (property.price != null && (property.price < band.min || property.price > band.max)) {
@@ -118,7 +125,7 @@ export default function PropertySearch() {
                   setLocation(event.target.value)
                   setTouched(true)
                 }}
-                placeholder="Ex: São Leopoldo, Campestre..."
+                placeholder="Ex: São Leopoldo, Nova Petrópolis, Campestre..."
                 className="w-full rounded-xl border border-navy-950/15 bg-paper-50 px-4 py-3 text-sm text-navy-900 placeholder:text-navy-400 outline-none transition-colors duration-200 focus:border-accent-600"
               />
             </label>

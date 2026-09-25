@@ -51,23 +51,22 @@ Todo o conteúdo dos imóveis (os 3 cards da Home e as 3 páginas de
 categoria) vem de **um único arquivo**: `src/data/properties.js`. Não é
 preciso mexer em nenhum componente visual para atualizar um imóvel.
 
-Os 9 imóveis cadastrados hoje são **exemplos fictícios**
-(`isExample: true`) só para validar o layout — é só isso que aparece no
-selo "Imóvel de exemplo" nos cards. Para publicar um imóvel real:
+`PROPERTIES` só contém imóveis reais — categoria sem nenhum imóvel mostra
+um estado vazio com convite para o WhatsApp, nunca cards inventados. Para
+publicar um imóvel real, siga o passo a passo no comentário do topo de
+`src/data/properties.js`. Em resumo:
 
-1. Abra `src/data/properties.js`.
-2. Duplique um objeto dentro de `PROPERTIES` (ou edite um existente) e
-   preencha `title`, `neighborhood`, `city`, `areaM2`, `bedroomsLabel` e
-   `priceLabel`.
-3. Troque `isExample` para `false` — o selo "Imóvel de exemplo" some.
-4. Para usar uma foto real (em vez da ilustração de placeholder), veja o
-   comentário no topo de `src/components/PropertyMedia.jsx`: basta importar
-   a imagem e trocar `image: { kind: 'house', variant: 1 }` por
-   `image: { src: fotoImportada }`.
+1. Converta a foto de capa para `.webp` em `src/assets/images/imoveis/` e
+   importe-a no topo de `src/data/properties.js`.
+2. Adicione um objeto no fim da categoria certa em `PROPERTIES`, com `id`
+   único, `code` (código Innovar), `title`, `neighborhood`, `city`,
+   `price` (número, usado pela busca) e `priceLabel` (texto exibido).
+3. Características: casas usam `areaM2` + `areaType` + `bedroomsLabel`;
+   outros tipos usam os campos opcionais `typeLabel`, `areas`,
+   `bedrooms`/`suites`, `rooms`, `bathrooms`, `parkingSpaces`,
+   `frontM`/`backM` — o card mostra só o que for informado.
 
-O card da Home de cada categoria é sempre o **primeiro imóvel cadastrado**
-dessa categoria em `PROPERTIES` — editar esse imóvel atualiza a Home e a
-página de categoria ao mesmo tempo, automaticamente.
+A página da categoria e a busca da Home são atualizadas automaticamente.
 
 ## Imagens de placeholder
 
