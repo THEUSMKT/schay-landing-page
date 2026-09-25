@@ -63,13 +63,13 @@ function buildSpecs(property) {
 export default function PropertyCard({ property, className = '' }) {
   const category = CATEGORIES[property.category]
   const typeLabel = property.typeLabel || category.tag
-  // Código + tipo + bairro + cidade (+ preço, quando existir): o suficiente
-  // pra corretora identificar o imóvel sem ambiguidade, com mensagem curta.
-  const codePrefix = property.code ? `[Cód. ${property.code}] ` : ''
+  // Tipo + bairro + cidade (+ preço, quando existir): o suficiente pra
+  // corretora identificar o imóvel sem ambiguidade, com mensagem curta.
+  // Por pedido da Schay, os imóveis não têm código exibido em lugar nenhum.
   const citySuffix = property.city ? `, em ${property.city}` : ''
   const priceSuffix = property.priceLabel ? `, no valor de ${property.priceLabel}` : ''
   const whatsappHref = buildWhatsAppLink(
-    `Olá! ${codePrefix}Gostaria de saber mais informações sobre este imóvel: ${typeLabel} no bairro ${property.neighborhood}${citySuffix}${priceSuffix}.`,
+    `Olá! Gostaria de saber mais informações sobre este imóvel: ${typeLabel} no bairro ${property.neighborhood}${citySuffix}${priceSuffix}.`,
   )
   // Cards de casas cadastrados no formato original (areaM2 + bedroomsLabel)
   // mantêm exatamente a apresentação de antes.
@@ -92,14 +92,7 @@ export default function PropertyCard({ property, className = '' }) {
       </div>
 
       <div className="flex flex-1 flex-col px-5 pt-7 pb-5">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="font-display text-xl font-semibold text-navy-950">{property.title}</h3>
-          {property.code ? (
-            <span className="mt-1 shrink-0 text-xs font-medium text-navy-400">
-              Cód. {property.code}
-            </span>
-          ) : null}
-        </div>
+        <h3 className="font-display text-xl font-semibold text-navy-950">{property.title}</h3>
 
         {property.priceLabel ? (
           <p className="mt-1 font-display text-lg font-semibold text-accent-600">
@@ -150,7 +143,7 @@ export default function PropertyCard({ property, className = '' }) {
             rel="noopener noreferrer"
             variant="amber"
             className="w-full"
-            aria-label={`Saiba mais pelo WhatsApp sobre ${property.title}${property.code ? ` (código ${property.code})` : ''}`}
+            aria-label={`Saiba mais pelo WhatsApp sobre ${property.title}`}
           >
             Saiba mais
           </Cta>

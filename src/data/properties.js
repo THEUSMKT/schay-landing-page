@@ -25,10 +25,10 @@
  *      PROPERTIES, com: title, neighborhood, city, areaM2, areaType
  *      ('lot' = terreno, 'built' = área construída/privativa, ou `null`
  *      quando o tipo não foi confirmado no anúncio original — NUNCA
- *      presuma), bedroomsLabel, code (código do anúncio na Innovar, sem o
- *      qual a corretora não consegue identificar o imóvel pelo WhatsApp) e,
- *      se souber, priceLabel (ex: 'R$ 329.000' — opcional, o card só mostra
- *      o preço quando esse campo existe).
+ *      presuma), bedroomsLabel e, se souber, priceLabel (ex: 'R$ 329.000' —
+ *      opcional, o card só mostra o preço quando esse campo existe).
+ *      Por pedido da Schay, os cards NÃO mostram código de anúncio — não
+ *      preencha `code` em nenhum imóvel novo.
  *   3. `image: { src: fotoImportada, alt: '...' }`.
  *
  * Imóveis que não são "casa com quartos" (ex: em Terrenos e oportunidades)
@@ -50,12 +50,11 @@
  * entra no final da lista da categoria, sem mexer nos anteriores.
  *
  * O botão "Saiba mais" de cada card monta a mensagem do WhatsApp
- * automaticamente a partir de `code` (código do anúncio), tipo (typeLabel
- * ou tag da categoria), `neighborhood`, `city` e, quando existe,
- * `priceLabel` — nunca a partir de título, metragens ou quartos, que só
- * deixariam a mensagem mais longa sem ajudar a identificar o imóvel. Por
- * isso é importante manter `code`, `neighborhood` e `city` sempre
- * preenchidos.
+ * automaticamente a partir do tipo (typeLabel ou tag da categoria),
+ * `neighborhood`, `city` e, quando existe, `priceLabel` — nunca a partir de
+ * título, metragens ou quartos, que só deixariam a mensagem mais longa sem
+ * ajudar a identificar o imóvel. Por isso é importante manter
+ * `neighborhood` e `city` sempre preenchidos.
  *
  * Nada mais no site precisa ser tocado: a Home e as 3 páginas de categoria
  * são geradas automaticamente a partir desta lista.
@@ -154,7 +153,6 @@ export const PROPERTIES = [
     title: 'Casa térrea em ótima localização',
     neighborhood: 'Campestre',
     city: 'São Leopoldo / RS',
-    code: '9265',
     // Só a área do terreno estava visível no anúncio (450 m²); não havia
     // área construída/privativa informada — por isso areaType: 'lot', pra
     // o card deixar claro que não é a área construída da casa.
@@ -172,7 +170,6 @@ export const PROPERTIES = [
     title: 'Casa aconchegante em Estância Velha',
     neighborhood: 'Campo Grande',
     city: 'Estância Velha / RS',
-    code: '36912',
     // Metragem não estava visível/legível na captura enviada — mantido
     // como "a informar" (não inventar dado), conforme pedido.
     areaM2: null,
@@ -189,7 +186,6 @@ export const PROPERTIES = [
     title: 'Casa com 3 quartos à venda',
     neighborhood: 'Cristo Rei',
     city: 'São Leopoldo / RS',
-    code: '46763',
     // Tipo de área (terreno x construída) não foi confirmado no anúncio
     // original — não presumir; o card mostra "tipo a confirmar".
     areaM2: 300.9,
@@ -206,7 +202,7 @@ export const PROPERTIES = [
     title: 'Sobrado com 2 quartos à venda',
     neighborhood: 'Campestre',
     city: 'São Leopoldo / RS',
-    code: '74350', // sobrado em construção
+    // sobrado em construção
     areaM2: 99,
     areaType: null,
     bedroomsLabel: '2 quartos',
@@ -221,7 +217,6 @@ export const PROPERTIES = [
     title: 'Casa de alvenaria na São Borja',
     neighborhood: 'Fazenda São Borja',
     city: 'São Leopoldo / RS',
-    code: '45917',
     areaM2: 108,
     areaType: null,
     bedroomsLabel: '2 quartos',
@@ -236,7 +231,6 @@ export const PROPERTIES = [
     title: 'Sobrado moderno em Lomba Grande',
     neighborhood: 'Lomba Grande',
     city: 'Novo Hamburgo / RS',
-    code: '96604',
     areas: [
       { label: 'Área total', m2: 150 },
       { label: 'Área do terreno', m2: 300 },
@@ -266,7 +260,6 @@ export const PROPERTIES = [
     title: 'Casa comercial com 3 salas à venda',
     neighborhood: 'Boêmios',
     city: 'Nova Petrópolis / RS',
-    code: '54680',
     areas: [
       { label: 'Área total', m2: 3988 },
       { label: 'Área privativa', m2: 521 },
@@ -289,7 +282,6 @@ export const PROPERTIES = [
     title: 'Sítio rural à venda no Campestre',
     neighborhood: 'Campestre',
     city: 'São Leopoldo / RS',
-    code: '13486',
     areas: [{ label: 'Área do terreno', m2: 1009 }],
     bedrooms: 3,
     suites: 2,
@@ -308,7 +300,6 @@ export const PROPERTIES = [
     title: 'Terreno na Fazenda São Borja',
     neighborhood: 'Fazenda São Borja',
     city: 'São Leopoldo / RS',
-    code: '9961',
     areas: [{ label: 'Área do terreno', m2: 360 }],
     frontM: 12,
     backM: 30,
@@ -322,10 +313,6 @@ export const PROPERTIES = [
   },
 
   // ----------------------------------------------------------------- Apartamentos
-  // `code` não foi informado nos anúncios recebidos para estes dois imóveis
-  // — o card e a mensagem de WhatsApp já lidam com `code` ausente (não
-  // mostram o selo/prefixo). Peça o código Innovar de cada um pra Schay
-  // assim que possível e preencha aqui.
   {
     id: 'apartamento-01-porto-munique',
     category: 'apartamentos',
@@ -336,7 +323,7 @@ export const PROPERTIES = [
     bedrooms: 2,
     parkingSpaces: 1,
     price: 165000,
-    priceLabel: 'R$ 165.000 (comissão inclusa)',
+    priceLabel: 'R$ 165.000',
     image: {
       src: apartamentoPortoMunique,
       alt: 'Fachada do condomínio Porto Munique à venda em São Leopoldo, com guarita e céu azul com nuvens',
@@ -355,7 +342,7 @@ export const PROPERTIES = [
     bedrooms: 2,
     suites: 1,
     price: 392000,
-    priceLabel: 'R$ 392.000 (corretagem inclusa)',
+    priceLabel: 'R$ 392.000',
     image: {
       src: apartamentoKaspary,
       alt: 'Fachada do Edifício Kaspary à venda no Centro de São Leopoldo, na Rua José Bonifácio',

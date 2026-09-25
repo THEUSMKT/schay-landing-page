@@ -59,8 +59,9 @@ publicar um imóvel real, siga o passo a passo no comentário do topo de
 1. Converta a foto de capa para `.webp` em `src/assets/images/imoveis/` e
    importe-a no topo de `src/data/properties.js`.
 2. Adicione um objeto no fim da categoria certa em `PROPERTIES`, com `id`
-   único, `code` (código Innovar), `title`, `neighborhood`, `city`,
-   `price` (número, usado pela busca) e `priceLabel` (texto exibido).
+   único, `title`, `neighborhood`, `city`, `price` (número, usado pela
+   busca) e `priceLabel` (texto exibido). Por pedido da Schay, os cards
+   não mostram código de anúncio — não preencha `code`.
 3. Características: casas usam `areaM2` + `areaType` + `bedroomsLabel`;
    outros tipos usam os campos opcionais `typeLabel`, `areas`,
    `bedrooms`/`suites`, `rooms`, `bathrooms`, `parkingSpaces`,
