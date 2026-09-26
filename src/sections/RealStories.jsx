@@ -4,7 +4,10 @@ import { SALES_STORIES } from '../data/stories'
 
 export default function RealStories() {
   return (
-    <section id="historias-reais" className="scroll-mt-24 bg-cream-100 py-20 sm:py-28">
+    <section
+      id="historias-reais"
+      className="scroll-mt-24 bg-linear-to-b from-cream-100 from-75% to-paper-100 pt-10 pb-20 sm:pt-14 sm:pb-28"
+    >
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal>
           <SectionEyebrow tone="dark">Vendas realizadas</SectionEyebrow>

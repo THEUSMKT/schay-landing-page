@@ -25,6 +25,12 @@ const TAGS = {
  * stagger de 60-120ms entre itens de um mesmo grupo (via `delay`). Quando
  * o visitante prefere menos movimento (prefers-reduced-motion), o
  * conteúdo aparece direto, sem deslocamento nem fade.
+ *
+ * Disparo: assim que o topo do bloco passa da faixa final da tela (8% de
+ * baixo), qualquer que seja a altura dele. Exigir uma fração do bloco
+ * visível (o antigo amount: 0.3) deixava blocos altos — formulário, cards
+ * empilhados no celular — invisíveis por várias rolagens, como um buraco
+ * na página enquanto a pessoa tentava ler.
  */
 export default function Reveal({
   as = 'div',
@@ -34,7 +40,8 @@ export default function Reveal({
   duration = 0.55,
   y = 16,
   once = true,
-  amount = 0.3,
+  amount = 'some',
+  margin = '0px 0px -8% 0px',
   mode = 'inView',
   ...rest
 }) {
@@ -69,7 +76,7 @@ export default function Reveal({
       : {
           initial: 'hidden',
           whileInView: 'visible',
-          viewport: { once, amount },
+          viewport: { once, amount, margin },
         }
 
   return (

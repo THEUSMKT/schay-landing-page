@@ -4,6 +4,7 @@ import Reveal from '../components/Reveal'
 import SectionEyebrow from '../components/SectionEyebrow'
 import PropertyCard from '../components/PropertyCard'
 import EmptyCategoryState from '../components/EmptyCategoryState'
+import SectionFade from '../components/SectionFade'
 import useDocumentTitle from '../hooks/useDocumentTitle'
 import { CATEGORIES, getPropertiesByCategory } from '../data/properties'
 
@@ -27,7 +28,7 @@ export default function CategoryPage({ categorySlug }) {
 
   return (
     <>
-      <section className="border-b border-navy-950/10 bg-paper-200 pt-14 pb-16 sm:pt-20 sm:pb-20">
+      <section className="bg-linear-to-b from-paper-200 from-55% to-paper-100 pt-14 pb-16 sm:pt-20 sm:pb-20">
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
           <Reveal mode="mount">
             <Link
@@ -58,7 +59,7 @@ export default function CategoryPage({ categorySlug }) {
         </div>
       </section>
 
-      <section className="bg-paper-100 py-16 sm:py-20">
+      <section className="bg-paper-100 pt-16 pb-10 sm:pt-20 sm:pb-12">
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
           {properties.length > 0 ? (
             <>
@@ -69,7 +70,10 @@ export default function CategoryPage({ categorySlug }) {
               </Reveal>
               <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {properties.map((property, index) => (
-                  <Reveal key={property.id} delay={index * 0.1}>
+                  // Atraso relativo à posição na linha (3 colunas no desktop):
+                  // no celular cada card entra sozinho, sem esperar pelos
+                  // anteriores da lista.
+                  <Reveal key={property.id} delay={(index % 3) * 0.08}>
                     <PropertyCard property={property} className="h-full" />
                   </Reveal>
                 ))}
@@ -82,6 +86,8 @@ export default function CategoryPage({ categorySlug }) {
           )}
         </div>
       </section>
+
+      <SectionFade variant="paper-to-navy" className="h-20 sm:h-28 lg:h-32" />
     </>
   )
 }

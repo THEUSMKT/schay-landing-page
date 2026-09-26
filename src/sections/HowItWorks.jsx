@@ -33,7 +33,7 @@ const STEPS = [
  */
 export default function HowItWorks() {
   return (
-    <section id="como-funciona" className="scroll-mt-24 bg-paper-50 py-20 sm:py-28">
+    <section id="como-funciona" className="scroll-mt-24 bg-paper-50 pt-20 pb-10 sm:pt-28 sm:pb-14">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal className="flex justify-center">
           <SectionEyebrow tone="dark">Como funciona</SectionEyebrow>
@@ -50,7 +50,7 @@ export default function HowItWorks() {
           {STEPS.map((step, index) => (
             <Reveal
               key={step.title}
-              delay={0.1 + index * 0.1}
+              delay={0.06 + index * 0.07}
               className="relative flex flex-col items-start gap-3 rounded-2xl border border-navy-950/10 bg-white px-5 py-7 shadow-soft"
             >
               <span

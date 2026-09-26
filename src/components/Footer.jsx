@@ -8,7 +8,10 @@ export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="border-t border-white/10 bg-navy-950">
+    // Sem borda no topo: cada página termina numa faixa que já escurece até
+    // o azul do rodapé (SectionFade), e a 404 já é azul — a linha só
+    // reintroduziria o corte seco.
+    <footer className="bg-navy-950">
       <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
         <Reveal className="grid gap-10 md:grid-cols-[1.3fr_1fr_1fr]">
           <div>

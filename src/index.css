@@ -128,6 +128,60 @@
   }
 }
 
+/* Passagens entre seções de fundos muito diferentes (ver SectionFade.jsx).
+   Paradas calculadas em OKLab com easing senoidal: a variação é zero nas
+   duas pontas, então a emenda com o fundo liso de cada seção vizinha não
+   forma degrau — e o meio passa pelos azuis da marca em vez de um cinza
+   lavado. A altura de cada faixa fica no JSX, conforme o contraste do par. */
+@layer components {
+  .fade-navy-to-white,
+  .fade-white-to-navy {
+    --fade-stops: #070d1a 0%, #080f1d 7.1%, #0e1626 14.3%, #162236 21.4%, #23334b 28.6%,
+      #344865 35.7%, #4a6182 42.9%, #647c9e 50%, #8298b8 57.1%, #a1b3ce 64.3%,
+      #bfccdf 71.4%, #d9e2ed 78.6%, #eef2f7 85.7%, #fbfcfd 92.9%, #ffffff 100%;
+  }
+  .fade-navy-to-white {
+    background-image: linear-gradient(to bottom, var(--fade-stops));
+  }
+  .fade-white-to-navy {
+    background-image: linear-gradient(to top, var(--fade-stops));
+  }
+  .fade-navy-to-cream {
+    background-image: linear-gradient(
+      to bottom,
+      #070d1a 0%, #090f1d 7.1%, #0e1625 14.3%, #172132 21.4%, #253144 28.6%,
+      #37445a 35.7%, #4c5b72 42.9%, #66758a 50%, #828fa1 57.1%, #9ea8b6 64.3%,
+      #bac0c7 71.4%, #d2d3d4 78.6%, #e4e2de 85.7%, #f0ece4 92.9%, #f4efe6 100%
+    );
+  }
+  .fade-paper-to-navy {
+    background-image: linear-gradient(
+      to bottom,
+      #f5f7fb 0%, #f1f4f9 7.1%, #e4eaf3 14.3%, #d0dbea 21.4%, #b7c6dc 28.6%,
+      #9aaecb 35.7%, #7c93b5 42.9%, #60789c 50%, #475e80 57.1%, #324664 64.3%,
+      #22324b 71.4%, #162136 78.6%, #0d1626 85.7%, #080f1d 92.9%, #070d1a 100%
+    );
+  }
+}
+
+/* Seta do indicador "role/deslize para explorar" (ScrollCue.jsx): só se
+   move quando o sistema não pede menos movimento. */
+@keyframes scroll-cue-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-cue-arrow {
+    animation: scroll-cue-bob 1.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+}
+
 /* Rede de segurança para prefers-reduced-motion: cobre as transições/
    animações puramente em CSS (hover, foco, o acordeão de dúvidas
    frequentes) que não passam pelo Reveal nem checam useReducedMotion() no

@@ -16,7 +16,7 @@ import fotoHistoria from '../assets/images/schay-historia.webp'
 export default function BrokerStory() {
   return (
     <section id="historia-da-corretora" className="relative scroll-mt-24 overflow-hidden bg-navy-950">
-      <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-16 lg:py-28">
+      <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-16 lg:py-14">
         <div className="mx-auto max-w-xl text-center lg:mx-0 lg:max-w-none lg:text-left">
           <Reveal className="flex justify-center lg:justify-start">
             <SectionEyebrow>Minha história</SectionEyebrow>

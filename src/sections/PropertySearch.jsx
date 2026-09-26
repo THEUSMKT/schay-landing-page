@@ -73,7 +73,12 @@ export default function PropertySearch() {
   )
 
   return (
-    <section className="bg-paper-50 py-14 sm:py-20">
+    // id="busca": o indicador de rolagem do hero (ScrollCue) some assim que
+    // esta seção entra na tela. Fundo termina no cinza-claro da vitrine.
+    <section
+      id="busca"
+      className="bg-linear-to-b from-paper-50 from-60% to-paper-100 pt-6 pb-14 sm:pt-8 sm:pb-20"
+    >
       <div className="mx-auto max-w-5xl px-5 sm:px-8">
         <Reveal className="flex justify-center">
           <SectionEyebrow tone="dark">Encontre seu próximo endereço</SectionEyebrow>

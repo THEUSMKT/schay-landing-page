@@ -64,7 +64,7 @@ export default function ContactForm() {
   }
 
   return (
-    <section id="contato" className="scroll-mt-24 bg-paper-100 py-20 sm:py-28">
+    <section id="contato" className="scroll-mt-24 bg-paper-100 pt-20 pb-10 sm:pt-28 sm:pb-14">
       <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
         <div>
           <Reveal>
