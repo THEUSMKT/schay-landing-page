@@ -88,6 +88,11 @@ import terrenosTerreno from '../assets/images/imoveis/terrenos-03-terreno.webp'
 // cards em /apartamentos.
 import apartamentoPortoMunique from '../assets/images/imoveis/apartamentos-01-porto-munique.webp'
 import apartamentoKaspary from '../assets/images/imoveis/apartamentos-02-edificio-kaspary.webp'
+// Estas duas fotos mantêm o formato de colagem (foto principal + 2
+// miniaturas) enviado pela Schay — só a borda branca externa foi
+// recortada, as 3 fotos continuam juntas numa imagem só.
+import apartamentoPortoBerlim from '../assets/images/imoveis/apartamentos-03-porto-berlim.webp'
+import apartamentoSantoAndre from '../assets/images/imoveis/apartamentos-04-santo-andre.webp'
 
 // Categorias disponíveis. `slug` define a rota (ex: /apartamentos).
 export const CATEGORIES = {
@@ -346,6 +351,42 @@ export const PROPERTIES = [
     image: {
       src: apartamentoKaspary,
       alt: 'Fachada do Edifício Kaspary à venda no Centro de São Leopoldo, na Rua José Bonifácio',
+    },
+    isExample: false,
+  },
+  {
+    id: 'apartamento-03-porto-berlim',
+    category: 'apartamentos',
+    title: 'Apartamento no 3º andar do Porto Berlim',
+    neighborhood: 'Santo André',
+    city: 'São Leopoldo / RS',
+    areas: [{ label: 'Área privativa', m2: 40 }],
+    bedrooms: 2,
+    bathrooms: 1,
+    parkingSpaces: 1,
+    price: 198000,
+    priceLabel: 'R$ 198.000',
+    image: {
+      src: apartamentoPortoBerlim,
+      alt: 'Fotos do apartamento à venda no Residencial Parque Porto Berlim, bairro Santo André, São Leopoldo: fachada do prédio com palmeiras, banheiro e sala vazia',
+    },
+    isExample: false,
+  },
+  {
+    id: 'apartamento-04-santo-andre',
+    category: 'apartamentos',
+    title: 'Apartamento com 2 dormitórios em Santo André',
+    neighborhood: 'Santo André',
+    city: 'São Leopoldo / RS',
+    areas: [{ label: 'Área privativa', m2: 40 }],
+    bedrooms: 2,
+    bathrooms: 1,
+    parkingSpaces: 1,
+    price: 240000,
+    priceLabel: 'R$ 240.000',
+    image: {
+      src: apartamentoSantoAndre,
+      alt: 'Fotos do apartamento à venda no bairro Santo André, São Leopoldo: sala de estar e jantar integradas, vistas de ângulos diferentes',
     },
     isExample: false,
   },
