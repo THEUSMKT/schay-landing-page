@@ -10,10 +10,8 @@ import {
 } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import CategoryBanner from './CategoryBanner'
+import useDragScroll from '../hooks/useDragScroll'
 
-// Abaixo disso o gesto do mouse conta como clique; acima, é arraste — e o
-// clique que o navegador dispara ao soltar é descartado.
-const DRAG_THRESHOLD_PX = 6
 // Soltou arrastando rápido (px/ms): vai pro card seguinte na direção do
 // gesto mesmo sem ter passado da metade do caminho.
 const FLICK_VELOCITY = 0.35
@@ -78,10 +76,7 @@ export default function CategoryCarousel({ categories }) {
   const activeRef = useRef(0)
   const targetRef = useRef(0)
   const animationRef = useRef(null)
-  const dragRef = useRef(null)
-  const suppressClickRef = useRef(false)
   const [active, setActive] = useState(0)
-  const [dragging, setDragging] = useState(false)
 
   // scrollLeft direto num MotionValue (em vez de useScroll, que a cada
   // evento também mede tamanho do contêiner/conteúdo): menos trabalho por
@@ -140,6 +135,18 @@ export default function CategoryCarousel({ categories }) {
     [count, reduceMotion],
   )
 
+  // --- Arraste com mouse (toque e caneta usam a rolagem nativa) -----------
+  const { dragging, isDragging, dragHandlers } = useDragScroll(trackRef, {
+    onPress: stopAnimation,
+    onRelease: ({ velocity }) => {
+      const p = trackRef.current.scrollLeft / stepRef.current
+      let target = Math.round(p)
+      if (velocity < -FLICK_VELOCITY) target = Math.ceil(p)
+      else if (velocity > FLICK_VELOCITY) target = Math.floor(p)
+      scrollToIndex(target)
+    },
+  })
+
   // Distância entre os centros de dois cards (muda por breakpoint) e
   // recentraliza o card ativo quando a largura muda.
   useLayoutEffect(() => {
@@ -154,13 +161,13 @@ export default function CategoryCarousel({ categories }) {
       if (stepPx <= 0) return
       stepRef.current = stepPx
       step.set(stepPx)
-      if (!animationRef.current && !dragRef.current) el.scrollLeft = activeRef.current * stepPx
+      if (!animationRef.current && !isDragging()) el.scrollLeft = activeRef.current * stepPx
     }
     measure()
     const observer = new ResizeObserver(measure)
     observer.observe(el)
     return () => observer.disconnect()
-  }, [step])
+  }, [step, isDragging])
 
   // Posição de rolagem -> MotionValue; e qualquer interação direta (toque,
   // roda, trackpad) interrompe uma animação de navegação em andamento — a
@@ -183,69 +190,6 @@ export default function CategoryCarousel({ categories }) {
   }, [scrollX, stopAnimation])
 
   const currentIndex = () => (animationRef.current ? targetRef.current : activeRef.current)
-
-  // --- Arraste com mouse (toque e caneta usam a rolagem nativa) -----------
-  const onPointerDown = (event) => {
-    stopAnimation()
-    if (event.pointerType !== 'mouse' || event.button !== 0) return
-    dragRef.current = {
-      id: event.pointerId,
-      startX: event.clientX,
-      startScroll: trackRef.current.scrollLeft,
-      lastX: event.clientX,
-      lastT: event.timeStamp,
-      velocity: 0,
-      moved: false,
-    }
-  }
-
-  const onPointerMove = (event) => {
-    const drag = dragRef.current
-    if (!drag || event.pointerId !== drag.id) return
-    const el = trackRef.current
-    const dx = event.clientX - drag.startX
-    if (!drag.moved) {
-      if (Math.abs(dx) < DRAG_THRESHOLD_PX) return
-      drag.moved = true
-      // Captura só a partir daqui: um clique simples continua chegando no link.
-      el.setPointerCapture(event.pointerId)
-      el.style.scrollSnapType = 'none'
-      setDragging(true)
-    }
-    el.scrollLeft = drag.startScroll - dx
-    const dt = event.timeStamp - drag.lastT
-    if (dt > 0) drag.velocity = 0.7 * ((event.clientX - drag.lastX) / dt) + 0.3 * drag.velocity
-    drag.lastX = event.clientX
-    drag.lastT = event.timeStamp
-  }
-
-  const endDrag = (event) => {
-    const drag = dragRef.current
-    if (!drag || event.pointerId !== drag.id) return
-    dragRef.current = null
-    if (!drag.moved) return
-
-    setDragging(false)
-    suppressClickRef.current = true
-    setTimeout(() => {
-      suppressClickRef.current = false
-    }, 0)
-
-    const p = trackRef.current.scrollLeft / stepRef.current
-    // Só vale como "arremesso" se o mouse ainda estava em movimento ao soltar.
-    const velocity = event.timeStamp - drag.lastT < 80 ? drag.velocity : 0
-    let target = Math.round(p)
-    if (velocity < -FLICK_VELOCITY) target = Math.ceil(p)
-    else if (velocity > FLICK_VELOCITY) target = Math.floor(p)
-    scrollToIndex(target)
-  }
-
-  const onClickCapture = (event) => {
-    if (!suppressClickRef.current) return
-    suppressClickRef.current = false
-    event.preventDefault()
-    event.stopPropagation()
-  }
 
   // --- Teclado -------------------------------------------------------------
   const onKeyDown = (event) => {
@@ -283,13 +227,7 @@ export default function CategoryCarousel({ categories }) {
         aria-roledescription="carrossel"
         aria-label="Categorias de imóveis — use as setas para navegar"
         data-dragging={dragging}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={endDrag}
-        onPointerCancel={endDrag}
-        onLostPointerCapture={endDrag}
-        onClickCapture={onClickCapture}
-        onDragStart={(event) => event.preventDefault()}
+        {...dragHandlers}
         onKeyDown={onKeyDown}
         className="peer/track relative flex snap-x snap-mandatory gap-(--gap) overflow-x-auto overscroll-x-contain pt-3 pb-12 select-none [scrollbar-width:none] focus-visible:outline-none pointer-fine:cursor-grab data-[dragging=true]:cursor-grabbing lg:[mask-image:linear-gradient(to_right,transparent,#000_7%,#000_93%,transparent)] [&::-webkit-scrollbar]:hidden"
       >

@@ -92,7 +92,7 @@ export default function PropertyCard({ property, className = '' }) {
       </div>
 
       <div className="flex flex-1 flex-col px-5 pt-7 pb-5">
-        <h3 className="font-display text-xl font-semibold text-navy-950">{property.title}</h3>
+        <h3 className="font-display text-xl font-semibold text-balance text-navy-950">{property.title}</h3>
 
         {property.priceLabel ? (
           <p className="mt-1 font-display text-lg font-semibold text-accent-600">
@@ -144,6 +144,7 @@ export default function PropertyCard({ property, className = '' }) {
             variant="amber"
             className="w-full"
             aria-label={`Saiba mais pelo WhatsApp sobre ${property.title}`}
+            data-fab-avoid
           >
             Saiba mais
           </Cta>

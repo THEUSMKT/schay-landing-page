@@ -2,7 +2,7 @@ import { Navigate, Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import SectionEyebrow from '../components/SectionEyebrow'
-import PropertyCard from '../components/PropertyCard'
+import PropertyCarousel from '../components/PropertyCarousel'
 import EmptyCategoryState from '../components/EmptyCategoryState'
 import SectionFade from '../components/SectionFade'
 import useDocumentTitle from '../hooks/useDocumentTitle'
@@ -59,26 +59,30 @@ export default function CategoryPage({ categorySlug }) {
         </div>
       </section>
 
-      <section className="bg-paper-100 pt-16 pb-10 sm:pt-20 sm:pb-12">
+      {/* Com imóveis, a folga de baixo vem da própria faixa do carrossel
+          (espaço pra sombra dos cards). */}
+      <section
+        className={`bg-paper-100 pt-16 sm:pt-20 ${properties.length > 0 ? '' : 'pb-10 sm:pb-12'}`}
+      >
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
           {properties.length > 0 ? (
-            <>
-              {/* h2 entre o h1 da página e os h3 dos cards — sem isso a
-                  hierarquia de headings pulava de h1 direto pra h3. */}
-              <Reveal mode="mount" as="h2" className="font-display text-2xl font-semibold text-navy-950">
-                Imóveis confirmados
-              </Reveal>
-              <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {properties.map((property, index) => (
-                  // Atraso relativo à posição na linha (3 colunas no desktop):
-                  // no celular cada card entra sozinho, sem esperar pelos
-                  // anteriores da lista.
-                  <Reveal key={property.id} delay={(index % 3) * 0.08}>
-                    <PropertyCard property={property} className="h-full" />
-                  </Reveal>
-                ))}
-              </div>
-            </>
+            // Uma fileira só, deslizando para o lado (ver PropertyCarousel).
+            <PropertyCarousel
+              properties={properties}
+              headingId="imoveis-da-categoria"
+              heading={
+                // h2 entre o h1 da página e os h3 dos cards — sem isso a
+                // hierarquia de headings pulava de h1 direto pra h3.
+                <Reveal
+                  mode="mount"
+                  as="h2"
+                  id="imoveis-da-categoria"
+                  className="font-display text-2xl font-semibold text-navy-950"
+                >
+                  Imóveis confirmados
+                </Reveal>
+              }
+            />
           ) : (
             <Reveal mode="mount">
               <EmptyCategoryState category={category} />
