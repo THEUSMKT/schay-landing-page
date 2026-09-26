@@ -76,21 +76,23 @@ import casasImovel04 from '../assets/images/imoveis/casas-04.webp'
 import casasImovel05 from '../assets/images/imoveis/casas-05.webp'
 import casasImovel06 from '../assets/images/imoveis/casas-06.webp'
 import casasImovel07 from '../assets/images/imoveis/casas-07.webp'
+// Colagem (foto principal + 2 miniaturas) enviada pela Schay — só a borda
+// branca externa foi recortada, as 3 fotos continuam juntas numa imagem só.
 import casasImovel08 from '../assets/images/imoveis/casas-08-lomba-grande.webp'
 
 // Fotos reais de "Terrenos e oportunidades" (fornecidas pela Schay), na
-// mesma ordem dos cards em /terrenos-e-oportunidades.
+// mesma ordem dos cards em /terrenos-e-oportunidades. A da casa comercial é
+// uma colagem de 3 fotos, só sem a borda branca externa (como a do sobrado).
 import terrenosCasaComercial from '../assets/images/imoveis/terrenos-01-casa-comercial.webp'
 import terrenosSitio from '../assets/images/imoveis/terrenos-02-sitio.webp'
 import terrenosTerreno from '../assets/images/imoveis/terrenos-03-terreno.webp'
 
 // Fotos reais de "Apartamentos" (fornecidas pela Schay), na mesma ordem dos
-// cards em /apartamentos.
+// cards em /apartamentos. Todas mantêm o formato de colagem (foto principal
+// + 2 miniaturas) enviado pela Schay — só a borda branca externa foi
+// recortada, as 3 fotos continuam juntas numa imagem só.
 import apartamentoPortoMunique from '../assets/images/imoveis/apartamentos-01-porto-munique.webp'
 import apartamentoKaspary from '../assets/images/imoveis/apartamentos-02-edificio-kaspary.webp'
-// Estas duas fotos mantêm o formato de colagem (foto principal + 2
-// miniaturas) enviado pela Schay — só a borda branca externa foi
-// recortada, as 3 fotos continuam juntas numa imagem só.
 import apartamentoPortoBerlim from '../assets/images/imoveis/apartamentos-03-porto-berlim.webp'
 import apartamentoSantoAndre from '../assets/images/imoveis/apartamentos-04-santo-andre.webp'
 
@@ -248,7 +250,7 @@ export const PROPERTIES = [
     priceLabel: 'R$ 990.000',
     image: {
       src: casasImovel08,
-      alt: 'Sobrado moderno de arquitetura contemporânea à venda no Residencial Mirante do Vale, bairro Lomba Grande, Novo Hamburgo',
+      alt: 'Fotos do sobrado moderno à venda no Residencial Mirante do Vale, bairro Lomba Grande, Novo Hamburgo: fachada de arquitetura contemporânea, sala de estar com lareira e escada com guarda-corpo de vidro, e vista aérea do pátio com piscina',
     },
     isExample: false,
   },
@@ -276,7 +278,7 @@ export const PROPERTIES = [
     priceLabel: 'R$ 5.100.000',
     image: {
       src: terrenosCasaComercial,
-      alt: 'Casa comercial amarela de estilo colonial à venda no bairro Boêmios, Nova Petrópolis, fotografada ao anoitecer, com vistas aéreas do terreno em destaque',
+      alt: 'Fotos da casa comercial amarela de estilo colonial à venda no bairro Boêmios, Nova Petrópolis: a casa fotografada ao anoitecer e duas vistas aéreas do terreno, com o lago e o contorno da área em destaque',
     },
     isExample: false,
   },
@@ -331,7 +333,7 @@ export const PROPERTIES = [
     priceLabel: 'R$ 165.000',
     image: {
       src: apartamentoPortoMunique,
-      alt: 'Fachada do condomínio Porto Munique à venda em São Leopoldo, com guarita e céu azul com nuvens',
+      alt: 'Fotos do apartamento à venda no condomínio Porto Munique, São Leopoldo: entrada do condomínio com guarita e céu azul com nuvens, sala com piso laminado e banheiro',
     },
     isExample: false,
   },
@@ -350,7 +352,7 @@ export const PROPERTIES = [
     priceLabel: 'R$ 392.000',
     image: {
       src: apartamentoKaspary,
-      alt: 'Fachada do Edifício Kaspary à venda no Centro de São Leopoldo, na Rua José Bonifácio',
+      alt: 'Fotos do apartamento à venda no Edifício Kaspary, na Rua José Bonifácio, Centro de São Leopoldo: fachada do prédio, banheiro com box de vidro e sala ampla',
     },
     isExample: false,
   },
