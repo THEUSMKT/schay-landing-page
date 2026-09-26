@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { SlidersHorizontal } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import SectionEyebrow from '../components/SectionEyebrow'
-import PropertyCard from '../components/PropertyCard'
+import PropertyCarousel from '../components/PropertyCarousel'
 import EmptyCategoryState from '../components/EmptyCategoryState'
 import { CATEGORIES, CATEGORY_LIST, PROPERTIES } from '../data/properties'
 import { buildWhatsAppLink } from '../data/site'
@@ -165,10 +165,26 @@ export default function PropertySearch() {
               Ajuste os filtros acima para ver imóveis reais disponíveis com esse perfil.
             </p>
           ) : results.length > 0 ? (
-            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
-              {results.map((property) => (
-                <PropertyCard key={property.id} property={property} />
-              ))}
+            // Mesma fileira deslizante das páginas de categoria; a cada
+            // mudança de filtro ela volta ao primeiro imóvel e o contador
+            // acompanha o novo total.
+            <div className="mt-8">
+              <PropertyCarousel
+                layout="panel"
+                properties={results}
+                headingId="resultados-da-busca"
+                heading={
+                  <p
+                    id="resultados-da-busca"
+                    aria-live="polite"
+                    className="font-display text-lg font-semibold text-navy-950"
+                  >
+                    {results.length === 1
+                      ? '1 imóvel encontrado'
+                      : `${results.length} imóveis encontrados`}
+                  </p>
+                }
+              />
             </div>
           ) : (
             <div className="mt-8" aria-live="polite">

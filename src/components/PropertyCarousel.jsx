@@ -13,6 +13,23 @@ const SCROLL_TRANSITION = { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value))
 const pad2 = (n) => String(n).padStart(2, '0')
 
+// Geometria da faixa em cada lugar onde o carrossel aparece. Os
+// espaçadores das pontas (--edge) + o gap formam a margem lateral
+// (--gutter), e o scroll-padding faz o encaixe respeitar essa margem; o
+// card ocupa 90% da largura útil no celular, 2 cards + a ponta do
+// terceiro do sm ao md e 3 cards inteiros do lg em diante.
+const LAYOUTS = {
+  // Páginas de categoria: de borda a borda da tela até o md (a ponta do
+  // próximo card chega até a beira); no lg, 24px além do contêiner de cada
+  // lado — espaço pra sombra/elevação do hover não ser cortada, sem mostrar
+  // pedaço do card seguinte. pb-12: folga pra sombra dos cards.
+  page: 'pb-12 -mx-5 [--card-w:calc((100%_-_40px)_*_0.9)] [--edge:8px] [--gap:12px] [--gutter:20px] sm:-mx-8 sm:[--card-w:calc((100%_-_80px)_/_2_-_20px)] sm:[--edge:16px] sm:[--gap:16px] sm:[--gutter:32px] lg:-mx-6 lg:[--card-w:calc((100%_-_96px)_/_3)] lg:[--edge:0px] lg:[--gap:24px] lg:[--gutter:24px]',
+  // Dentro do painel branco da busca (p-5 / sm:p-7): de borda a borda do
+  // painel, com a margem igual ao respiro dele. A folga de baixo invade o
+  // respiro do painel (-mb), pra não sobrar espaço demais sob os cards.
+  panel: 'pb-8 -mx-5 -mb-5 [--card-w:calc((100%_-_40px)_*_0.9)] [--edge:8px] [--gap:12px] [--gutter:20px] sm:-mx-7 sm:-mb-7 sm:[--card-w:calc((100%_-_72px)_/_2_-_20px)] sm:[--edge:12px] sm:[--gap:16px] sm:[--gutter:28px] lg:[--card-w:calc((100%_-_112px)_/_3)] lg:[--edge:0px] lg:[--gap:28px]',
+}
+
 // Quantos cards cabem inteiros por tela (ver as larguras na faixa, abaixo):
 // 1 no celular, 2 do sm ao md, 3 do lg em diante. Com isso dá pra saber só
 // com CSS — já certo no HTML pré-renderizado, sem esperar o JS medir nada —
@@ -42,18 +59,19 @@ function ArrowButton({ label, disabled, onClick, children }) {
 }
 
 /**
- * Listagem de imóveis das páginas de categoria como carrossel horizontal:
- * uma fileira só, com a rolagem nativa do navegador e scroll-snap (cada
- * card encaixa alinhado à esquerda). No celular, 1 card por vez (90% da
- * largura útil) com a ponta do próximo aparecendo; do sm ao md, 2 cards e
- * a ponta do terceiro; do lg em diante, 3 cards inteiros.
+ * Listagem de imóveis como carrossel horizontal — páginas de categoria
+ * (layout "page") e resultados da busca da Home (layout "panel"): uma
+ * fileira só, com a rolagem nativa do navegador e scroll-snap (cada card
+ * encaixa alinhado à esquerda). No celular, 1 card por vez (90% da largura
+ * útil) com a ponta do próximo aparecendo; do sm ao md, 2 cards e a ponta
+ * do terceiro; do lg em diante, 3 cards inteiros.
  *
  * Por cima da rolagem nativa: setas (mouse/trackpad), arraste com o mouse
  * que não abre o imóvel por engano, ←/→ do teclado com foco em qualquer
  * ponto do carrossel e o contador do primeiro card visível ("01 de 06").
  * Sem avanço automático e sem repetição infinita.
  */
-export default function PropertyCarousel({ properties, heading, headingId }) {
+export default function PropertyCarousel({ properties, heading, headingId, layout = 'page' }) {
   const count = properties.length
   const reduceMotion = useReducedMotion()
   const trackRef = useRef(null)
@@ -287,19 +305,14 @@ export default function PropertyCarousel({ properties, heading, headingId }) {
           </p>
         ) : null}
 
-        {/* Faixa: de borda a borda da tela até o md (a ponta do próximo card
-            chega até a beira); no lg, 24px além do contêiner de cada lado —
-            espaço pra sombra/elevação do hover não ser cortada, sem mostrar
-            pedaço do card seguinte. Os espaçadores das pontas + o gap
-            formam a margem lateral (--gutter), e o scroll-padding faz o
-            encaixe respeitar essa margem; pt-3/pb-12 são a folga vertical
-            pra elevação e sombra dos cards. */}
+        {/* Faixa (geometria em LAYOUTS); pt-3 é a folga pra elevação do
+            card no hover não ser cortada. */}
         <div
           ref={trackRef}
           data-dragging={dragging}
           data-fab-clip
           {...dragHandlers}
-          className="-mx-5 mt-3 flex snap-x snap-mandatory scroll-px-(--gutter) gap-(--gap) overflow-x-auto overscroll-x-contain pt-3 pb-12 [--card-w:calc((100%_-_40px)_*_0.9)] [--edge:8px] [--gap:12px] [--gutter:20px] [scrollbar-width:none] pointer-fine:cursor-grab data-[dragging=true]:cursor-grabbing data-[dragging=true]:select-none sm:-mx-8 sm:[--card-w:calc((100%_-_80px)_/_2_-_20px)] sm:[--edge:16px] sm:[--gap:16px] sm:[--gutter:32px] lg:-mx-6 lg:[--card-w:calc((100%_-_96px)_/_3)] lg:[--edge:0px] lg:[--gap:24px] lg:[--gutter:24px] [&::-webkit-scrollbar]:hidden"
+          className={`mt-3 flex snap-x snap-mandatory scroll-px-(--gutter) gap-(--gap) overflow-x-auto overscroll-x-contain pt-3 [scrollbar-width:none] pointer-fine:cursor-grab data-[dragging=true]:cursor-grabbing data-[dragging=true]:select-none [&::-webkit-scrollbar]:hidden ${LAYOUTS[layout]}`}
         >
           <div aria-hidden="true" className="w-(--edge) shrink-0" />
           {properties.map((property, i) => (
