@@ -1,6 +1,6 @@
 import Reveal from '../components/Reveal'
 import SectionEyebrow from '../components/SectionEyebrow'
-import CategoryBanner from '../components/CategoryBanner'
+import CategoryCarousel from '../components/CategoryCarousel'
 import { CATEGORY_LIST } from '../data/properties'
 
 export default function PropertiesShowcase() {
@@ -30,17 +30,18 @@ export default function PropertiesShowcase() {
             Casas, apartamentos e terrenos para diferentes planos de vida.
           </Reveal>
         </div>
+      </div>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {CATEGORY_LIST.map((category, index) => (
-            <Reveal key={category.slug} delay={index * 0.1}>
-              <CategoryBanner category={category} className="h-full" />
-            </Reveal>
-          ))}
-        </div>
+      {/* Fora do contêiner com padding: no celular e no tablet a faixa vai
+          de borda a borda da tela, pra "espiada" do próximo card chegar até
+          a beira. Ordem: Apartamentos → Casas → Terrenos e oportunidades. */}
+      <Reveal delay={0.12} className="mt-8 sm:mt-10">
+        <CategoryCarousel categories={CATEGORY_LIST} />
+      </Reveal>
 
+      <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal delay={0.2}>
-          <p className="mt-8 text-center font-display text-sm text-navy-500 italic">
+          <p className="mt-6 text-center font-display text-sm text-navy-500 italic">
             Fotos representativas de cada categoria — consulte os imóveis disponíveis com a
             Schay.
           </p>

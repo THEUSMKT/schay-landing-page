@@ -7,6 +7,12 @@ import { SCENE_BY_KIND } from './illustrations'
  * categoria + título + CTA. O card inteiro é clicável e leva para a página
  * da categoria (/apartamentos, /casas, /terrenos-e-oportunidades) — não
  * representa mais um imóvel específico (sem m², quartos, bairro etc.).
+ *
+ * Proporção e sombra vêm de quem usa (o carrossel da Vitrine muda a
+ * proporção por tamanho de tela e controla a profundidade). draggable=false
+ * evita o "fantasma" de arrastar link/imagem do navegador quando a pessoa
+ * arrasta o carrossel com o mouse; o cursor herda o "grab" do carrossel e
+ * vira mãozinha só sobre o botão.
  */
 export default function CategoryBanner({ category, className = '' }) {
   const Scene = SCENE_BY_KIND[category.kind]
@@ -14,8 +20,9 @@ export default function CategoryBanner({ category, className = '' }) {
   return (
     <Link
       to={category.path}
+      draggable={false}
       aria-label={`${category.ctaLabel} — ver imóveis desta categoria`}
-      className={`group relative flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-2xl border border-navy-950/10 shadow-card transition-transform duration-300 hover:-translate-y-1 ${className}`}
+      className={`group relative flex cursor-[inherit] flex-col justify-end overflow-hidden rounded-2xl border border-navy-950/10 transition-transform duration-300 hover:-translate-y-1 ${className}`}
     >
       <div className="absolute inset-0 overflow-hidden">
         {category.bannerImage ? (
@@ -25,6 +32,9 @@ export default function CategoryBanner({ category, className = '' }) {
           <img
             src={category.bannerImage}
             alt=""
+            draggable={false}
+            loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : Scene ? (
@@ -38,11 +48,11 @@ export default function CategoryBanner({ category, className = '' }) {
         {category.tag}
       </span>
 
-      <div className="relative flex flex-col gap-4 p-6">
-        <h3 className="text-balance font-display text-2xl font-semibold text-white">
+      <div className="relative flex flex-col gap-4 p-6 lg:p-8">
+        <h3 className="text-balance font-display text-2xl font-semibold text-white lg:text-3xl">
           {category.bannerTitle}
         </h3>
-        <span className="inline-flex w-fit items-center gap-2 rounded-full bg-amber-500 px-5 py-2.5 text-sm font-semibold text-navy-950 transition-colors duration-200 group-hover:bg-amber-400">
+        <span className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-full bg-amber-500 px-5 py-2.5 text-sm font-semibold text-navy-950 transition-colors duration-200 group-hover:bg-amber-400">
           {category.ctaLabel}
           <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
         </span>
