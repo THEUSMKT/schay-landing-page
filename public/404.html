@@ -10,7 +10,10 @@
       // para o index.html, que devolve a rota original (ver script equivalente
       // em index.html). Não tem efeito em hosts com rewrite de verdade
       // (Netlify/Vercel), que nunca chegam a servir este arquivo.
-      var pathSegmentsToKeep = 1 // /schay-landing-page/
+      // Quantos segmentos do caminho são a "pasta" do site: 1 no endereço
+      // do GitHub (theusmkt.github.io/schay-landing-page/), 0 no domínio
+      // próprio (schaycorretora.com.br/), onde o site fica na raiz.
+      var pathSegmentsToKeep = window.location.hostname.endsWith('.github.io') ? 1 : 0
 
       var l = window.location
       l.replace(

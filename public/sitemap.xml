@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- No GitHub Pages este arquivo é gerado de novo no deploy, com o endereço
+     em que o site está publicado (scripts/prerender.mjs). -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://theusmkt.github.io/schay-landing-page/</loc>
+    <loc>https://schaycorretora.com.br/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://theusmkt.github.io/schay-landing-page/casas</loc>
+    <loc>https://schaycorretora.com.br/casas</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://theusmkt.github.io/schay-landing-page/apartamentos</loc>
+    <loc>https://schaycorretora.com.br/apartamentos</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://theusmkt.github.io/schay-landing-page/terrenos-e-oportunidades</loc>
+    <loc>https://schaycorretora.com.br/terrenos-e-oportunidades</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>

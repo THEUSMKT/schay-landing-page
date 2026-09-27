@@ -29,17 +29,27 @@ jobs:
 
       - run: npm ci
 
-      # --base precisa bater com o nome do repositório, já que o GitHub
-      # Pages serve um "Project Pages" em /<repositorio>/. Netlify e Vercel
-      # não usam este workflow, então continuam servindo a partir de "/".
-      - run: npm run build -- --base=/${{ github.event.repository.name }}/
+      # Onde o GitHub Pages serve o site, lido da própria configuração do
+      # Pages: sem domínio próprio, é o "Project Pages" em
+      # theusmkt.github.io/<repositorio>/ (base_path "/schay-landing-page");
+      # com o domínio próprio (schaycorretora.com.br) configurado em
+      # Settings → Pages, é a raiz (base_path ""). O build se ajusta sozinho
+      # às duas situações — depois de trocar o domínio no Pages, basta
+      # publicar de novo (Actions → "Deploy to GitHub Pages" → Run workflow).
+      # Netlify e Vercel não usam este workflow e servem sempre da raiz.
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - run: npm run build -- --base=${{ steps.pages.outputs.base_path }}/
 
       # Baixa só o Chromium (não Firefox/WebKit) — é o único navegador que o
       # script de prerender usa. Ver scripts/prerender.mjs pro porquê da
       # pré-renderização existir.
       - run: npx playwright install --with-deps chromium
 
-      - run: npm run prerender -- --base=/${{ github.event.repository.name }}/
+      # --site-url: endereço público usado no canonical, nas tags de
+      # compartilhamento, no JSON-LD, no sitemap.xml e no robots.txt.
+      - run: npm run prerender -- --base=${{ steps.pages.outputs.base_path }}/ --site-url=${{ steps.pages.outputs.base_url }}
 
       - uses: actions/upload-pages-artifact@v3
         with:

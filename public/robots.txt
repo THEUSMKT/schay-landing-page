@@ -1,4 +1,6 @@
+# No GitHub Pages este arquivo é gerado de novo no deploy, com o endereço
+# em que o site está publicado (scripts/prerender.mjs).
 User-agent: *
 Allow: /
 
-Sitemap: https://theusmkt.github.io/schay-landing-page/sitemap.xml
+Sitemap: https://schaycorretora.com.br/sitemap.xml

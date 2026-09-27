@@ -109,6 +109,37 @@ O projeto já sai pronto para os hosts estáticos mais comuns — o build
   automaticamente em qualquer host compatível com o formato Netlify
   (inclusive Cloudflare Pages).
 
+### GitHub Pages e domínio próprio (schaycorretora.com.br)
+
+O site oficial é publicado pelo workflow `.github/workflows/deploy-pages.yml`,
+que lê da configuração do GitHub Pages onde o site é servido
+(`actions/configure-pages`): sem domínio próprio, em
+`theusmkt.github.io/schay-landing-page/`; com o domínio configurado em
+**Settings → Pages → Custom domain**, na raiz de
+`https://schaycorretora.com.br`. O caminho dos arquivos, o canonical, as
+tags de compartilhamento, o JSON-LD, o `sitemap.xml` e o `robots.txt` se
+ajustam sozinhos. Depois de trocar o domínio no Pages, publique de novo
+(**Actions → Deploy to GitHub Pages → Run workflow**) e, quando o GitHub
+liberar, marque **Enforce HTTPS**.
+
+Zona DNS do domínio (no Registro.br), apontando para o GitHub Pages:
+
+| Tipo  | Nome    | Valor                 |
+| ----- | ------- | --------------------- |
+| A     | (vazio) | `185.199.108.153`     |
+| A     | (vazio) | `185.199.109.153`     |
+| A     | (vazio) | `185.199.110.153`     |
+| A     | (vazio) | `185.199.111.153`     |
+| AAAA  | (vazio) | `2606:50c0:8000::153` |
+| AAAA  | (vazio) | `2606:50c0:8001::153` |
+| AAAA  | (vazio) | `2606:50c0:8002::153` |
+| AAAA  | (vazio) | `2606:50c0:8003::153` |
+| CNAME | `www`   | `theusmkt.github.io`  |
+
+Com o `www` apontado, o GitHub redireciona `www.schaycorretora.com.br`
+para o endereço sem `www` (e o endereço antigo do github.io para o
+domínio novo).
+
 ## Dados institucionais
 
 WhatsApp, e-mail, CRECI e os links do menu ficam centralizados em

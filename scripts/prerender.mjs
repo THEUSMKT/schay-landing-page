@@ -32,7 +32,9 @@
  * mínima que resolve o problema real (status HTTP + conteúdo indexável)
  * sem trocar a arquitetura do site.
  *
- * Uso: node scripts/prerender.mjs --base=/schay-landing-page/
+ * Uso: node scripts/prerender.mjs --base=/ --site-url=https://schaycorretora.com.br
+ * (no GitHub Pages os dois valores vêm da configuração do Pages — ver
+ * .github/workflows/deploy-pages.yml)
  * (rodado pelo workflow do GitHub Pages logo depois do `vite build`; ver
  * .github/workflows/deploy-pages.yml)
  */
@@ -46,8 +48,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
 const DIST = path.join(ROOT, 'dist')
 
-const PRODUCTION_URL = 'https://theusmkt.github.io/schay-landing-page'
-
 const args = Object.fromEntries(
   process.argv.slice(2).map((arg) => {
     const [key, value] = arg.replace(/^--/, '').split('=')
@@ -56,12 +56,22 @@ const args = Object.fromEntries(
 )
 const base = (args.base || '/').replace(/\/?$/, '/') // garante barra final
 
+// Endereço público do site: canonical, og:url/og:image, JSON-LD, sitemap e
+// robots. No deploy vem de --site-url (theusmkt.github.io/schay-landing-page
+// enquanto o domínio próprio não estiver configurado no Pages; depois,
+// schaycorretora.com.br). Sempre https — o GitHub Pages emite o certificado
+// do domínio próprio, e o endereço pode chegar como http antes disso.
+const PRODUCTION_URL = (typeof args['site-url'] === 'string' ? args['site-url'] : 'https://schaycorretora.com.br')
+  .replace(/^http:/, 'https:')
+  .replace(/\/+$/, '')
+
 const OG_IMAGE = `${PRODUCTION_URL}/og-image.png`
 
 const ROUTES = [
   {
     path: '/',
     outFile: 'index.html',
+    priority: '1.0',
     description:
       'Schay Corretora — imóveis à venda em São Leopoldo e região. Casas, apartamentos e terrenos com atendimento próximo, do primeiro contato à entrega das chaves. CRECI 83.933F.',
     jsonLd: {
@@ -84,18 +94,21 @@ const ROUTES = [
   {
     path: '/casas',
     outFile: 'casas/index.html',
+    priority: '0.8',
     description:
       'Casas à venda em São Leopoldo e região, com curadoria da Schay Corretora. Espaço para a família viver com conforto, do quintal à sala de estar.',
   },
   {
     path: '/apartamentos',
     outFile: 'apartamentos/index.html',
+    priority: '0.6',
     description:
       'Apartamentos à venda em São Leopoldo e região com a Schay Corretora. Praticidade e boa localização para o seu próximo endereço.',
   },
   {
     path: '/terrenos-e-oportunidades',
     outFile: 'terrenos-e-oportunidades/index.html',
+    priority: '0.6',
     description:
       'Terrenos, sítios e oportunidades comerciais em São Leopoldo, Nova Petrópolis e região com a Schay Corretora.',
   },
@@ -240,6 +253,23 @@ async function injectHead(page, { canonical, description, jsonLd }) {
   )
 }
 
+// URL pública de uma rota: raiz com barra final, as demais sem.
+const pageUrl = (routePath) => (routePath === '/' ? `${PRODUCTION_URL}/` : `${PRODUCTION_URL}${routePath}`)
+
+// sitemap.xml e robots.txt com o mesmo endereço do canonical — substituem
+// as cópias estáticas de public/, que ficam para hosts sem este script.
+async function writeSeoFiles() {
+  const urls = ROUTES.map(
+    (route) =>
+      `  <url>\n    <loc>${pageUrl(route.path)}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>${route.priority}</priority>\n  </url>`,
+  )
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`
+  const robots = `User-agent: *\nAllow: /\n\nSitemap: ${PRODUCTION_URL}/sitemap.xml\n`
+  await writeFile(path.join(DIST, 'sitemap.xml'), sitemap, 'utf-8')
+  await writeFile(path.join(DIST, 'robots.txt'), robots, 'utf-8')
+  console.log(`✓ sitemap.xml e robots.txt -> ${PRODUCTION_URL}`)
+}
+
 async function main() {
   if (!(await stat(DIST).catch(() => null))) {
     console.error('dist/ não existe — rode `vite build` antes deste script.')
@@ -292,7 +322,7 @@ async function main() {
     await page.evaluate(() => document.documentElement.setAttribute('data-prerendered', 'true'))
 
     await injectHead(page, {
-      canonical: `${PRODUCTION_URL}${route.path}`.replace(/\/$/, '') + (route.path === '/' ? '/' : ''),
+      canonical: pageUrl(route.path),
       description: route.description,
       jsonLd: route.jsonLd,
     })
@@ -303,6 +333,8 @@ async function main() {
     await writeFile(outPath, html, 'utf-8')
     console.log(`✓ ${route.path.padEnd(28)} -> dist/${route.outFile} (${(html.length / 1024).toFixed(0)} KB)`)
   }
+
+  await writeSeoFiles()
 
   if (pageErrors.length) {
     console.error('\nErros de JS durante a pré-renderização:')
