@@ -1,6 +1,6 @@
-import Reveal from '../components/Reveal'
-import SectionEyebrow from '../components/SectionEyebrow'
-import fotoHistoria from '../assets/images/schay-historia.webp'
+import Reveal from "../components/Reveal";
+import SectionEyebrow from "../components/SectionEyebrow";
+import fotoHistoria from "../assets/images/schay-historia.webp";
 
 /**
  * Seção "História da corretora": texto à esquerda, foto à direita em
@@ -15,7 +15,10 @@ import fotoHistoria from '../assets/images/schay-historia.webp'
  */
 export default function BrokerStory() {
   return (
-    <section id="historia-da-corretora" className="relative scroll-mt-24 overflow-hidden bg-navy-950">
+    <section
+      id="historia-da-corretora"
+      className="relative scroll-mt-24 overflow-hidden bg-navy-950"
+    >
       <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-16 lg:py-14">
         <div className="mx-auto max-w-xl text-center lg:mx-0 lg:max-w-none lg:text-left">
           <Reveal className="flex justify-center lg:justify-start">
@@ -30,25 +33,35 @@ export default function BrokerStory() {
             Schay
           </Reveal>
 
-          <Reveal delay={0.16} className="mt-6 text-base leading-relaxed text-white/80 sm:text-lg">
-            Meu interesse por esse mercado nasceu de um sonho antigo: o de ajudar famílias a
-            encontrarem um lugar para chamar de lar. Estudei, me dediquei, prestei a prova e me
-            tornei corretora — e a cada imóvel que ajudo a realizar, essa escolha se confirma.
-            Hoje, atuo na Imobiliária Innovar, fazendo o que amo, e é essa realização que me move
-            a trabalhar com excelência todos os dias.
+          <Reveal
+            delay={0.16}
+            className="mt-6 text-base leading-relaxed text-white/80 sm:text-lg"
+          >
+            Meu trabalho começa por entender o que você procura. A partir daí,
+            ajudo a selecionar opções, organizar visitas e acompanhar a
+            negociação. Sou Schay, corretora de imóveis, CRECI 83.933F, e atuo
+            em São Leopoldo e região.
           </Reveal>
 
-          <Reveal delay={0.26} className="mt-14 sm:mt-16">
+          <Reveal delay={0.26} className="mt-6">
             <p className="font-display text-2xl text-balance text-accent-300 italic sm:text-3xl">
-              "Não vendo apenas imóveis. Ajudo pessoas a escreverem novos capítulos."
+              "Não vendo apenas imóveis. Ajudo pessoas a escreverem novos
+              capítulos."
             </p>
           </Reveal>
         </div>
 
-        <Reveal delay={0.2} className="mx-auto mt-12 max-w-sm lg:mx-0 lg:mt-0 lg:max-w-none">
+        <Reveal
+          delay={0.2}
+          className="mx-auto mt-12 max-w-[220px] lg:mx-auto lg:mt-0 lg:max-w-xs"
+        >
           <div className="relative aspect-[1086/1638] w-full">
             <img
               src={fotoHistoria}
+              loading="lazy"
+              decoding="async"
+              width="1086"
+              height="1638"
               alt="Schay, corretora da Schay Corretora"
               className="absolute inset-0 h-full w-full object-cover"
             />
@@ -56,5 +69,5 @@ export default function BrokerStory() {
         </Reveal>
       </div>
     </section>
-  )
+  );
 }

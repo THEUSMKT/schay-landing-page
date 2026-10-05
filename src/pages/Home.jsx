@@ -1,16 +1,18 @@
-import Hero from '../sections/Hero'
-import PropertySearch from '../sections/PropertySearch'
-import PropertiesShowcase from '../sections/PropertiesShowcase'
-import HowItWorks from '../sections/HowItWorks'
-import BrokerStory from '../sections/BrokerStory'
-import RealStories from '../sections/RealStories'
-import Faq from '../sections/Faq'
-import ContactForm from '../sections/ContactForm'
-import SectionFade from '../components/SectionFade'
-import useDocumentTitle from '../hooks/useDocumentTitle'
+import Hero from "../sections/Hero";
+import PropertySearch from "../sections/PropertySearch";
+import PropertiesShowcase from "../sections/PropertiesShowcase";
+import HowItWorks from "../sections/HowItWorks";
+import BrokerStory from "../sections/BrokerStory";
+import RealStories from "../sections/RealStories";
+import Faq from "../sections/Faq";
+import ContactForm from "../sections/ContactForm";
+import SectionFade from "../components/SectionFade";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function Home() {
-  useDocumentTitle('Schay Corretora | Imóveis à venda em São Leopoldo e região')
+  useDocumentTitle(
+    "Schay Corretora | Imóveis à venda em São Leopoldo e região",
+  );
 
   // As passagens claro→claro (busca → vitrine → como funciona, vendas →
   // dúvidas) são resolvidas no próprio fundo de cada seção; aqui ficam só
@@ -18,17 +20,17 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <SectionFade variant="navy-to-white" className="h-28 sm:h-36 lg:h-44" />
+      <SectionFade variant="navy-to-white" className="h-8 sm:h-12" />
       <PropertySearch />
       <PropertiesShowcase />
-      <HowItWorks />
-      <SectionFade variant="white-to-navy" className="h-24 sm:h-32 lg:h-40" />
-      <BrokerStory />
-      <SectionFade variant="navy-to-cream" className="h-24 sm:h-32 lg:h-40" />
       <RealStories />
+      <HowItWorks />
+      <SectionFade variant="white-to-navy" className="h-8 sm:h-12" />
+      <BrokerStory />
+      <SectionFade variant="navy-to-cream" className="h-8 sm:h-12" />
       <Faq />
       <ContactForm />
-      <SectionFade variant="paper-to-navy" className="h-20 sm:h-28 lg:h-32" />
+      <SectionFade variant="paper-to-navy" className="h-8 sm:h-12" />
     </>
-  )
+  );
 }

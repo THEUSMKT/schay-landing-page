@@ -1,149 +1,95 @@
 /**
- * ============================================================================
- * FONTE ÚNICA DE DADOS — imóveis e categorias
- * ============================================================================
- *
- * Este arquivo concentra TODO o conteúdo de categorias e imóveis do site:
- * - CATEGORIES alimenta os 3 banners de categoria na Home (Vitrine) e o
- *   cabeçalho de cada página de categoria.
- * - PROPERTIES alimenta os cards de imóvel dentro de cada página de
- *   categoria (/apartamentos, /casas, /terrenos-e-oportunidades).
- *
- * POLÍTICA DE DADOS (importante): PROPERTIES só pode conter imóveis reais,
- * com foto e dados conferidos. NUNCA adicione um imóvel fictício/placeholder
- * aqui pra "preencher" uma categoria — se uma categoria não tem nenhum
- * imóvel real no momento, `getPropertiesByCategory` retorna uma lista vazia
- * de propósito, e a página da categoria mostra um estado vazio (ver
- * EmptyCategoryState) convidando a pessoa a falar com a Schay pelo
- * WhatsApp em vez de exibir cards inventados. O campo `isExample` existe só
- * por segurança (getPropertiesByCategory filtra qualquer imóvel marcado
- * assim antes de chegar na tela) — não é o mecanismo normal de trabalho.
- *
- * Para publicar um imóvel real:
- *   1. Importe a foto no topo deste arquivo.
- *   2. Adicione um objeto novo no fim da categoria correspondente dentro de
- *      PROPERTIES, com: title, neighborhood, city, areaM2, areaType
- *      ('lot' = terreno, 'built' = área construída/privativa, ou `null`
- *      quando o tipo não foi confirmado no anúncio original — NUNCA
- *      presuma), bedroomsLabel e, se souber, priceLabel (ex: 'R$ 329.000' —
- *      opcional, o card só mostra o preço quando esse campo existe).
- *      Por pedido da Schay, os cards NÃO mostram código de anúncio — não
- *      preencha `code` em nenhum imóvel novo.
- *   3. `image: { src: fotoImportada, alt: '...' }`.
- *
- * Imóveis que não são "casa com quartos" (ex: em Terrenos e oportunidades)
- * usam campos opcionais no lugar de areaM2/areaType/bedroomsLabel — o card
- * mostra só os que existirem:
- *   - typeLabel: selo do card ('Casa comercial', 'Sítio', 'Terreno'...);
- *     sem ele, o selo usa o `tag` da categoria.
- *   - areas: [{ label: 'Área total', m2: 3988 }, ...] — com o nome exato
- *     usado no anúncio (nunca converta "área total" em "área do terreno").
- *   - bedrooms / suites, rooms (salas), bathrooms, parkingSpaces (vagas).
- *   - frontM / backM: medidas de frente e fundos, em metros.
- *
- * Enquanto algum dado ainda não chegou, use 'Título a informar' /
- * 'Bairro a informar' / 'Quartos a informar', `areaM2: null` (o card mostra
- * "Metragem a informar" automaticamente) ou `areaType: null` (o card mostra
- * "tipo a confirmar" ao lado da metragem) — nunca invente o valor. NUNCA
- * reordene ou troque o `id` de um imóvel já publicado: a ordem dos cards em
- * cada página segue a ordem deste array, e cada novo imóvel enviado depois
- * entra no final da lista da categoria, sem mexer nos anteriores.
- *
- * O botão "Saiba mais" de cada card monta a mensagem do WhatsApp
- * automaticamente a partir do tipo (typeLabel ou tag da categoria),
- * `neighborhood`, `city` e, quando existe, `priceLabel` — nunca a partir de
- * título, metragens ou quartos, que só deixariam a mensagem mais longa sem
- * ajudar a identificar o imóvel. Por isso é importante manter
- * `neighborhood` e `city` sempre preenchidos.
- *
- * Nada mais no site precisa ser tocado: a Home e as 3 páginas de categoria
- * são geradas automaticamente a partir desta lista.
+ * Fonte única de imóveis reais. Preserve IDs, fotos, preços e dados confirmados.
+ * Nunca invente valores para preencher cards. Áreas sem tipo confirmado são
+ * omitidas do resumo público; os dados originais permanecem aqui para conferência.
+ * O ID é a referência estável exibida no card e enviada ao WhatsApp.
+ * A apresentação prioriza São Leopoldo sem modificar a ordem deste cadastro.
  */
 
 // Fotos reais dos banners de categoria (Home). Se algum dia precisar tirar
 // uma foto (voltando à ilustração de placeholder), basta remover a linha
 // `bannerImage` correspondente — o CategoryBanner cai de volta na
 // ilustração de `kind` automaticamente.
-import fotoCasas from '../assets/images/categoria-casas.webp'
-import fotoApartamentos from '../assets/images/categoria-apartamentos.webp'
-import fotoTerrenos from '../assets/images/categoria-terrenos.webp'
+import fotoCasas from "../assets/images/categoria-casas.webp";
+import fotoApartamentos from "../assets/images/categoria-apartamentos.webp";
+import fotoTerrenos from "../assets/images/categoria-terrenos.webp";
 
 // Fotos reais dos imóveis de "Casas" (fornecidas pela Schay). A ordem dos
 // imports abaixo é a ordem em que os cards aparecem em /casas — mantenha
 // essa ordem estável conforme novos imóveis forem chegando.
-import casasImovel03 from '../assets/images/imoveis/casas-03.webp'
-import casasImovel04 from '../assets/images/imoveis/casas-04.webp'
-import casasImovel05 from '../assets/images/imoveis/casas-05.webp'
-import casasImovel06 from '../assets/images/imoveis/casas-06.webp'
-import casasImovel07 from '../assets/images/imoveis/casas-07.webp'
+import casasImovel03 from "../assets/images/imoveis/casas-03.webp";
+import casasImovel04 from "../assets/images/imoveis/casas-04.webp";
+import casasImovel05 from "../assets/images/imoveis/casas-05.webp";
+import casasImovel06 from "../assets/images/imoveis/casas-06.webp";
+import casasImovel07 from "../assets/images/imoveis/casas-07.webp";
 // Colagem (foto principal + 2 miniaturas) enviada pela Schay — só a borda
 // branca externa foi recortada, as 3 fotos continuam juntas numa imagem só.
-import casasImovel08 from '../assets/images/imoveis/casas-08-lomba-grande.webp'
+import casasImovel08 from "../assets/images/imoveis/casas-08-lomba-grande.webp";
 
 // Fotos reais de "Terrenos e oportunidades" (fornecidas pela Schay), na
 // mesma ordem dos cards em /terrenos-e-oportunidades. A da casa comercial é
 // uma colagem de 3 fotos, só sem a borda branca externa (como a do sobrado).
-import terrenosCasaComercial from '../assets/images/imoveis/terrenos-01-casa-comercial.webp'
-import terrenosSitio from '../assets/images/imoveis/terrenos-02-sitio.webp'
-import terrenosTerreno from '../assets/images/imoveis/terrenos-03-terreno.webp'
+import terrenosCasaComercial from "../assets/images/imoveis/terrenos-01-casa-comercial.webp";
+import terrenosSitio from "../assets/images/imoveis/terrenos-02-sitio.webp";
+import terrenosTerreno from "../assets/images/imoveis/terrenos-03-terreno.webp";
 
 // Fotos reais de "Apartamentos" (fornecidas pela Schay), na mesma ordem dos
 // cards em /apartamentos. Todas mantêm o formato de colagem (foto principal
 // + 2 miniaturas) enviado pela Schay — só a borda branca externa foi
 // recortada, as 3 fotos continuam juntas numa imagem só.
-import apartamentoPortoMunique from '../assets/images/imoveis/apartamentos-01-porto-munique.webp'
-import apartamentoKaspary from '../assets/images/imoveis/apartamentos-02-edificio-kaspary.webp'
-import apartamentoPortoBerlim from '../assets/images/imoveis/apartamentos-03-porto-berlim.webp'
-import apartamentoSantoAndre from '../assets/images/imoveis/apartamentos-04-santo-andre.webp'
+import apartamentoPortoMunique from "../assets/images/imoveis/apartamentos-01-porto-munique.webp";
+import apartamentoKaspary from "../assets/images/imoveis/apartamentos-02-edificio-kaspary.webp";
+import apartamentoPortoBerlim from "../assets/images/imoveis/apartamentos-03-porto-berlim.webp";
+import apartamentoSantoAndre from "../assets/images/imoveis/apartamentos-04-santo-andre.webp";
 
 // Categorias disponíveis. `slug` define a rota (ex: /apartamentos).
 export const CATEGORIES = {
   apartamentos: {
-    slug: 'apartamentos',
-    path: '/apartamentos',
-    tag: 'Apartamento',
-    kind: 'apartment',
+    slug: "apartamentos",
+    path: "/apartamentos",
+    tag: "Apartamento",
+    kind: "apartment",
     bannerImage: fotoApartamentos,
-    navLabel: 'Apartamentos',
-    ctaLabel: 'Ver apartamentos',
+    navLabel: "Apartamentos",
+    ctaLabel: "Ver apartamentos",
     // Título do banner de categoria na Home (Vitrine).
-    bannerTitle: 'Apartamentos em São Leopoldo e região',
-    pageTitle: 'Apartamentos à venda em São Leopoldo e região',
+    bannerTitle: "Apartamentos em São Leopoldo e região",
+    pageTitle: "Apartamentos à venda em São Leopoldo e região",
     pageIntro:
-      'Praticidade e boa localização para quem busca um novo endereço para chamar de seu.',
-    heroKicker: 'Apartamentos',
+      "Praticidade e boa localização para quem busca um novo endereço para chamar de seu.",
+    heroKicker: "Apartamentos",
   },
   casas: {
-    slug: 'casas',
-    path: '/casas',
-    tag: 'Casa',
-    kind: 'house',
+    slug: "casas",
+    path: "/casas",
+    tag: "Casa",
+    kind: "house",
     bannerImage: fotoCasas,
-    navLabel: 'Casas',
-    ctaLabel: 'Ver casas',
-    bannerTitle: 'Casas em São Leopoldo e região',
-    pageTitle: 'Casas à venda em São Leopoldo e região',
+    navLabel: "Casas",
+    ctaLabel: "Ver casas",
+    bannerTitle: "Casas em São Leopoldo e região",
+    pageTitle: "Casas à venda em São Leopoldo e região",
     pageIntro:
-      'Espaço para a família viver com conforto, do quintal à sala de estar.',
-    heroKicker: 'Casas',
+      "Espaço para a família viver com conforto, do quintal à sala de estar.",
+    heroKicker: "Casas",
   },
   terrenos: {
-    slug: 'terrenos',
-    path: '/terrenos-e-oportunidades',
-    tag: 'Terreno',
-    kind: 'land',
+    slug: "terrenos",
+    path: "/terrenos-e-oportunidades",
+    tag: "Terreno",
+    kind: "land",
     bannerImage: fotoTerrenos,
-    navLabel: 'Terrenos e oportunidades',
-    ctaLabel: 'Ver terrenos e oportunidades',
-    bannerTitle: 'Terrenos e oportunidades em São Leopoldo e região',
-    pageTitle: 'Terrenos e oportunidades em São Leopoldo e região',
+    navLabel: "Terrenos e oportunidades",
+    ctaLabel: "Ver terrenos e oportunidades",
+    bannerTitle: "Terrenos e oportunidades em São Leopoldo e região",
+    pageTitle: "Terrenos e oportunidades em São Leopoldo e região",
     pageIntro:
-      'Terrenos, sítios e oportunidades comerciais em São Leopoldo, Nova Petrópolis e região — para construir do zero, viver mais perto da natureza ou investir no próprio negócio.',
-    heroKicker: 'Terrenos e oportunidades',
+      "Terrenos, sítios e oportunidades comerciais em São Leopoldo, Nova Petrópolis e região — para construir do zero, viver mais perto da natureza ou investir no próprio negócio.",
+    heroKicker: "Terrenos e oportunidades",
   },
-}
+};
 
-export const CATEGORY_LIST = Object.values(CATEGORIES)
+export const CATEGORY_LIST = Object.values(CATEGORIES);
 
 // Imóveis reais. Categorias sem nenhum imóvel aqui (hoje, apartamentos)
 // mostram o estado vazio — ver EmptyCategoryState — em vez de cards
@@ -155,102 +101,117 @@ export const PROPERTIES = [
   // já publicada — novos imóveis entram no fim da lista, como casa-06,
   // casa-07 etc.
   {
-    id: 'casa-03',
-    category: 'casas',
-    title: 'Casa térrea em ótima localização',
-    neighborhood: 'Campestre',
-    city: 'São Leopoldo / RS',
+    id: "casa-03",
+    category: "casas",
+    title: "Casa térrea com 2 quartos no Campestre",
+    neighborhood: "Campestre",
+    city: "São Leopoldo / RS",
     // Só a área do terreno estava visível no anúncio (450 m²); não havia
     // área construída/privativa informada — por isso areaType: 'lot', pra
     // o card deixar claro que não é a área construída da casa.
     areaM2: 450,
-    areaType: 'lot',
-    bedroomsLabel: '2 quartos',
+    areaType: "lot",
+    bedroomsLabel: "2 quartos",
     price: 636000,
-    priceLabel: 'R$ 636.000',
-    image: { src: casasImovel03, alt: 'Casa térrea à venda no bairro Campestre, São Leopoldo' },
+    priceLabel: "R$ 636.000",
+    image: {
+      src: casasImovel03,
+      alt: "Casa térrea à venda no bairro Campestre, São Leopoldo",
+    },
     isExample: false,
   },
   {
-    id: 'casa-04',
-    category: 'casas',
-    title: 'Casa aconchegante em Estância Velha',
-    neighborhood: 'Campo Grande',
-    city: 'Estância Velha / RS',
+    id: "casa-04",
+    category: "casas",
+    title: "Casa aconchegante em Estância Velha",
+    neighborhood: "Campo Grande",
+    city: "Estância Velha / RS",
     // Metragem não estava visível/legível na captura enviada — mantido
     // como "a informar" (não inventar dado), conforme pedido.
     areaM2: null,
     areaType: null,
-    bedroomsLabel: '2 quartos',
+    bedroomsLabel: "2 quartos",
     price: 295000,
-    priceLabel: 'R$ 295.000',
-    image: { src: casasImovel04, alt: 'Casa à venda no bairro Campo Grande, Estância Velha' },
+    priceLabel: "R$ 295.000",
+    image: {
+      src: casasImovel04,
+      alt: "Casa à venda no bairro Campo Grande, Estância Velha",
+    },
     isExample: false,
   },
   {
-    id: 'casa-05',
-    category: 'casas',
-    title: 'Casa com 3 quartos à venda',
-    neighborhood: 'Cristo Rei',
-    city: 'São Leopoldo / RS',
+    id: "casa-05",
+    category: "casas",
+    title: "Casa com 3 quartos no Cristo Rei",
+    neighborhood: "Cristo Rei",
+    city: "São Leopoldo / RS",
     // Tipo de área (terreno x construída) não foi confirmado no anúncio
     // original — não presumir; o card mostra "tipo a confirmar".
     areaM2: 300.9,
     areaType: null,
-    bedroomsLabel: '3 quartos (1 suíte)',
+    bedroomsLabel: "3 quartos (1 suíte)",
     price: 980000,
-    priceLabel: 'R$ 980.000',
-    image: { src: casasImovel05, alt: 'Casa à venda no bairro Cristo Rei, São Leopoldo' },
+    priceLabel: "R$ 980.000",
+    image: {
+      src: casasImovel05,
+      alt: "Casa à venda no bairro Cristo Rei, São Leopoldo",
+    },
     isExample: false,
   },
   {
-    id: 'casa-06',
-    category: 'casas',
-    title: 'Sobrado com 2 quartos à venda',
-    neighborhood: 'Campestre',
-    city: 'São Leopoldo / RS',
+    id: "casa-06",
+    category: "casas",
+    title: "Sobrado com 2 quartos no Campestre",
+    neighborhood: "Campestre",
+    city: "São Leopoldo / RS",
     // sobrado em construção
     areaM2: 99,
     areaType: null,
-    bedroomsLabel: '2 quartos',
+    bedroomsLabel: "2 quartos",
     price: 580000,
-    priceLabel: 'R$ 580.000',
-    image: { src: casasImovel06, alt: 'Sobrado à venda no bairro Campestre, São Leopoldo' },
+    priceLabel: "R$ 580.000",
+    image: {
+      src: casasImovel06,
+      alt: "Sobrado à venda no bairro Campestre, São Leopoldo",
+    },
     isExample: false,
   },
   {
-    id: 'casa-07',
-    category: 'casas',
-    title: 'Casa de alvenaria na São Borja',
-    neighborhood: 'Fazenda São Borja',
-    city: 'São Leopoldo / RS',
+    id: "casa-07",
+    category: "casas",
+    title: "Casa de alvenaria na São Borja",
+    neighborhood: "Fazenda São Borja",
+    city: "São Leopoldo / RS",
     areaM2: 108,
     areaType: null,
-    bedroomsLabel: '2 quartos',
+    bedroomsLabel: "2 quartos",
     price: 421880,
-    priceLabel: 'R$ 421.880',
-    image: { src: casasImovel07, alt: 'Casa à venda na Fazenda São Borja, São Leopoldo' },
+    priceLabel: "R$ 421.880",
+    image: {
+      src: casasImovel07,
+      alt: "Casa à venda na Fazenda São Borja, São Leopoldo",
+    },
     isExample: false,
   },
   {
-    id: 'casa-08-sobrado-lomba-grande',
-    category: 'casas',
-    title: 'Sobrado moderno em Lomba Grande',
-    neighborhood: 'Lomba Grande',
-    city: 'Novo Hamburgo / RS',
+    id: "casa-08-sobrado-lomba-grande",
+    category: "casas",
+    title: "Sobrado moderno em Lomba Grande",
+    neighborhood: "Lomba Grande",
+    city: "Novo Hamburgo / RS",
     areas: [
-      { label: 'Área total', m2: 150 },
-      { label: 'Área do terreno', m2: 300 },
+      { label: "Área total", m2: 150 },
+      { label: "Área do terreno", m2: 300 },
     ],
     bedrooms: 2,
     suites: 2,
     bathrooms: 4,
     parkingSpaces: 2,
     price: 990000,
-    priceLabel: 'R$ 990.000',
+    priceLabel: "R$ 990.000",
     image: {
       src: casasImovel08,
-      alt: 'Fotos do sobrado moderno à venda no Residencial Mirante do Vale, bairro Lomba Grande, Novo Hamburgo: fachada de arquitetura contemporânea, sala de estar com lareira e escada com guarda-corpo de vidro, e vista aérea do pátio com piscina',
+      alt: "Fotos do sobrado moderno à venda no Residencial Mirante do Vale, bairro Lomba Grande, Novo Hamburgo: fachada de arquitetura contemporânea, sala de estar com lareira e escada com guarda-corpo de vidro, e vista aérea do pátio com piscina",
     },
     isExample: false,
   },
@@ -261,138 +222,138 @@ export const PROPERTIES = [
   // anúncio — `areas` mantém o nome exato de cada metragem, sem presumir se
   // é terreno ou área construída.
   {
-    id: 'terreno-01-casa-comercial-boemios',
-    category: 'terrenos',
-    typeLabel: 'Casa comercial',
-    title: 'Casa comercial com 3 salas à venda',
-    neighborhood: 'Boêmios',
-    city: 'Nova Petrópolis / RS',
+    id: "terreno-01-casa-comercial-boemios",
+    category: "terrenos",
+    typeLabel: "Casa comercial",
+    title: "Casa comercial com 3 salas à venda",
+    neighborhood: "Boêmios",
+    city: "Nova Petrópolis / RS",
     areas: [
-      { label: 'Área total', m2: 3988 },
-      { label: 'Área privativa', m2: 521 },
+      { label: "Área total", m2: 3988 },
+      { label: "Área privativa", m2: 521 },
     ],
     rooms: 3,
     bathrooms: 3,
     parkingSpaces: 3,
     price: 5100000,
-    priceLabel: 'R$ 5.100.000',
+    priceLabel: "R$ 5.100.000",
     image: {
       src: terrenosCasaComercial,
-      alt: 'Fotos da casa comercial amarela de estilo colonial à venda no bairro Boêmios, Nova Petrópolis: a casa fotografada ao anoitecer e duas vistas aéreas do terreno, com o lago e o contorno da área em destaque',
+      alt: "Fotos da casa comercial amarela de estilo colonial à venda no bairro Boêmios, Nova Petrópolis: a casa fotografada ao anoitecer e duas vistas aéreas do terreno, com o lago e o contorno da área em destaque",
     },
     isExample: false,
   },
   {
-    id: 'terreno-02-sitio-campestre',
-    category: 'terrenos',
-    typeLabel: 'Sítio',
-    title: 'Sítio rural à venda no Campestre',
-    neighborhood: 'Campestre',
-    city: 'São Leopoldo / RS',
-    areas: [{ label: 'Área do terreno', m2: 1009 }],
+    id: "terreno-02-sitio-campestre",
+    category: "terrenos",
+    typeLabel: "Sítio",
+    title: "Sítio rural à venda no Campestre",
+    neighborhood: "Campestre",
+    city: "São Leopoldo / RS",
+    areas: [{ label: "Área do terreno", m2: 1009 }],
     bedrooms: 3,
     suites: 2,
     price: 742000,
-    priceLabel: 'R$ 742.000',
+    priceLabel: "R$ 742.000",
     image: {
       src: terrenosSitio,
-      alt: 'Entrada da casa do sítio rural à venda no bairro Campestre, São Leopoldo, com pérgola de madeira, paredes em tom terracota e muitas plantas',
+      alt: "Entrada da casa do sítio rural à venda no bairro Campestre, São Leopoldo, com pérgola de madeira, paredes em tom terracota e muitas plantas",
     },
     isExample: false,
   },
   {
-    id: 'terreno-03-fazenda-sao-borja',
-    category: 'terrenos',
-    typeLabel: 'Terreno',
-    title: 'Terreno na Fazenda São Borja',
-    neighborhood: 'Fazenda São Borja',
-    city: 'São Leopoldo / RS',
-    areas: [{ label: 'Área do terreno', m2: 360 }],
+    id: "terreno-03-fazenda-sao-borja",
+    category: "terrenos",
+    typeLabel: "Terreno",
+    title: "Terreno na Fazenda São Borja",
+    neighborhood: "Fazenda São Borja",
+    city: "São Leopoldo / RS",
+    areas: [{ label: "Área do terreno", m2: 360 }],
     frontM: 12,
     backM: 30,
     price: 137800,
-    priceLabel: 'R$ 137.800',
+    priceLabel: "R$ 137.800",
     image: {
       src: terrenosTerreno,
-      alt: 'Terreno à venda na Fazenda São Borja, São Leopoldo, com horta cultivada, árvores ao fundo e vista para os morros',
+      alt: "Terreno à venda na Fazenda São Borja, São Leopoldo, com horta cultivada, árvores ao fundo e vista para os morros",
     },
     isExample: false,
   },
 
   // ----------------------------------------------------------------- Apartamentos
   {
-    id: 'apartamento-01-porto-munique',
-    category: 'apartamentos',
-    title: 'Apartamento com 2 dormitórios no Porto Munique',
-    neighborhood: 'Condomínio Porto Munique',
-    city: 'São Leopoldo / RS',
-    areas: [{ label: 'Área (aproximada)', m2: 41 }],
+    id: "apartamento-01-porto-munique",
+    category: "apartamentos",
+    title: "Apartamento com 2 dormitórios no Porto Munique",
+    neighborhood: "Condomínio Porto Munique",
+    city: "São Leopoldo / RS",
+    areas: [{ label: "Área (aproximada)", m2: 41 }],
     bedrooms: 2,
     parkingSpaces: 1,
     price: 165000,
-    priceLabel: 'R$ 165.000',
+    priceLabel: "R$ 165.000",
     image: {
       src: apartamentoPortoMunique,
-      alt: 'Fotos do apartamento à venda no condomínio Porto Munique, São Leopoldo: entrada do condomínio com guarita e céu azul com nuvens, sala com piso laminado e banheiro',
+      alt: "Fotos do apartamento à venda no condomínio Porto Munique, São Leopoldo: entrada do condomínio com guarita e céu azul com nuvens, sala com piso laminado e banheiro",
     },
     isExample: false,
   },
   {
-    id: 'apartamento-02-edificio-kaspary',
-    category: 'apartamentos',
+    id: "apartamento-02-edificio-kaspary",
+    category: "apartamentos",
     // Desocupado (imediato pra mudança) — sem campo próprio no card, mas
     // vale mencionar pra Schay no atendimento.
-    title: 'Apartamento térreo de frente no Edifício Kaspary',
-    neighborhood: 'Centro',
-    city: 'São Leopoldo / RS',
-    areas: [{ label: 'Área privativa', m2: 114.31 }],
+    title: "Apartamento térreo de frente no Edifício Kaspary",
+    neighborhood: "Centro",
+    city: "São Leopoldo / RS",
+    areas: [{ label: "Área privativa", m2: 114.31 }],
     bedrooms: 2,
     suites: 1,
     price: 392000,
-    priceLabel: 'R$ 392.000',
+    priceLabel: "R$ 392.000",
     image: {
       src: apartamentoKaspary,
-      alt: 'Fotos do apartamento à venda no Edifício Kaspary, na Rua José Bonifácio, Centro de São Leopoldo: fachada do prédio, banheiro com box de vidro e sala ampla',
+      alt: "Fotos do apartamento à venda no Edifício Kaspary, na Rua José Bonifácio, Centro de São Leopoldo: fachada do prédio, banheiro com box de vidro e sala ampla",
     },
     isExample: false,
   },
   {
-    id: 'apartamento-03-porto-berlim',
-    category: 'apartamentos',
-    title: 'Apartamento no 3º andar do Porto Berlim',
-    neighborhood: 'Santo André',
-    city: 'São Leopoldo / RS',
-    areas: [{ label: 'Área privativa', m2: 40 }],
+    id: "apartamento-03-porto-berlim",
+    category: "apartamentos",
+    title: "Apartamento no 3º andar do Porto Berlim",
+    neighborhood: "Santo André",
+    city: "São Leopoldo / RS",
+    areas: [{ label: "Área privativa", m2: 40 }],
     bedrooms: 2,
     bathrooms: 1,
     parkingSpaces: 1,
     price: 198000,
-    priceLabel: 'R$ 198.000',
+    priceLabel: "R$ 198.000",
     image: {
       src: apartamentoPortoBerlim,
-      alt: 'Fotos do apartamento à venda no Residencial Parque Porto Berlim, bairro Santo André, São Leopoldo: fachada do prédio com palmeiras, banheiro e sala vazia',
+      alt: "Fotos do apartamento à venda no Residencial Parque Porto Berlim, bairro Santo André, São Leopoldo: fachada do prédio com palmeiras, banheiro e sala vazia",
     },
     isExample: false,
   },
   {
-    id: 'apartamento-04-santo-andre',
-    category: 'apartamentos',
-    title: 'Apartamento com 2 dormitórios em Santo André',
-    neighborhood: 'Santo André',
-    city: 'São Leopoldo / RS',
-    areas: [{ label: 'Área privativa', m2: 40 }],
+    id: "apartamento-04-santo-andre",
+    category: "apartamentos",
+    title: "Apartamento com 2 dormitórios em Santo André",
+    neighborhood: "Santo André",
+    city: "São Leopoldo / RS",
+    areas: [{ label: "Área privativa", m2: 40 }],
     bedrooms: 2,
     bathrooms: 1,
     parkingSpaces: 1,
     price: 240000,
-    priceLabel: 'R$ 240.000',
+    priceLabel: "R$ 240.000",
     image: {
       src: apartamentoSantoAndre,
-      alt: 'Fotos do apartamento à venda no bairro Santo André, São Leopoldo: sala de estar e jantar integradas, vistas de ângulos diferentes',
+      alt: "Fotos do apartamento à venda no bairro Santo André, São Leopoldo: sala de estar e jantar integradas, vistas de ângulos diferentes",
     },
     isExample: false,
   },
-]
+];
 
 /**
  * Retorna os imóveis reais de uma categoria (pela slug usada na
@@ -404,5 +365,5 @@ export const PROPERTIES = [
 export function getPropertiesByCategory(categorySlug) {
   return PROPERTIES.filter(
     (property) => property.category === categorySlug && !property.isExample,
-  )
+  );
 }

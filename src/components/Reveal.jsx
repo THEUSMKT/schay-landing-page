@@ -1,5 +1,5 @@
-import { motion, useReducedMotion } from 'framer-motion'
-import { isPrerendered } from '../lib/prerender'
+import { motion, useReducedMotion } from "framer-motion";
+import { isPrerendered } from "../lib/prerender";
 
 const TAGS = {
   div: motion.div,
@@ -11,7 +11,7 @@ const TAGS = {
   li: motion.li,
   ul: motion.ul,
   form: motion.form,
-}
+};
 
 /**
  * Anima a entrada de um bloco (fade-in + leve deslocamento vertical).
@@ -33,31 +33,31 @@ const TAGS = {
  * na página enquanto a pessoa tentava ler.
  */
 export default function Reveal({
-  as = 'div',
+  as = "div",
   children,
   className,
   delay = 0,
   duration = 0.55,
-  y = 16,
+  y: _y = 16,
   once = true,
-  amount = 'some',
-  margin = '0px 0px -8% 0px',
-  mode = 'inView',
+  amount = "some",
+  margin = "0px 0px -8% 0px",
+  mode = "inView",
   ...rest
 }) {
-  const Component = TAGS[as] || motion.div
-  const reduceMotion = useReducedMotion()
+  const Component = TAGS[as] || motion.div;
+  const reduceMotion = useReducedMotion();
 
   const variants = reduceMotion
     ? { hidden: { opacity: 1, y: 0 }, visible: { opacity: 1, y: 0 } }
     : {
-        hidden: { opacity: 0, y },
+        hidden: { opacity: 1, y: 0 },
         visible: {
           opacity: 1,
           y: 0,
           transition: { duration, delay, ease: [0.22, 1, 0.36, 1] },
         },
-      }
+      };
 
   // mode="mount" é sempre conteúdo acima da dobra (hero, cabeçalho de
   // categoria). Numa página pré-renderizada esse conteúdo já chegou
@@ -67,21 +67,26 @@ export default function Reveal({
   // terminarem de rodar (ver src/lib/prerender.js). Conteúdo abaixo da
   // dobra (mode="inView", o padrão) mantém a animação normal ao rolar —
   // isso não afeta o LCP e preserva a experiência de entrada no scroll.
-  const skipMountAnimation = mode === 'mount' && isPrerendered()
+  const skipMountAnimation = mode === "mount" && isPrerendered();
 
   const triggerProps = skipMountAnimation
-    ? { initial: false, animate: 'visible' }
-    : mode === 'mount'
-      ? { initial: 'hidden', animate: 'visible' }
+    ? { initial: false, animate: "visible" }
+    : mode === "mount"
+      ? { initial: "hidden", animate: "visible" }
       : {
-          initial: 'hidden',
-          whileInView: 'visible',
+          initial: "hidden",
+          whileInView: "visible",
           viewport: { once, amount, margin },
-        }
+        };
 
   return (
-    <Component className={className} variants={variants} {...triggerProps} {...rest}>
+    <Component
+      className={className}
+      variants={variants}
+      {...triggerProps}
+      {...rest}
+    >
       {children}
     </Component>
-  )
+  );
 }

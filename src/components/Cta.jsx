@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
-import { ArrowUpRight } from 'lucide-react'
+import { Link } from "react-router-dom";
+import { ArrowUpRight } from "lucide-react";
 
 /**
  * Botão de call-to-action reutilizado no site inteiro (hero, cards, formulário).
@@ -7,27 +7,33 @@ import { ArrowUpRight } from 'lucide-react'
  * ou <button> (ação via `onClick`/`type="submit"`), sempre com o mesmo visual.
  */
 const VARIANTS = {
-  amber:
-    'bg-amber-500 text-navy-950 hover:bg-amber-400 shadow-soft',
-  blue: 'bg-accent-400 text-navy-950 hover:bg-accent-300 shadow-soft',
-  outline: 'border border-white/25 text-white hover:bg-white/10',
-  ghost: 'text-accent-300 hover:text-accent-200',
-}
+  whatsapp: "bg-whatsapp text-white hover:bg-[#095c45] shadow-soft",
+  amber: "bg-amber-500 text-navy-950 hover:bg-amber-400 shadow-soft",
+  blue: "bg-accent-400 text-navy-950 hover:bg-accent-300 shadow-soft",
+  outline: "border border-white/25 text-white hover:bg-white/10",
+  ghost: "text-accent-300 hover:text-accent-200",
+};
 
 export default function Cta({
   to,
   href,
-  variant = 'amber',
+  variant = "amber",
   icon: Icon = ArrowUpRight,
   showIcon = true,
-  className = '',
+  className = "",
   children,
-  type = 'button',
+  type = "button",
   ...rest
 }) {
-  const classes = `inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold whitespace-nowrap transition duration-200 hover:-translate-y-0.5 active:translate-y-0 active:duration-100 ${VARIANTS[variant] || VARIANTS.amber} ${className}`
+  const effectiveVariant = href?.startsWith("https://wa.me/")
+    ? "whatsapp"
+    : variant;
+  const classes = `inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-center whitespace-normal transition duration-200 hover:-translate-y-0.5 active:translate-y-0 active:duration-100 ${VARIANTS[effectiveVariant] || VARIANTS.amber} ${className}`;
 
-  const iconEl = showIcon && Icon ? <Icon className="h-4 w-4 shrink-0" aria-hidden="true" /> : null
+  const iconEl =
+    showIcon && Icon ? (
+      <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+    ) : null;
 
   if (to) {
     return (
@@ -35,7 +41,7 @@ export default function Cta({
         {children}
         {iconEl}
       </Link>
-    )
+    );
   }
 
   if (href) {
@@ -44,7 +50,7 @@ export default function Cta({
         {children}
         {iconEl}
       </a>
-    )
+    );
   }
 
   return (
@@ -52,5 +58,5 @@ export default function Cta({
       {children}
       {iconEl}
     </button>
-  )
+  );
 }

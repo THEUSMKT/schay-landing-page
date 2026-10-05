@@ -1,17 +1,17 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
-import Logo from './Logo'
-import Cta from './Cta'
-import { NAV_LINKS, buildWhatsAppLink } from '../data/site'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import Logo from "./Logo";
+import Cta from "./Cta";
+import { NAV_LINKS, buildWhatsAppLink } from "../data/site";
 
 const WHATSAPP_HREF = buildWhatsAppLink(
-  'Olá! Vim pelo site da Schay Corretora e gostaria de solicitar atendimento.',
-)
+  "Olá! Vim pelo site da Schay Corretora e gostaria de solicitar atendimento.",
+);
 
 export default function Header() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-navy-950/75 backdrop-blur-md">
@@ -39,7 +39,7 @@ export default function Header() {
             className="px-5 py-2.5"
             showIcon={false}
           >
-            Solicitar atendimento
+            Falar com a Schay
           </Cta>
         </div>
 
@@ -47,7 +47,7 @@ export default function Header() {
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          aria-label={open ? 'Fechar menu' : 'Abrir menu'}
+          aria-label={open ? "Fechar menu" : "Abrir menu"}
           className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white transition-[background-color,transform] duration-150 hover:bg-white/5 active:scale-90 lg:hidden"
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -58,7 +58,11 @@ export default function Header() {
         {open ? (
           <motion.nav
             initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0, transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] } }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] },
+            }}
             exit={{ opacity: 0, y: -8, transition: { duration: 0.15 } }}
             className="border-t border-white/10 bg-navy-950/95 px-5 py-4 lg:hidden"
           >
@@ -83,11 +87,11 @@ export default function Header() {
               onClick={() => setOpen(false)}
               className="mt-4 w-full"
             >
-              Solicitar atendimento
+              Falar com a Schay
             </Cta>
           </motion.nav>
         ) : null}
       </AnimatePresence>
     </header>
-  )
+  );
 }
