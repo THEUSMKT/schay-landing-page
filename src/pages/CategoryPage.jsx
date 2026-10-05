@@ -1,12 +1,14 @@
-import { Navigate, Link } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
-import Reveal from '../components/Reveal'
-import SectionEyebrow from '../components/SectionEyebrow'
-import PropertyCarousel from '../components/PropertyCarousel'
-import EmptyCategoryState from '../components/EmptyCategoryState'
-import SectionFade from '../components/SectionFade'
-import useDocumentTitle from '../hooks/useDocumentTitle'
-import { CATEGORIES, getPropertiesByCategory } from '../data/properties'
+import { Navigate, Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import Reveal from "../components/Reveal";
+import SectionEyebrow from "../components/SectionEyebrow";
+import PropertyGrid from "../components/PropertyGrid";
+import Cta from "../components/Cta";
+import { buildWhatsAppLink } from "../data/site";
+import EmptyCategoryState from "../components/EmptyCategoryState";
+import SectionFade from "../components/SectionFade";
+import useDocumentTitle from "../hooks/useDocumentTitle";
+import { CATEGORIES, getPropertiesByCategory } from "../data/properties";
 
 /**
  * Página de listagem de uma categoria (/apartamentos, /casas,
@@ -15,15 +17,15 @@ import { CATEGORIES, getPropertiesByCategory } from '../data/properties'
  * real mostra EmptyCategoryState em vez de cards fictícios.
  */
 export default function CategoryPage({ categorySlug }) {
-  const category = CATEGORIES[categorySlug]
-  const properties = getPropertiesByCategory(categorySlug)
+  const category = CATEGORIES[categorySlug];
+  const properties = getPropertiesByCategory(categorySlug);
 
   useDocumentTitle(
-    category ? `${category.pageTitle} | Schay Corretora` : 'Schay Corretora',
-  )
+    category ? `${category.pageTitle} | Schay Corretora` : "Schay Corretora",
+  );
 
   if (!category) {
-    return <Navigate to="/" replace />
+    return <Navigate to="/" replace />;
   }
 
   return (
@@ -53,7 +55,11 @@ export default function CategoryPage({ categorySlug }) {
             {category.pageTitle}
           </Reveal>
 
-          <Reveal mode="mount" delay={0.2} className="mt-4 max-w-xl text-navy-600">
+          <Reveal
+            mode="mount"
+            delay={0.2}
+            className="mt-4 max-w-xl text-navy-600"
+          >
             {category.pageIntro}
           </Reveal>
         </div>
@@ -62,13 +68,17 @@ export default function CategoryPage({ categorySlug }) {
       {/* Com imóveis, a folga de baixo vem da própria faixa do carrossel
           (espaço pra sombra dos cards). */}
       <section
-        className={`bg-paper-100 pt-16 sm:pt-20 ${properties.length > 0 ? '' : 'pb-10 sm:pb-12'}`}
+        className={`bg-paper-100 pt-16 sm:pt-20 ${properties.length > 0 ? "" : "pb-10 sm:pb-12"}`}
       >
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
           {properties.length > 0 ? (
             // Uma fileira só, deslizando para o lado (ver PropertyCarousel).
-            <PropertyCarousel
-              properties={properties}
+            <PropertyGrid
+              properties={[...properties].sort(
+                (a, b) =>
+                  Number(b.city?.includes("São Leopoldo")) -
+                  Number(a.city?.includes("São Leopoldo")),
+              )}
               headingId="imoveis-da-categoria"
               heading={
                 // h2 entre o h1 da página e os h3 dos cards — sem isso a
@@ -79,7 +89,7 @@ export default function CategoryPage({ categorySlug }) {
                   id="imoveis-da-categoria"
                   className="font-display text-2xl font-semibold text-navy-950"
                 >
-                  Imóveis confirmados
+                  {properties.length} imóveis para consultar
                 </Reveal>
               }
             />
@@ -91,7 +101,26 @@ export default function CategoryPage({ categorySlug }) {
         </div>
       </section>
 
-      <SectionFade variant="paper-to-navy" className="h-20 sm:h-28 lg:h-32" />
+      <section className="bg-paper-100 px-5 py-12 text-center">
+        <h2 className="text-2xl text-navy-950">Quer ajuda para escolher?</h2>
+        <p className="mx-auto mt-3 max-w-xl text-navy-600">
+          Conte o bairro e o valor que pretende investir. A Schay ajuda você a
+          consultar opções e combinar uma visita.
+        </p>
+        <Cta
+          className="mt-5"
+          href={buildWhatsAppLink(
+            `Olá, Schay! Estou procurando ${category.navLabel.toLowerCase()}. Pode me ajudar?`,
+          )}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-category={categorySlug}
+          data-placement="category_help"
+        >
+          Falar com a Schay no WhatsApp
+        </Cta>
+      </section>
+      <SectionFade variant="paper-to-navy" className="h-10 sm:h-16" />
     </>
-  )
+  );
 }

@@ -1,201 +1,159 @@
-import { useMemo, useState } from 'react'
-import { SlidersHorizontal } from 'lucide-react'
-import Reveal from '../components/Reveal'
-import SectionEyebrow from '../components/SectionEyebrow'
-import PropertyCarousel from '../components/PropertyCarousel'
-import EmptyCategoryState from '../components/EmptyCategoryState'
-import { CATEGORIES, CATEGORY_LIST, PROPERTIES } from '../data/properties'
-import { buildWhatsAppLink } from '../data/site'
+import { useEffect, useState } from "react";
+import Cta from "../components/Cta";
+import PropertyGrid from "../components/PropertyGrid";
+import { CATEGORY_LIST, PROPERTIES } from "../data/properties";
+import { buildWhatsAppLink } from "../data/site";
+import { PRICE_BANDS, filterProperties } from "../lib/search";
+import { trackEvent } from "../lib/analytics";
 
-const PRICE_BANDS = [
-  { value: '', label: 'Qualquer faixa de preço', min: 0, max: Infinity },
-  { value: 'ate-300', label: 'Até R$ 300 mil', min: 0, max: 300000 },
-  { value: '300-600', label: 'R$ 300 mil a R$ 600 mil', min: 300000, max: 600000 },
-  { value: 'acima-600', label: 'Acima de R$ 600 mil', min: 600000, max: Infinity },
-]
-
-const REAL_PROPERTIES = PROPERTIES.filter((property) => !property.isExample)
-
-// "nova petropolis" encontra "Nova Petrópolis", "boemios" encontra "Boêmios".
-const normalize = (text) =>
-  text
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .toLowerCase()
-
-const selectClass =
-  'w-full appearance-none rounded-xl border border-navy-950/15 bg-paper-50 px-4 py-3 pr-10 text-sm text-navy-900 outline-none transition-colors duration-200 focus:border-accent-600'
-
-/**
- * Busca orientada por tipo + localização + faixa de preço (opcional), sem
- * cadastro. Filtra só entre imóveis reais (PROPERTIES já vem sem
- * fictícios — ver política de dados em src/data/properties.js). Antes de
- * qualquer filtro ser tocado, não mostra resultado nenhum (essa seção é uma
- * ferramenta de busca, não mais uma vitrine — a vitrine geral vem logo
- * abaixo). Sem resultado real pro filtro escolhido, oferece atendimento
- * pelo WhatsApp já com as preferências preenchidas na mensagem.
- */
+const initial = { type: "", location: "", priceBand: "" };
+const fieldClass =
+  "mt-2 w-full rounded-xl border border-navy-950/20 bg-white px-3 py-3 text-base text-navy-950";
+const locations = [
+  ...new Set(
+    PROPERTIES.filter((p) => !p.isExample)
+      .flatMap((p) => [p.city, p.neighborhood])
+      .filter(Boolean),
+  ),
+].sort();
 export default function PropertySearch() {
-  const [type, setType] = useState('')
-  const [location, setLocation] = useState('')
-  const [priceBand, setPriceBand] = useState('')
-  const [touched, setTouched] = useState(false)
-
-  const band = PRICE_BANDS.find((option) => option.value === priceBand) || PRICE_BANDS[0]
-
-  const results = useMemo(() => {
-    if (!touched) return null
-    const locationQuery = normalize(location.trim())
-
-    return REAL_PROPERTIES.filter((property) => {
-      if (type && property.category !== type) return false
-      if (locationQuery) {
-        const haystack = normalize(`${property.neighborhood} ${property.city}`)
-        if (!haystack.includes(locationQuery)) return false
-      }
-      if (property.price != null && (property.price < band.min || property.price > band.max)) {
-        return false
-      }
-      return true
-    })
-  }, [type, location, band, touched])
-
-  const whatsappHref = buildWhatsAppLink(
-    [
-      'Olá! Estou procurando um imóvel com este perfil:',
-      `Tipo: ${type ? CATEGORIES[type].navLabel : 'qualquer tipo'}`,
-      location.trim() ? `Localização: ${location.trim()}` : null,
-      priceBand ? `Faixa de preço: ${band.label}` : null,
-      'Pode me ajudar a encontrar algo assim?',
-    ]
-      .filter(Boolean)
-      .join('\n'),
-  )
-
+  const [filters, setFilters] = useState(initial);
+  const touched = Object.values(filters).some(Boolean);
+  const results = filterProperties(PROPERTIES, filters);
+  const category = CATEGORY_LIST.find((c) => c.slug === filters.type);
+  const band = PRICE_BANDS.find((b) => b.value === filters.priceBand);
+  const summary = [
+    category?.navLabel,
+    filters.location.trim(),
+    filters.priceBand ? band?.label : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
+  useEffect(() => {
+    window.schaySearchSummary = summary;
+    window.dispatchEvent(new Event("schay-search-change"));
+    if (!touched) return;
+    const timer = setTimeout(() => {
+      trackEvent("property_search", {
+        category: filters.type,
+        price_band: filters.priceBand,
+        result_count: results.length,
+      });
+      if (!results.length)
+        trackEvent("search_no_results", {
+          category: filters.type,
+          price_band: filters.priceBand,
+          result_count: 0,
+        });
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [summary, filters.type, filters.priceBand, results.length, touched]);
+  const update = (key) => (event) =>
+    setFilters((current) => ({ ...current, [key]: event.target.value }));
   return (
-    // id="busca": o indicador de rolagem do hero (ScrollCue) some assim que
-    // esta seção entra na tela. Fundo termina no cinza-claro da vitrine.
-    <section
-      id="busca"
-      className="bg-linear-to-b from-paper-50 from-60% to-paper-100 pt-6 pb-14 sm:pt-8 sm:pb-20"
-    >
-      <div className="mx-auto max-w-5xl px-5 sm:px-8">
-        <Reveal className="flex justify-center">
-          <SectionEyebrow tone="dark">Encontre seu próximo endereço</SectionEyebrow>
-        </Reveal>
-        <Reveal
-          as="h2"
-          delay={0.08}
-          className="mt-4 text-center font-display text-3xl font-semibold text-navy-950 sm:text-4xl"
-        >
-          O que você está buscando?
-        </Reveal>
-
-        <Reveal
-          delay={0.16}
-          className="mt-10 rounded-3xl border border-navy-950/10 bg-white p-5 shadow-card sm:p-7"
-        >
-          <div className="grid gap-4 sm:grid-cols-3">
-            <label className="flex flex-col gap-2 text-sm">
-              <span className="font-medium text-navy-800">Tipo de imóvel</span>
-              <div className="relative">
-                <select
-                  value={type}
-                  onChange={(event) => {
-                    setType(event.target.value)
-                    setTouched(true)
-                  }}
-                  className={selectClass}
-                >
-                  <option value="">Qualquer tipo</option>
-                  {CATEGORY_LIST.map((category) => (
-                    <option key={category.slug} value={category.slug}>
-                      {category.navLabel}
-                    </option>
-                  ))}
-                </select>
-                <SlidersHorizontal
-                  className="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-navy-400"
-                  aria-hidden="true"
-                />
-              </div>
-            </label>
-
-            <label className="flex flex-col gap-2 text-sm">
-              <span className="font-medium text-navy-800">Cidade ou bairro</span>
-              <input
-                type="text"
-                value={location}
-                onChange={(event) => {
-                  setLocation(event.target.value)
-                  setTouched(true)
-                }}
-                placeholder="Ex: São Leopoldo, Nova Petrópolis, Campestre..."
-                className="w-full rounded-xl border border-navy-950/15 bg-paper-50 px-4 py-3 text-sm text-navy-900 placeholder:text-navy-400 outline-none transition-colors duration-200 focus:border-accent-600"
-              />
-            </label>
-
-            <label className="flex flex-col gap-2 text-sm">
-              <span className="font-medium text-navy-800">Faixa de preço (opcional)</span>
-              <div className="relative">
-                <select
-                  value={priceBand}
-                  onChange={(event) => {
-                    setPriceBand(event.target.value)
-                    setTouched(true)
-                  }}
-                  className={selectClass}
-                >
-                  {PRICE_BANDS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-                <SlidersHorizontal
-                  className="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-navy-400"
-                  aria-hidden="true"
-                />
-              </div>
-            </label>
-          </div>
-
-          {results === null ? (
-            <p className="mt-6 text-center text-sm text-navy-500">
-              Ajuste os filtros acima para ver imóveis reais disponíveis com esse perfil.
-            </p>
-          ) : results.length > 0 ? (
-            // Mesma fileira deslizante das páginas de categoria; a cada
-            // mudança de filtro ela volta ao primeiro imóvel e o contador
-            // acompanha o novo total.
-            <div className="mt-8">
-              <PropertyCarousel
-                layout="panel"
+    <section id="busca" className="scroll-mt-24 bg-white py-10 sm:py-12">
+      <div className="mx-auto max-w-6xl px-5 sm:px-8">
+        <h2 className="text-3xl text-navy-950">O que você está buscando?</h2>
+        <p className="mt-3 text-navy-600">
+          Filtre os imóveis ou envie suas preferências diretamente para a Schay.
+        </p>
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <label className="text-sm font-medium">
+            Tipo de imóvel
+            <select
+              value={filters.type}
+              onChange={update("type")}
+              className={fieldClass}
+            >
+              <option value="">Qualquer tipo</option>
+              {CATEGORY_LIST.map((c) => (
+                <option key={c.slug} value={c.slug}>
+                  {c.navLabel}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="text-sm font-medium">
+            Cidade ou bairro
+            <input
+              list="localizacoes"
+              value={filters.location}
+              onChange={update("location")}
+              placeholder="Ex.: São Leopoldo ou Campestre"
+              className={fieldClass}
+            />
+            <datalist id="localizacoes">
+              {locations.map((location) => (
+                <option value={location} key={location} />
+              ))}
+            </datalist>
+          </label>
+          <label className="text-sm font-medium">
+            Faixa de preço
+            <select
+              value={filters.priceBand}
+              onChange={update("priceBand")}
+              className={fieldClass}
+            >
+              {PRICE_BANDS.map((b) => (
+                <option key={b.value} value={b.value}>
+                  {b.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <div className="mt-5 flex flex-wrap items-center gap-4">
+          <Cta
+            href={buildWhatsAppLink(
+              `Olá, Schay! Estou procurando um imóvel${summary ? ": " + summary : " em São Leopoldo"}. Pode me ajudar a encontrar opções?`,
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-placement="search"
+            data-category={filters.type}
+          >
+            Enviar minha busca no WhatsApp
+          </Cta>
+          {touched && (
+            <button
+              onClick={() => setFilters(initial)}
+              className="rounded-lg px-3 py-3 text-sm font-semibold underline underline-offset-4"
+            >
+              Limpar filtros
+            </button>
+          )}
+        </div>
+        {filters.priceBand && (
+          <p className="mt-3 text-sm text-navy-600">
+            Esta seleção inclui apenas imóveis com preço informado.
+          </p>
+        )}
+        {touched && (
+          <div className="mt-8">
+            <h3
+              aria-live="polite"
+              id="resultados-da-busca"
+              className="text-xl text-navy-950"
+            >
+              {results.length
+                ? `${results.length} ${results.length === 1 ? "imóvel encontrado" : "imóveis encontrados"}`
+                : "Não encontramos imóveis com esses filtros no site."}
+            </h3>
+            {results.length ? (
+              <PropertyGrid
                 properties={results}
                 headingId="resultados-da-busca"
-                heading={
-                  <p
-                    id="resultados-da-busca"
-                    aria-live="polite"
-                    className="font-display text-lg font-semibold text-navy-950"
-                  >
-                    {results.length === 1
-                      ? '1 imóvel encontrado'
-                      : `${results.length} imóveis encontrados`}
-                  </p>
-                }
               />
-            </div>
-          ) : (
-            <div className="mt-8" aria-live="polite">
-              <EmptyCategoryState
-                category={{ navLabel: type ? CATEGORIES[type].navLabel : 'imóveis' }}
-                whatsappHrefOverride={whatsappHref}
-              />
-            </div>
-          )}
-        </Reveal>
+            ) : (
+              <p className="mt-3 text-navy-600">
+                Conte o que você procura para a Schay consultar outras
+                possibilidades. Use o botão acima para enviar sua busca.
+              </p>
+            )}
+          </div>
+        )}
       </div>
     </section>
-  )
+  );
 }

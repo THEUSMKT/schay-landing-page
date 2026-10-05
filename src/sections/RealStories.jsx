@@ -1,12 +1,14 @@
-import Reveal from '../components/Reveal'
-import SectionEyebrow from '../components/SectionEyebrow'
-import { SALES_STORIES } from '../data/stories'
+import Cta from "../components/Cta";
+import { buildWhatsAppLink } from "../data/site";
+import Reveal from "../components/Reveal";
+import SectionEyebrow from "../components/SectionEyebrow";
+import { SALES_STORIES } from "../data/stories";
 
 export default function RealStories() {
   return (
     <section
       id="historias-reais"
-      className="scroll-mt-24 bg-linear-to-b from-cream-100 from-75% to-paper-100 pt-10 pb-20 sm:pt-14 sm:pb-28"
+      className="scroll-mt-24 bg-linear-to-b from-cream-100 from-75% to-paper-100 py-12 sm:py-16"
     >
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal>
@@ -18,11 +20,12 @@ export default function RealStories() {
           delay={0.08}
           className="mt-4 max-w-xl font-display text-4xl font-semibold text-navy-950 sm:text-5xl"
         >
-          Transformando <em className="font-medium text-accent-600 italic">histórias.</em>
+          Vendas realizadas com acompanhamento da Schay
         </Reveal>
 
         <Reveal delay={0.14} className="mt-3 max-w-xl text-navy-600">
-          Cada novo endereço, uma nova história.
+          Registros de negócios concluídos. Estas fotos são de vendas
+          realizadas, não de imóveis disponíveis.
         </Reveal>
 
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -32,9 +35,9 @@ export default function RealStories() {
                 <div className="relative aspect-[4/5] w-full">
                   <img
                     src={story.image.src}
-                    alt={story.image.alt || ''}
+                    alt={story.image.alt || ""}
                     loading="lazy"
-                    style={{ objectPosition: story.image.position || 'center' }}
+                    style={{ objectPosition: story.image.position || "center" }}
                     className="absolute inset-0 h-full w-full object-cover"
                   />
                   {/* Gradiente padronizado sobre as 3 fotos de prova real */}
@@ -47,13 +50,26 @@ export default function RealStories() {
                   <h3 className="mt-3 font-display text-xl font-semibold text-navy-950">
                     {story.title}
                   </h3>
-                  <p className="mt-2 text-sm text-navy-950/60">{story.description}</p>
+                  <p className="mt-2 text-sm text-navy-950/60">
+                    {story.description}
+                  </p>
                 </div>
               </article>
             </Reveal>
           ))}
         </div>
+        <Cta
+          className="mt-8"
+          href={buildWhatsAppLink(
+            "Olá, Schay! Vi os registros de vendas no site e gostaria de ajuda para encontrar meu imóvel.",
+          )}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-placement="sales_proof"
+        >
+          Quero encontrar meu imóvel
+        </Cta>
       </div>
     </section>
-  )
+  );
 }

@@ -33,7 +33,7 @@ const STEPS = [
  */
 export default function HowItWorks() {
   return (
-    <section id="como-funciona" className="scroll-mt-24 bg-paper-50 pt-20 pb-10 sm:pt-28 sm:pb-14">
+    <section id="como-funciona" className="scroll-mt-24 bg-paper-50 py-12 sm:py-16">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal className="flex justify-center">
           <SectionEyebrow tone="dark">Como funciona</SectionEyebrow>
@@ -43,10 +43,10 @@ export default function HowItWorks() {
           delay={0.08}
           className="mt-4 text-center font-display text-4xl font-semibold text-navy-950 sm:text-5xl"
         >
-          Do primeiro contato <em className="font-medium text-accent-600 italic">à entrega das chaves.</em>
+          Como funciona o atendimento
         </Reveal>
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {STEPS.map((step, index) => (
             <Reveal
               key={step.title}

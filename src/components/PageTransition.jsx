@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion } from "framer-motion";
 
 /**
  * Envolve o conteúdo de cada rota para que a troca de página seja um
@@ -8,7 +8,7 @@ import { motion, useReducedMotion } from 'framer-motion'
  * deslocamento vertical.
  */
 export default function PageTransition({ children }) {
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotion();
 
   const variants = reduceMotion
     ? {
@@ -17,7 +17,7 @@ export default function PageTransition({ children }) {
         exit: { opacity: 1, y: 0, transition: { duration: 0 } },
       }
     : {
-        initial: { opacity: 0, y: 14 },
+        initial: { opacity: 1, y: 0 },
         animate: {
           opacity: 1,
           y: 0,
@@ -28,7 +28,7 @@ export default function PageTransition({ children }) {
           y: -10,
           transition: { duration: 0.25, ease: [0.4, 0, 1, 1] },
         },
-      }
+      };
 
   return (
     <motion.main
@@ -40,5 +40,5 @@ export default function PageTransition({ children }) {
     >
       {children}
     </motion.main>
-  )
+  );
 }
