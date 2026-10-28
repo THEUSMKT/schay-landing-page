@@ -41,7 +41,12 @@ export default function Hero() {
   // cobrir e o respiro entre os botões e a foto, onde ele fica no celular.
   return (
     <section ref={heroRef} className="relative overflow-hidden bg-navy-950">
-      <div className="absolute inset-0">
+      {/* No celular/tablet (layout empilhado) a foto cobre só o trecho do
+          texto e dos botões, não o hero inteiro: esticada até o fim do hero
+          ela ficava enorme e a família caía atrás da foto da corretora.
+          Assim a casa e a família sobem e aparecem atrás do texto, com um
+          véu mais leve no meio e esmaecendo pro azul antes do retrato. */}
+      <div className="absolute inset-x-0 top-0 h-[44rem] lg:inset-0 lg:h-auto">
         {/* alt="" de propósito: fundo decorativo atrás do texto do hero, que já
             transmite a mensagem sozinho — uma descrição aqui só duplicaria
             informação pra quem usa leitor de tela. */}
@@ -50,7 +55,7 @@ export default function Hero() {
           srcSet={`${fotoHero480} 480w, ${fotoHero960} 960w, ${fotoHero} 1456w`}
           sizes="100vw"
           alt=""
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover object-[46%_50%] lg:object-center"
           fetchPriority="high"
           onLoad={() => setBgReady(true)}
           onError={() => setBgReady(true)}
@@ -58,8 +63,9 @@ export default function Hero() {
           animate={{ opacity: bgReady ? 1 : 0 }}
           transition={{ duration: reduceMotion ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
         />
-        <div className="absolute inset-0 bg-linear-to-r from-navy-950 via-navy-950/80 to-navy-950/35" />
-        <div className="absolute inset-0 bg-linear-to-t from-navy-950 via-navy-950/10 to-navy-950/25" />
+        <div className="absolute inset-0 bg-linear-to-b from-navy-950/85 from-10% via-navy-950/50 via-50% to-navy-950 lg:hidden" />
+        <div className="absolute inset-0 hidden bg-linear-to-r from-navy-950 via-navy-950/80 to-navy-950/35 lg:block" />
+        <div className="absolute inset-0 hidden bg-linear-to-t from-navy-950 via-navy-950/10 to-navy-950/25 lg:block" />
       </div>
 
       {/* No celular a primeira dobra é mais compacta (título menor, menos
@@ -86,15 +92,15 @@ export default function Hero() {
             mode="mount"
             delay={0.16}
             data-cue-avoid="text"
-            className="mt-4 font-display text-[2.25rem] leading-[1.1] font-semibold text-balance text-white sm:mt-6 sm:text-6xl sm:leading-[1.08] lg:text-[4rem] lg-short:mt-4 lg-short:text-[3.25rem]"
+            className="mt-4 font-display text-[2.25rem] leading-[1.1] font-semibold text-balance text-white sm:mt-6 sm:text-6xl sm:leading-[1.08] lg:text-[4rem] lg-short:mt-4 lg-short:text-[3.25rem] max-lg:[text-shadow:0_2px_14px_rgba(7,13,26,0.85)]"
           >
             Encontre seu imóvel em {SITE.region}
             <br />
-            <em className="font-medium text-accent-400 italic">com quem acompanha cada etapa.</em>
+            <em className="font-medium text-accent-300 italic lg:text-accent-400">com quem acompanha cada etapa.</em>
           </Reveal>
 
           <Reveal mode="mount" delay={0.26} data-cue-avoid="text">
-            <p className="mt-4 max-w-md text-base text-white/70 sm:mt-6 sm:text-lg">
+            <p className="mt-4 max-w-md text-base text-white/85 [text-shadow:0_1px_10px_rgba(7,13,26,0.9)] sm:mt-6 sm:text-lg lg:text-white/70 lg:[text-shadow:none]">
               Casas, apartamentos e terrenos com curadoria da Schay — atendimento direto, do
               primeiro contato à entrega das chaves.
             </p>
