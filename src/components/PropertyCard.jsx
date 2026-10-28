@@ -7,12 +7,11 @@ import {
   Car,
   MoveHorizontal,
   MoveVertical,
-} from "lucide-react";
-import { useLocation } from "react-router-dom";
-import PropertyMedia from "./PropertyMedia";
-import Cta from "./Cta";
-import { CATEGORIES } from "../data/properties";
-import { buildWhatsAppLink } from "../data/site";
+} from 'lucide-react'
+import PropertyMedia from './PropertyMedia'
+import Cta from './Cta'
+import { CATEGORIES } from '../data/properties'
+import { buildWhatsAppLink } from '../data/site'
 
 /**
  * Card de imóvel usado nas páginas de categoria (/apartamentos, /casas,
@@ -23,12 +22,12 @@ import { buildWhatsAppLink } from "../data/site";
 // 'lot' = só a área do terreno; 'built' = área construída/privativa;
 // ausente/null = tipo não confirmado no anúncio original (nunca presumir).
 const AREA_TYPE_LABEL = {
-  lot: "terreno",
-  built: "construída",
-};
+  lot: 'terreno',
+  built: 'construída',
+}
 
-const formatM2 = (value) => `${value.toLocaleString("pt-BR")} m²`;
-const plural = (count, one, many) => `${count} ${count === 1 ? one : many}`;
+const formatM2 = (value) => `${value.toLocaleString('pt-BR')} m²`
+const plural = (count, one, many) => `${count} ${count === 1 ? one : many}`
 
 // Características dos imóveis que usam os campos opcionais (areas, bedrooms,
 // rooms, frontM...) — só entra o que foi informado no cadastro. Metragens
@@ -38,77 +37,54 @@ function buildSpecs(property) {
     Icon: Ruler,
     label: `${area.label}: ${formatM2(area.m2)}`,
     fullRow: true,
-  }));
+  }))
   if (property.frontM != null) {
-    specs.push({ Icon: MoveHorizontal, label: `Frente: ${property.frontM} m` });
+    specs.push({ Icon: MoveHorizontal, label: `Frente: ${property.frontM} m` })
   }
   if (property.backM != null) {
-    specs.push({ Icon: MoveVertical, label: `Fundos: ${property.backM} m` });
+    specs.push({ Icon: MoveVertical, label: `Fundos: ${property.backM} m` })
   }
   if (property.bedrooms != null) {
-    const suites = property.suites
-      ? `, sendo ${plural(property.suites, "suíte", "suítes")}`
-      : "";
-    specs.push({
-      Icon: BedDouble,
-      label: `${plural(property.bedrooms, "quarto", "quartos")}${suites}`,
-    });
+    const suites = property.suites ? `, sendo ${plural(property.suites, 'suíte', 'suítes')}` : ''
+    specs.push({ Icon: BedDouble, label: `${plural(property.bedrooms, 'quarto', 'quartos')}${suites}` })
   }
   if (property.rooms != null) {
-    specs.push({
-      Icon: DoorOpen,
-      label: plural(property.rooms, "sala", "salas"),
-    });
+    specs.push({ Icon: DoorOpen, label: plural(property.rooms, 'sala', 'salas') })
   }
   if (property.bathrooms != null) {
-    specs.push({
-      Icon: Bath,
-      label: plural(property.bathrooms, "banheiro", "banheiros"),
-    });
+    specs.push({ Icon: Bath, label: plural(property.bathrooms, 'banheiro', 'banheiros') })
   }
   if (property.parkingSpaces != null) {
-    specs.push({
-      Icon: Car,
-      label: plural(property.parkingSpaces, "vaga", "vagas"),
-    });
+    specs.push({ Icon: Car, label: plural(property.parkingSpaces, 'vaga', 'vagas') })
   }
-  return specs;
+  return specs
 }
 
-export default function PropertyCard({ property, className = "" }) {
-  const { pathname } = useLocation();
-  const category = CATEGORIES[property.category];
-  const typeLabel = property.typeLabel || category.tag;
+export default function PropertyCard({ property, className = '' }) {
+  const category = CATEGORIES[property.category]
+  const typeLabel = property.typeLabel || category.tag
   // Tipo + bairro + cidade (+ preço, quando existir): o suficiente pra
   // corretora identificar o imóvel sem ambiguidade, com mensagem curta.
-  // O ID existente identifica a referência de forma estável, sem renumerar o estoque.
-  const citySuffix = property.city ? `, em ${property.city}` : "";
-  const priceSuffix = property.priceLabel
-    ? `, no valor de ${property.priceLabel}`
-    : "";
+  // Por pedido da Schay, os imóveis não têm código exibido em lugar nenhum.
+  const citySuffix = property.city ? `, em ${property.city}` : ''
+  const priceSuffix = property.priceLabel ? `, no valor de ${property.priceLabel}` : ''
   const whatsappHref = buildWhatsAppLink(
-    `Olá, Schay! Quero consultar ${property.title} no bairro ${property.neighborhood}${citySuffix}${priceSuffix}. Referência: ${property.id}. ${typeof window !== "undefined" ? window.location.origin + import.meta.env.BASE_URL.replace(/\/$/, "") + category.path + "#" + property.id : ""}`,
-  );
+    `Olá! Gostaria de saber mais informações sobre este imóvel: ${typeLabel} no bairro ${property.neighborhood}${citySuffix}${priceSuffix}.`,
+  )
   // Cards de casas cadastrados no formato original (areaM2 + bedroomsLabel)
   // mantêm exatamente a apresentação de antes.
-  const isLegacyHouse = property.bedroomsLabel !== undefined;
-  const areaLabel =
-    property.areaM2 && AREA_TYPE_LABEL[property.areaType]
-      ? `${formatM2(property.areaM2)} (${AREA_TYPE_LABEL[property.areaType]})`
-      : null;
+  const isLegacyHouse = property.bedroomsLabel !== undefined
+  const areaLabel = property.areaM2
+    ? `${property.areaM2} m² (${AREA_TYPE_LABEL[property.areaType] || 'tipo a confirmar'})`
+    : 'Metragem a informar'
 
   return (
     <article
-      id={pathname === category.path ? property.id : undefined}
-      style={{ scrollMarginTop: "6rem" }}
       className={`flex flex-col overflow-hidden rounded-2xl border border-navy-950/10 bg-paper-50 shadow-soft transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-card ${className}`}
     >
       <div className="relative">
         <div className="relative aspect-[4/3]">
-          <PropertyMedia
-            image={property.image}
-            className="absolute inset-0 h-full w-full"
-          />
+          <PropertyMedia image={property.image} className="absolute inset-0 h-full w-full" />
         </div>
         <span className="absolute -bottom-3 left-4 rounded-full bg-accent-500 px-3 py-1 text-xs font-semibold text-navy-950 shadow-soft">
           {typeLabel}
@@ -116,22 +92,16 @@ export default function PropertyCard({ property, className = "" }) {
       </div>
 
       <div className="flex flex-1 flex-col px-5 pt-7 pb-5">
-        <p className="mb-2 text-xs text-navy-600">Referência: {property.id}</p>
-        <h3 className="font-display text-xl font-semibold text-balance text-navy-950">
-          {property.title}
-        </h3>
+        <h3 className="font-display text-xl font-semibold text-balance text-navy-950">{property.title}</h3>
 
         {property.priceLabel ? (
-          <p className="mt-1 font-display text-xl font-semibold text-navy-950">
+          <p className="mt-1 font-display text-lg font-semibold text-accent-600">
             {property.priceLabel}
           </p>
         ) : null}
 
         <div className="mt-3 flex items-start gap-2 text-sm text-navy-600">
-          <MapPin
-            className="mt-0.5 h-4 w-4 shrink-0 text-accent-600"
-            aria-hidden="true"
-          />
+          <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent-600" aria-hidden="true" />
           <span>
             {property.neighborhood}
             <br />
@@ -142,18 +112,13 @@ export default function PropertyCard({ property, className = "" }) {
         <div className="my-4 h-px bg-navy-950/10" />
 
         {isLegacyHouse ? (
-          <div className="flex flex-wrap items-center gap-3 text-sm text-navy-700">
-            {areaLabel && (
-              <span className="inline-flex items-center gap-1.5">
-                <Ruler className="h-4 w-4 text-accent-600" aria-hidden="true" />
-                {areaLabel}
-              </span>
-            )}
+          <div className="flex items-center gap-5 text-sm text-navy-700">
             <span className="inline-flex items-center gap-1.5">
-              <BedDouble
-                className="h-4 w-4 text-accent-600"
-                aria-hidden="true"
-              />
+              <Ruler className="h-4 w-4 text-accent-600" aria-hidden="true" />
+              {areaLabel}
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <BedDouble className="h-4 w-4 text-accent-600" aria-hidden="true" />
               {property.bedroomsLabel}
             </span>
           </div>
@@ -162,12 +127,9 @@ export default function PropertyCard({ property, className = "" }) {
             {buildSpecs(property).map(({ Icon, label, fullRow }) => (
               <li
                 key={label}
-                className={`inline-flex items-center gap-1.5 ${fullRow ? "w-full" : ""}`}
+                className={`inline-flex items-center gap-1.5 ${fullRow ? 'w-full' : ''}`}
               >
-                <Icon
-                  className="h-4 w-4 shrink-0 text-accent-600"
-                  aria-hidden="true"
-                />
+                <Icon className="h-4 w-4 shrink-0 text-accent-600" aria-hidden="true" />
                 {label}
               </li>
             ))}
@@ -181,16 +143,13 @@ export default function PropertyCard({ property, className = "" }) {
             rel="noopener noreferrer"
             variant="amber"
             className="w-full"
-            aria-label={`Consultar imóvel no WhatsApp: ${property.title}`}
-            data-property-id={property.id}
-            data-category={property.category}
-            data-placement="property_card"
+            aria-label={`Saiba mais pelo WhatsApp sobre ${property.title}`}
             data-fab-avoid
           >
-            Consultar imóvel no WhatsApp
+            Saiba mais
           </Cta>
         </div>
       </div>
     </article>
-  );
+  )
 }

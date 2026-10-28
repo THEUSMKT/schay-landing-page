@@ -14,6 +14,9 @@
 @import "@fontsource/inter/600.css";
 @import "@fontsource/inter/700.css";
 
+/* Notebook de tela baixa (largura de desktop, até ~820px de altura útil). */
+@custom-variant lg-short (@media (min-width: 64rem) and (max-height: 820px));
+
 @theme {
   --font-display: "Playfair Display", "Iowan Old Style", Georgia, serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -182,58 +185,54 @@
   }
 }
 
-/* Botão dourado "neon" do questionário (Hero, barra fixa no celular e envio
-   do formulário): brilho que pulsa devagar e um reflexo que atravessa o
-   botão de tempos em tempos. Sem animação com prefers-reduced-motion — o
-   brilho fica parado. */
-.neon-cta {
+/* Botão do questionário (Hero, barra fixa no celular e envio do
+   formulário): dourado claro e sóbrio, com um brilho discreto que respira
+   devagar e um reflexo suave que atravessa o botão de tempos em tempos.
+   Parado com prefers-reduced-motion. */
+.lead-cta {
   position: relative;
   isolation: isolate;
   overflow: hidden;
   color: var(--color-navy-950);
-  background: linear-gradient(180deg, #ffe3a6 0%, var(--color-amber-400) 55%, var(--color-amber-500) 100%);
+  background: linear-gradient(180deg, #f6e7c8 0%, #e9cf9c 100%);
   box-shadow:
-    0 0 0 1px rgba(255, 231, 176, 0.9) inset,
-    0 0 14px 2px rgba(247, 205, 130, 0.75),
-    0 0 38px 6px rgba(237, 166, 56, 0.45);
-  text-shadow: 0 1px 0 rgba(255, 240, 205, 0.6);
+    0 0 0 1px rgba(255, 244, 222, 0.7) inset,
+    0 10px 26px -12px rgba(233, 207, 156, 0.55);
   transition: transform 0.2s, filter 0.2s;
 }
-.neon-cta:hover {
+.lead-cta:hover {
   transform: translateY(-2px);
-  filter: brightness(1.05);
+  filter: brightness(1.04);
 }
-.neon-cta:active {
+.lead-cta:active {
   transform: translateY(0);
 }
-.neon-cta::after {
+.lead-cta::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.75) 50%, transparent 65%);
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.55) 50%, transparent 62%);
   transform: translateX(-120%);
 }
 
-@keyframes neon-pulse {
+@keyframes lead-cta-glow {
   0%,
   100% {
     box-shadow:
-      0 0 0 1px rgba(255, 231, 176, 0.9) inset,
-      0 0 14px 2px rgba(247, 205, 130, 0.75),
-      0 0 38px 6px rgba(237, 166, 56, 0.45);
+      0 0 0 1px rgba(255, 244, 222, 0.7) inset,
+      0 10px 26px -12px rgba(233, 207, 156, 0.55);
   }
   50% {
     box-shadow:
-      0 0 0 1px rgba(255, 231, 176, 1) inset,
-      0 0 22px 5px rgba(247, 205, 130, 0.95),
-      0 0 60px 14px rgba(237, 166, 56, 0.6);
+      0 0 0 1px rgba(255, 244, 222, 0.85) inset,
+      0 10px 30px -8px rgba(233, 207, 156, 0.75);
   }
 }
 
-@keyframes neon-sheen {
+@keyframes lead-cta-sheen {
   0%,
-  70% {
+  80% {
     transform: translateX(-120%);
   }
   100% {
@@ -242,11 +241,11 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .neon-cta {
-    animation: neon-pulse 2.4s ease-in-out infinite;
+  .lead-cta {
+    animation: lead-cta-glow 3.2s ease-in-out infinite;
   }
-  .neon-cta::after {
-    animation: neon-sheen 4.5s ease-in-out infinite;
+  .lead-cta::after {
+    animation: lead-cta-sheen 7s ease-in-out infinite;
   }
 }
 

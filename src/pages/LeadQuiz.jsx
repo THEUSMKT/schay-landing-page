@@ -353,7 +353,7 @@ function ContactStep({ answers, headingRef, onSubmit }) {
 
       <button
         type="submit"
-        className="neon-cta mt-6 flex w-full items-center justify-center rounded-full px-6 py-4 text-base font-bold"
+        className="lead-cta mt-6 flex w-full items-center justify-center rounded-full px-6 py-4 text-base font-semibold"
       >
         Ver imóveis para o meu perfil
       </button>

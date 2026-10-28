@@ -96,7 +96,7 @@ no restante do site.
 
 ## Questionário de leads (/minha-busca)
 
-O botão dourado "Quero receber imóveis no meu perfil" (Hero e barra fixa
+O botão dourado "Encontrar imóveis ideais para meu perfil" (Hero e barra fixa
 no celular) leva a um questionário de 6 perguntas + contato
 (`src/pages/LeadQuiz.jsx`; perguntas, pontuação e mensagem em
 `src/lib/lead.js`). Cada lead vira uma linha na planilha "Leads do site –
