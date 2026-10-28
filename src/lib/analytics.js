@@ -9,6 +9,8 @@ export function trackEvent(event, context = {}) {
     "intent",
     "result_count",
     "price_band",
+    "step",
+    "lead_temperature",
   ];
   const data = Object.fromEntries(
     Object.entries(context).filter(([key]) => allowed.includes(key)),

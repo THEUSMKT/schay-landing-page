@@ -182,6 +182,74 @@
   }
 }
 
+/* Botão dourado "neon" do questionário (Hero, barra fixa no celular e envio
+   do formulário): brilho que pulsa devagar e um reflexo que atravessa o
+   botão de tempos em tempos. Sem animação com prefers-reduced-motion — o
+   brilho fica parado. */
+.neon-cta {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: var(--color-navy-950);
+  background: linear-gradient(180deg, #ffe3a6 0%, var(--color-amber-400) 55%, var(--color-amber-500) 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 231, 176, 0.9) inset,
+    0 0 14px 2px rgba(247, 205, 130, 0.75),
+    0 0 38px 6px rgba(237, 166, 56, 0.45);
+  text-shadow: 0 1px 0 rgba(255, 240, 205, 0.6);
+  transition: transform 0.2s, filter 0.2s;
+}
+.neon-cta:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+}
+.neon-cta:active {
+  transform: translateY(0);
+}
+.neon-cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.75) 50%, transparent 65%);
+  transform: translateX(-120%);
+}
+
+@keyframes neon-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(255, 231, 176, 0.9) inset,
+      0 0 14px 2px rgba(247, 205, 130, 0.75),
+      0 0 38px 6px rgba(237, 166, 56, 0.45);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(255, 231, 176, 1) inset,
+      0 0 22px 5px rgba(247, 205, 130, 0.95),
+      0 0 60px 14px rgba(237, 166, 56, 0.6);
+  }
+}
+
+@keyframes neon-sheen {
+  0%,
+  70% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .neon-cta {
+    animation: neon-pulse 2.4s ease-in-out infinite;
+  }
+  .neon-cta::after {
+    animation: neon-sheen 4.5s ease-in-out infinite;
+  }
+}
+
 /* Rede de segurança para prefers-reduced-motion: cobre as transições/
    animações puramente em CSS (hover, foco, o acordeão de dúvidas
    frequentes) que não passam pelo Reveal nem checam useReducedMotion() no

@@ -112,6 +112,13 @@ const ROUTES = [
     description:
       'Terrenos, sítios e oportunidades comerciais em São Leopoldo, Nova Petrópolis e região com a Schay Corretora.',
   },
+  {
+    path: '/minha-busca',
+    outFile: 'minha-busca/index.html',
+    priority: '0.5',
+    description:
+      'Responda 6 perguntas rápidas e receba da Schay imóveis em São Leopoldo e região que combinam com o seu perfil e o seu orçamento.',
+  },
 ]
 
 const MIME = {

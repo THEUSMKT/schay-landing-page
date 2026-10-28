@@ -3,17 +3,21 @@ import { AnimatePresence } from 'framer-motion'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import WhatsAppButton from './components/WhatsAppButton'
+import LeadStickyBar from './components/LeadStickyBar'
 import PageTransition from './components/PageTransition'
 import ScrollManager from './components/ScrollManager'
 import Home from './pages/Home'
 import CategoryPage from './pages/CategoryPage'
+import LeadQuiz from './pages/LeadQuiz'
 import NotFound from './pages/NotFound'
 
 function App() {
   const location = useLocation()
 
   return (
-    <div className="flex min-h-screen flex-col bg-navy-900">
+    // Folga no fim da página do tamanho da barra fixa do celular, enquanto
+    // ela está na tela (ver LeadStickyBar).
+    <div className="flex min-h-screen flex-col bg-navy-900 max-sm:pb-(--lead-bar-offset)">
       <ScrollManager />
       <Header />
 
@@ -59,6 +63,14 @@ function App() {
             }
           />
           <Route
+            path="/minha-busca"
+            element={
+              <PageTransition>
+                <LeadQuiz />
+              </PageTransition>
+            }
+          />
+          <Route
             path="*"
             element={
               <PageTransition>
@@ -71,6 +83,7 @@ function App() {
 
       <Footer />
       <WhatsAppButton />
+      <LeadStickyBar />
     </div>
   )
 }

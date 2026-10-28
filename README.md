@@ -10,7 +10,7 @@ próprias, acessadas com uma transição suave a partir dos cards da Home.
 - **React 19 + Vite** — build simples, gera arquivos estáticos (`dist/`) que
   rodam em qualquer host de site estático.
 - **React Router** — rotas `/`, `/apartamentos`, `/casas`,
-  `/terrenos-e-oportunidades`.
+  `/terrenos-e-oportunidades` e `/minha-busca` (questionário de leads).
 - **Framer Motion** — transição suave entre páginas e animação de entrada
   dos títulos ao rolar a página.
 - **Tailwind CSS v4** — estilos, com a paleta e tipografia do site definidas
@@ -93,6 +93,22 @@ Se no futuro for necessário capturar os leads também por e-mail ou em uma
 planilha/CRM, dá pra trocar a função `handleSubmit` por uma chamada a um
 serviço de formulários (Netlify Forms, Formspree, EmailJS etc.) sem mexer
 no restante do site.
+
+## Questionário de leads (/minha-busca)
+
+O botão dourado "Quero receber imóveis no meu perfil" (Hero e barra fixa
+no celular) leva a um questionário de 6 perguntas + contato
+(`src/pages/LeadQuiz.jsx`; perguntas, pontuação e mensagem em
+`src/lib/lead.js`). Cada lead vira uma linha na planilha "Leads do site –
+Schay" (Google Sheets), via o web app do Apps Script em `LEADS_ENDPOINT`,
+com a temperatura (quente / morno / frio) e a origem (Google Ads, UTM ou
+site de origem — `src/lib/attribution.js`). A temperatura nunca aparece
+para o visitante nem na mensagem do WhatsApp. Orçamento a partir de
+R$ 200 mil sempre mostra "Há imóveis disponíveis para o seu perfil!";
+abaixo disso, os imóveis do site que cabem no orçamento (ou um convite
+para o WhatsApp). Os eventos `lead_form_start`, `lead_form_step` e
+`lead_submit` (com `lead_temperature`) vão para o `dataLayer` — base para
+as conversões do Google Ads quando a tag for instalada.
 
 ## Deploy
 

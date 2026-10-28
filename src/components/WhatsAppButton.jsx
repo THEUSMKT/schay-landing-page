@@ -107,7 +107,9 @@ export default function WhatsAppButton() {
               duration: reduceMotion ? 0 : 0.2,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className={`z-50 flex items-center justify-center rounded-full bg-whatsapp text-white shadow-card transition-transform duration-200 hover:scale-105 focus-visible:scale-105 ${POSITION}`}
+            // No celular, enquanto a barra do questionário está na tela, o
+            // WhatsApp dela substitui este botão (ver LeadStickyBar).
+            className={`z-50 flex max-sm:in-data-lead-bar:hidden items-center justify-center rounded-full bg-whatsapp text-white shadow-card transition-transform duration-200 hover:scale-105 focus-visible:scale-105 ${POSITION}`}
           >
             <WhatsAppIcon className="relative h-7 w-7" />
             <span className="ml-2 text-sm font-semibold">

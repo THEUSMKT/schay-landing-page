@@ -4,6 +4,8 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App.jsx";
 import { installWhatsAppTracking } from "./lib/analytics";
+import { captureAttribution } from "./lib/attribution";
+captureAttribution();
 const removeTracking = installWhatsAppTracking();
 if (import.meta.hot) import.meta.hot.dispose(removeTracking);
 

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import Cta from "../components/Cta";
+import LeadCta from "../components/LeadCta";
+import WhatsAppIcon from "../components/icons/WhatsAppIcon";
 import { SITE, buildWhatsAppLink } from "../data/site";
 import fotoHero from "../assets/images/hero-casa-familia.webp";
 import fotoHero480 from "../assets/images/hero-casa-familia-480.webp";
@@ -27,32 +28,44 @@ export default function Hero() {
             <span className="text-amber-300">com a ajuda da Schay.</span>
           </h1>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
-            Conte o bairro, o tipo de imóvel e quanto pretende investir.
-            Converse diretamente com a Schay para encontrar opções que combinem
-            com sua busca.
+            Conte o bairro, o tipo de imóvel e quanto pretende investir. A
+            Schay encontra as opções que combinam com a sua busca.
           </p>
-          <div className="mt-6 flex flex-col items-stretch gap-3 sm:items-start">
-            <Cta
-              href={buildWhatsAppLink(
-                "Olá, Schay! Estou procurando um imóvel em São Leopoldo. Pode me ajudar a encontrar opções?",
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-placement="hero"
-              className="py-4 text-base"
-            >
-              Buscar meu imóvel pelo WhatsApp
-            </Cta>
-            <Link
-              to="/#imoveis"
-              className="rounded-full border border-white/30 px-6 py-3 text-center text-sm font-semibold text-white hover:bg-white/10"
-            >
-              Ver imóveis disponíveis
-            </Link>
+          <div className="mt-7 flex flex-col items-stretch sm:items-start">
+            {/* Principal (anúncios do Google): o questionário qualifica quem
+                está mesmo procurando. data-lead-cta: enquanto este botão
+                está na tela, a barra fixa do celular (LeadStickyBar) fica
+                escondida. */}
+            <LeadCta
+              placement="hero"
+              data-lead-cta
+              className="min-h-14 py-4 text-base sm:text-lg"
+            />
+            <p className="mt-3 max-w-md text-sm text-white/80">
+              Responda 6 perguntas rápidas e a Schay separa as opções certas
+              para você.
+            </p>
+            <div className="mt-5 grid grid-cols-2 gap-3 sm:flex">
+              <a
+                href={buildWhatsAppLink(
+                  "Olá, Schay! Estou procurando um imóvel em São Leopoldo. Pode me ajudar a encontrar opções?",
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-placement="hero"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-white/10 sm:px-6"
+              >
+                <WhatsAppIcon className="h-4 w-4 shrink-0" />
+                Falar no WhatsApp
+              </a>
+              <Link
+                to="/#imoveis"
+                className="rounded-full border border-white/30 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-white/10 sm:px-6"
+              >
+                Ver imóveis
+              </Link>
+            </div>
           </div>
-          <p className="mt-4 text-sm text-white/80">
-            Atendimento direto com a Schay. Sem cadastro obrigatório.
-          </p>
           <a
             href={buildWhatsAppLink(
               "Olá, Schay! Quero conversar sobre a venda do meu imóvel.",
