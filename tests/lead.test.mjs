@@ -99,8 +99,9 @@ test('envio para a planilha é uma requisição simples, sem preflight', async (
   assert.equal(calls[0].options.keepalive, true)
   assert.match(calls[0].options.headers['Content-Type'], /^text\/plain/)
   assert.deepEqual(JSON.parse(calls[0].options.body), { nome: 'Ana' })
+  assert.equal(await sendLead({ nome: 'Ana' }, 'https://example.test/exec'), true)
   global.fetch = async () => { throw new Error('offline') }
-  await sendLead({}, 'https://example.test/exec')
+  assert.equal(await sendLead({}, 'https://example.test/exec'), false)
   delete global.fetch
 })
 
@@ -122,4 +123,51 @@ test('eventos do questionário passam passo e temperatura, sem dados pessoais', 
     { event: 'lead_form_step', page_path: '/minha-busca', step: 3 },
   ])
   delete global.window
+})
+
+const adsConfig = { id: 'AW-1', labels: { LABEL_LEAD_FORMULARIO: 'abc', LABEL_LEAD_QUENTE: '', LABEL_CLIQUE_WHATSAPP: ' wa1 ' } }
+
+test('conversão do Ads só dispara com rótulo preenchido e gtag carregado', async () => {
+  const { trackAdsConversion, ADS_CONFIG } = await import('../src/lib/adsConversions.js')
+  const calls = []
+  global.window = { gtag: (...args) => calls.push(args) }
+  trackAdsConversion('LABEL_LEAD_FORMULARIO', adsConfig)
+  trackAdsConversion('LABEL_LEAD_QUENTE', adsConfig)
+  trackAdsConversion('LABEL_CLIQUE_WHATSAPP', adsConfig)
+  assert.deepEqual(calls, [
+    ['event', 'conversion', { send_to: 'AW-1/abc' }],
+    ['event', 'conversion', { send_to: 'AW-1/wa1' }],
+  ])
+  assert.equal(ADS_CONFIG.id, 'AW-18481242347')
+  assert.deepEqual(Object.keys(ADS_CONFIG.labels), ['LABEL_LEAD_FORMULARIO', 'LABEL_LEAD_QUENTE', 'LABEL_CLIQUE_WHATSAPP'])
+  assert.ok(Object.values(ADS_CONFIG.labels).every((l) => l === '' || l.length > 0))
+  delete global.window.gtag
+  trackAdsConversion('LABEL_LEAD_FORMULARIO', adsConfig)
+  assert.equal(calls.length, 2)
+  delete global.window
+})
+
+test('um listener só conta cliques em links do WhatsApp, sem impedir o clique', async () => {
+  const { installWhatsAppConversion } = await import('../src/lib/adsConversions.js')
+  const calls = []
+  const listeners = new Set()
+  global.document = { addEventListener: (_, f) => listeners.add(f), removeEventListener: (_, f) => listeners.delete(f) }
+  global.window = { gtag: (...args) => calls.push(args), location: { href: 'https://schaycorretora.com.br/casas' } }
+  const stop = installWhatsAppConversion(adsConfig)
+  assert.equal(listeners.size, 1)
+  const click = (href, extra = {}) => {
+    const event = { defaultPrevented: false, target: { closest: () => (href === null ? null : { href }) }, ...extra }
+    for (const fn of listeners) fn(event)
+  }
+  click('https://wa.me/5551992789076?text=Oi')
+  click('https://api.whatsapp.com/send?phone=5551992789076')
+  click('https://example.com/')
+  click('/casas')
+  click(null)
+  click('https://wa.me/5551992789076', { defaultPrevented: true })
+  assert.equal(calls.length, 2)
+  stop()
+  assert.equal(listeners.size, 0)
+  delete global.window
+  delete global.document
 })

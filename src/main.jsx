@@ -5,9 +5,15 @@ import "./index.css";
 import App from "./App.jsx";
 import { installWhatsAppTracking } from "./lib/analytics";
 import { captureAttribution } from "./lib/attribution";
+import { installWhatsAppConversion } from "./lib/adsConversions";
 captureAttribution();
 const removeTracking = installWhatsAppTracking();
-if (import.meta.hot) import.meta.hot.dispose(removeTracking);
+const removeAdsConversion = installWhatsAppConversion();
+if (import.meta.hot)
+  import.meta.hot.dispose(() => {
+    removeTracking();
+    removeAdsConversion();
+  });
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

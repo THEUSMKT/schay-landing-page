@@ -217,6 +217,8 @@ export function buildLeadPayload(answers, attribution = {}) {
  * a resposta fica opaca, então não dá pra saber se gravou — por isso o
  * resultado e o botão do WhatsApp aparecem de qualquer forma. `keepalive`
  * garante o envio mesmo se a pessoa sair da página logo em seguida.
+ * Resolve `true` se a requisição chegou ao servidor e `false` se falhou
+ * (rede fora do ar, bloqueio) — nunca rejeita.
  */
 export function sendLead(payload, endpoint = LEADS_ENDPOINT) {
   return fetch(endpoint, {
@@ -225,5 +227,8 @@ export function sendLead(payload, endpoint = LEADS_ENDPOINT) {
     keepalive: true,
     headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(payload),
-  }).catch(() => {});
+  }).then(
+    () => true,
+    () => false,
+  );
 }

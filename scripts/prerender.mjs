@@ -302,6 +302,13 @@ async function main() {
   const browser = await chromium.launch(launchOptions)
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } })
 
+  // O index.html carrega a tag do Google Ads (gtag.js). Aqui, no build,
+  // ela não pode rodar: mandaria visitas falsas da máquina de build pro
+  // Google, e o gtag.js ainda injetaria scripts extras no HTML salvo.
+  await page.route(/googletagmanager\.com|google-analytics\.com|doubleclick\.net|googleadservices\.com/, (route) =>
+    route.abort(),
+  )
+
   const pageErrors = []
   page.on('pageerror', (err) => pageErrors.push(String(err)))
 

@@ -110,6 +110,20 @@ para o WhatsApp). Os eventos `lead_form_start`, `lead_form_step` e
 `lead_submit` (com `lead_temperature`) vão para o `dataLayer` — base para
 as conversões do Google Ads quando a tag for instalada.
 
+## Conversões do Google Ads
+
+A tag do Google (gtag.js, conta `AW-18481242347`) está no `<head>` do
+`index.html`, então vale para todas as páginas (o pré-renderizador bloqueia
+a tag durante o build, pra não mandar visitas falsas). As conversões ficam
+em `src/lib/adsConversions.js`, em `ADS_CONFIG.labels`: cole ali o rótulo
+de cada conversão criada no Google Ads (a parte depois da barra do
+`send_to`). Rótulo vazio = conversão desligada.
+
+- `LABEL_LEAD_FORMULARIO`: questionário enviado (depois do envio à planilha,
+  nunca com erro de validação).
+- `LABEL_LEAD_QUENTE`: o mesmo envio, quando o lead é classificado Quente.
+- `LABEL_CLIQUE_WHATSAPP`: clique em qualquer link wa.me / whatsapp.com.
+
 ## Deploy
 
 O projeto já sai pronto para os hosts estáticos mais comuns — o build

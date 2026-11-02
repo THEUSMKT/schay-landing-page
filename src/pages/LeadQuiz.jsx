@@ -9,6 +9,7 @@ import { PROPERTIES } from "../data/properties";
 import { SITE, buildWhatsAppLink } from "../data/site";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import { trackEvent } from "../lib/analytics";
+import { trackAdsConversion } from "../lib/adsConversions";
 import { getAttribution } from "../lib/attribution";
 import {
   QUESTIONS,
@@ -82,8 +83,14 @@ export default function LeadQuiz() {
   const submit = (contact) => {
     const final = { ...answers, ...contact };
     setAnswers(final);
-    sendLead(buildLeadPayload(final, getAttribution()));
     const { temperatura } = scoreLead(final);
+    // Conversões do Google Ads só depois que o envio chegou ao servidor —
+    // nunca no clique em si nem com erro de validação (que nem chega aqui).
+    sendLead(buildLeadPayload(final, getAttribution())).then((sent) => {
+      if (!sent) return;
+      trackAdsConversion("LABEL_LEAD_FORMULARIO");
+      if (temperatura === "Quente") trackAdsConversion("LABEL_LEAD_QUENTE");
+    });
     trackEvent("lead_submit", {
       placement: "minha_busca",
       lead_temperature: temperatura.toLowerCase(),
