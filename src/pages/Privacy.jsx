@@ -173,7 +173,9 @@ export default function Privacy() {
               dados em servidores fora do Brasil.
             </p>
             <p>
-              Por quanto tempo guardamos os dados: <ToConfirm />
+              <strong>Por quanto tempo guardamos os dados:</strong> o seu nome, o seu
+              WhatsApp e as suas respostas do questionário ficam guardados por 1 mês, a
+              contar do envio, e depois são apagados da planilha.
             </p>
           </Section>
 
@@ -256,9 +258,9 @@ export default function Privacy() {
               </li>
             </List>
             <p>
-              <strong>Como pedir:</strong> envie um e-mail para {email} ou uma mensagem para
-              o WhatsApp {SITE.whatsappDisplay}, dizendo o que você deseja. A resposta vem
-              pelo mesmo canal. Se achar que seus dados foram tratados de forma
+              <strong>Como pedir:</strong> envie um e-mail para {email}, dizendo o que você
+              deseja (acesso, correção, exclusão…). Quem responde é a Schay Cardoso, pelo
+              mesmo e-mail. Se achar que seus dados foram tratados de forma
               inadequada, você também pode reclamar à Autoridade Nacional de Proteção de
               Dados (ANPD), em{" "}
               <ExternalLink href="https://www.gov.br/anpd">gov.br/anpd</ExternalLink>.
@@ -271,7 +273,9 @@ export default function Privacy() {
               Schay pelo e-mail {email} ou pelo WhatsApp {SITE.whatsappDisplay}.
             </p>
             <p>
-              Encarregado pelo tratamento de dados (DPO): <ToConfirm />
+              <strong>Encarregada pelo tratamento de dados e pelos pedidos dos titulares:</strong>{" "}
+              Schay Cardoso, pelo e-mail {email}. Esse é o canal para pedidos de acesso,
+              correção e exclusão dos seus dados.
             </p>
           </Section>
 
