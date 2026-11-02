@@ -8,6 +8,8 @@ const descriptions = {
     "Apartamentos à venda em São Leopoldo e região: consulte fotos, preços e características e fale diretamente com a Schay pelo WhatsApp.",
   "/terrenos-e-oportunidades":
     "Terrenos, sítios e oportunidades em São Leopoldo e região. Consulte as ofertas e tire suas dúvidas com a Schay pelo WhatsApp.",
+  "/politica-de-privacidade":
+    "Política de Privacidade da Schay Corretora: quais dados o site coleta, para que são usados, onde ficam guardados e como exercer seus direitos pela LGPD.",
   "/minha-busca":
     "Responda 6 perguntas rápidas e receba da Schay imóveis em São Leopoldo e região que combinam com o seu perfil e o seu orçamento.",
 };

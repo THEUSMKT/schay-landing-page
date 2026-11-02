@@ -4,6 +4,7 @@ import Reveal from '../components/Reveal'
 import SectionEyebrow from '../components/SectionEyebrow'
 import Cta from '../components/Cta'
 import { SITE, buildWhatsAppLink } from '../data/site'
+import { trackAdsConversion } from '../lib/adsConversions'
 
 // "Alugar um imóvel" fica de fora até esse serviço ser confirmado — ver
 // lista de pontos a confirmar entregue junto com esta revisão. Não incluir
@@ -58,6 +59,11 @@ export default function ContactForm() {
     // pessoa precisa clicar no botão manualmente.
     const win = window.open(whatsappHref, '_blank', 'noopener,noreferrer')
     setPopupBlocked(!win)
+    // Aqui o WhatsApp abre pelo próprio envio, não por um clique em link — o
+    // listener global de links não vê isso. Conta como clique no WhatsApp
+    // (nunca como lead do questionário). O "Abrir WhatsApp" da confirmação
+    // leva data-ads-counted pra não contar de novo.
+    trackAdsConversion('LABEL_CLIQUE_WHATSAPP')
     setLastWhatsAppHref(whatsappHref)
     setSent(true)
     setForm(INITIAL_FORM)
@@ -126,7 +132,13 @@ export default function ContactForm() {
                   : 'Abrimos uma nova aba com sua mensagem pronta — nada foi enviado ainda: é só conferir e enviar por lá para continuar o atendimento.'}
               </p>
               <div className="mt-5 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-                <Cta href={lastWhatsAppHref} target="_blank" rel="noopener noreferrer" variant="amber">
+                <Cta
+                  href={lastWhatsAppHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="amber"
+                  data-ads-counted
+                >
                   Abrir WhatsApp
                 </Cta>
                 <button

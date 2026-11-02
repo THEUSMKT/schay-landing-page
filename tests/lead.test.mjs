@@ -156,7 +156,7 @@ test('um listener só conta cliques em links do WhatsApp, sem impedir o clique',
   const stop = installWhatsAppConversion(adsConfig)
   assert.equal(listeners.size, 1)
   const click = (href, extra = {}) => {
-    const event = { defaultPrevented: false, target: { closest: () => (href === null ? null : { href }) }, ...extra }
+    const event = { defaultPrevented: false, target: { closest: () => (href === null ? null : { href, hasAttribute: () => false }) }, ...extra }
     for (const fn of listeners) fn(event)
   }
   click('https://wa.me/5551992789076?text=Oi')
@@ -165,6 +165,10 @@ test('um listener só conta cliques em links do WhatsApp, sem impedir o clique',
   click('/casas')
   click(null)
   click('https://wa.me/5551992789076', { defaultPrevented: true })
+  assert.equal(calls.length, 2)
+  // link já contado por quem abriu o WhatsApp (formulário do fim da página)
+  for (const fn of listeners)
+    fn({ defaultPrevented: false, target: { closest: () => ({ href: 'https://wa.me/5551992789076', hasAttribute: (n) => n === 'data-ads-counted' }) } })
   assert.equal(calls.length, 2)
   stop()
   assert.equal(listeners.size, 0)

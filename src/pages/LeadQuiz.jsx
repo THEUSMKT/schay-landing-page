@@ -6,7 +6,7 @@ import Cta from "../components/Cta";
 import PropertyGrid from "../components/PropertyGrid";
 import WhatsAppIcon from "../components/icons/WhatsAppIcon";
 import { PROPERTIES } from "../data/properties";
-import { SITE, buildWhatsAppLink } from "../data/site";
+import { PRIVACY_PATH, SITE, buildWhatsAppLink } from "../data/site";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import { trackEvent } from "../lib/analytics";
 import { trackAdsConversion } from "../lib/adsConversions";
@@ -348,8 +348,18 @@ function ContactStep({ answers, headingRef, onSubmit }) {
           className="mt-0.5 h-5 w-5 shrink-0 accent-amber-500"
         />
         <span>
-          Autorizo a {SITE.name} a falar comigo pelo WhatsApp sobre imóveis.
-          Meus dados não serão compartilhados com terceiros.
+          Autorizo a {SITE.name} a falar comigo pelo WhatsApp sobre imóveis. Meu
+          nome, WhatsApp e respostas ficam guardados em uma planilha do Google, e
+          a conversa acontece pelo WhatsApp. Veja a{" "}
+          <Link
+            to={PRIVACY_PATH}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-accent-700 underline underline-offset-2"
+          >
+            Política de Privacidade
+          </Link>
+          .
         </span>
       </label>
       {errors.consent ? (
@@ -364,9 +374,17 @@ function ContactStep({ answers, headingRef, onSubmit }) {
       >
         Ver imóveis para o meu perfil
       </button>
-      <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-navy-600">
-        <Lock className="h-3.5 w-3.5" aria-hidden="true" />
-        Seus dados ficam só com a Schay.
+      <p className="mt-3 text-center text-xs leading-relaxed text-navy-600">
+        <Lock className="mr-1 inline h-3.5 w-3.5 align-[-2px]" aria-hidden="true" />
+        Usados só para o seu atendimento. Saiba mais na{" "}
+        <Link
+          to={PRIVACY_PATH}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline underline-offset-2"
+        >
+          Política de Privacidade
+        </Link>
       </p>
     </form>
   );

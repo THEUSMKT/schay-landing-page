@@ -9,6 +9,8 @@ import ScrollManager from './components/ScrollManager'
 import Home from './pages/Home'
 import CategoryPage from './pages/CategoryPage'
 import LeadQuiz from './pages/LeadQuiz'
+import Privacy from './pages/Privacy'
+import CookieNotice from './components/CookieNotice'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -71,6 +73,14 @@ function App() {
             }
           />
           <Route
+            path="/politica-de-privacidade"
+            element={
+              <PageTransition>
+                <Privacy />
+              </PageTransition>
+            }
+          />
+          <Route
             path="*"
             element={
               <PageTransition>
@@ -84,6 +94,7 @@ function App() {
       <Footer />
       <WhatsAppButton />
       <LeadStickyBar />
+      <CookieNotice />
     </div>
   )
 }

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { Mail, MapPin, Phone } from 'lucide-react'
 import Logo from './Logo'
 import Reveal from './Reveal'
-import { NAV_LINKS, SITE, buildWhatsAppLink } from '../data/site'
+import { NAV_LINKS, PRIVACY_PATH, SITE, buildWhatsAppLink } from '../data/site'
 
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -83,7 +83,15 @@ export default function Footer() {
           <p>
             © {year} {SITE.name}. Todos os direitos reservados.
           </p>
-          <p>CRECI {SITE.creci}</p>
+          <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <Link
+              to={PRIVACY_PATH}
+              className="text-white/60 underline underline-offset-4 transition-colors duration-200 hover:text-accent-300"
+            >
+              Política de Privacidade
+            </Link>
+            <span>CRECI {SITE.creci}</span>
+          </p>
         </Reveal>
       </div>
     </footer>

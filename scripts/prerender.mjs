@@ -119,6 +119,13 @@ const ROUTES = [
     description:
       'Responda 6 perguntas rápidas e receba da Schay imóveis em São Leopoldo e região que combinam com o seu perfil e o seu orçamento.',
   },
+  {
+    path: '/politica-de-privacidade',
+    outFile: 'politica-de-privacidade/index.html',
+    priority: '0.3',
+    description:
+      'Política de Privacidade da Schay Corretora: quais dados o site coleta, para que são usados, onde ficam guardados e como exercer seus direitos pela LGPD.',
+  },
 ]
 
 const MIME = {
@@ -308,6 +315,16 @@ async function main() {
   await page.route(/googletagmanager\.com|google-analytics\.com|doubleclick\.net|googleadservices\.com/, (route) =>
     route.abort(),
   )
+
+  // O aviso de cookies aparece só pra quem ainda não o fechou: aqui ele já
+  // vem "fechado", senão o HTML salvo de cada página sairia com o aviso.
+  await page.addInitScript(() => {
+    try {
+      localStorage.setItem('schay-cookie-notice', 'closed')
+    } catch {
+      // sem localStorage: o aviso simplesmente aparece
+    }
+  })
 
   const pageErrors = []
   page.on('pageerror', (err) => pageErrors.push(String(err)))

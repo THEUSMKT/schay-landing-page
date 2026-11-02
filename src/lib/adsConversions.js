@@ -40,7 +40,9 @@ export function installWhatsAppConversion(config = ADS_CONFIG) {
   const listener = (event) => {
     if (event.defaultPrevented) return;
     const link = event.target.closest?.("a[href]");
-    if (!link) return;
+    // data-ads-counted: o clique já foi contado por quem abriu o WhatsApp
+    // (ver ContactForm) — evita contar duas vezes o mesmo envio.
+    if (!link || link.hasAttribute("data-ads-counted")) return;
     let host;
     try {
       host = new URL(link.href, window.location.href).hostname;

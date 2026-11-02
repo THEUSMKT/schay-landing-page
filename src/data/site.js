@@ -14,6 +14,9 @@ export const SITE = {
   email: 'schaycardoso29@gmail.com',
 }
 
+// Página da política de privacidade (rodapé, questionário, aviso de cookies).
+export const PRIVACY_PATH = '/politica-de-privacidade'
+
 export const NAV_LINKS = [
   { label: 'Como funciona', href: '/#como-funciona' },
   { label: 'Imóveis', href: '/#imoveis' },
